@@ -1,0 +1,65 @@
+[
+  {
+    "dst": "unresolved:knuth84",
+    "extractor": "latexml",
+    "kind": "cites",
+    "resolved": false,
+    "resolver": "",
+    "src": "main:Intro",
+    "tier": "T2"
+  },
+  {
+    "dst": "unresolved:lamport94",
+    "extractor": "latexml",
+    "kind": "cites",
+    "resolved": false,
+    "resolver": "",
+    "src": "main:Intro",
+    "tier": "T2"
+  },
+  {
+    "dst": "unresolved:chapter2",
+    "extractor": "latexml",
+    "kind": "includes",
+    "resolved": false,
+    "resolver": "",
+    "src": "main:Intro",
+    "tier": "T2"
+  },
+  {
+    "dst": "unresolved:fig:one",
+    "extractor": "latexml",
+    "kind": "references",
+    "resolved": false,
+    "resolver": "",
+    "src": "chapter2:More",
+    "tier": "T2"
+  },
+  {
+    "dst": "unresolved:sec:intro",
+    "extractor": "latexml",
+    "kind": "references",
+    "resolved": false,
+    "resolver": "",
+    "src": "chapter2:More",
+    "tier": "T2"
+  },
+  {
+    "dst": "unresolved:sec:intro",
+    "extractor": "latexml",
+    "kind": "references",
+    "resolved": false,
+    "resolver": "",
+    "src": "main:Intro",
+    "tier": "T2"
+  },
+  {
+    "dst": "unresolved:sec:missing",
+    "extractor": "latexml",
+    "kind": "references",
+    "resolved": false,
+    "resolver": "",
+    "src": "main:Intro",
+    "tier": "T2"
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "name": "proofgraph-ai",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "V6 assembly vessel - the AI outlet skeleton: byok-arena wall <-> composed system. Graph travels as DATA; keys never leave the server side. Zero new dependencies (Node 24 native type-stripping, node:test).",
+  "scripts": {
+    "test": "node --test \"test/*.test.ts\""
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0"
+}

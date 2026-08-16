@@ -1,0 +1,36 @@
+{
+  "slug": "sub200-tables",
+  "date": "2026-08-03",
+  "scope": "vessels/REPORT-SUB200-*.md (13 reports): verification tables re-measured (wc -l of every listed file), table completeness vs disk, ceiling/max claims, exemption existence/nature claims, facade claims (original path exists + re-exports; spot-imports per area), catalog-size claims, schemagen --check",
+  "method": "wc -l (LF count; splitlines fallback accepted) of all 727 table rows across 13 areas; recursive disk scan per area for unlisted source files and any file >=200 lines; existence checks for every exemption path; live python/node spot-imports of 3+ facades per area where cheap (schema, graph-model, capability-layer, structure-extractor, hub, vessels, outerwall, acceptance/faultcheck, ai, byok-arena) and grep-level re-export verification for vite/tsx areas (graph-view, editor-shell, app-src); faultcheck anchor-uniqueness greps; python schemagen.py --check re-run (only fast command executed). No suites re-run (wave-3 closer owns totals).",
+  "claimsChecked": 859,
+  "verified": 793,
+  "falseFoundAtWriting": 0,
+  "driftNote": "All 65 line-count mismatches are on files whose mtimes POST-date their report (remediation/claim-audit rounds edited the tree after 2026-08-02 19:03-20:04); the tables were accurate at writing but are stale today. Sole ambiguous row: app/vitest.acceptance.config.ts (claimed 40, is 37, file unmodified since 2026-08-02 19:53). Every drifted file remains under the 200-line ceiling; no area's ceiling is breached (byok-arena max 199, editor-shell 199, app-tests 199, acceptance run_demo.py 199).",
+  "corrected": [
+    {"where": "REPORT-SUB200-graph-model.md table", "was": "src/cell.py 140; src/errors.py 23; src/importgate.py 65; src/stages/s6_project.py 125; src/stages/s7_roundtrip.py 96", "is": "141; 24; 67; 127; 98 (drift after report; max non-exempt still 181)"},
+    {"where": "REPORT-SUB200-graph-view.md table", "was": "ingest.ts 171; catalogRenderLink.ts 100; ingestEdges.ts 91; catalogVerdictLayout.ts 75; probeCatalog.ts 44", "is": "172; 103; 97; 77; 46 (drift; catalog still 93 entries; max 197)"},
+    {"where": "REPORT-SUB200-ai.md table", "was": "ai/server.ts 83", "is": "88 (drift; <=161 bound still holds)"},
+    {"where": "REPORT-SUB200-byok-arena.md table", "was": "src/index.ts 95", "is": "96 (drift; max still 199)"},
+    {"where": "REPORT-SUB200-capability-layer.md table", "was": "discovery 130; floor/treesitter 117; gate 87; handle 47; probes_catalog_ae 119; probes_catalog_fj 105; shim/ybg_lsp 104; spine_wire 97; tree 103; tests/test_14 142", "is": "131; 119; 88; 50; 124; 108; 105; 99; 105; 143 (drift; max still 198; catalog 89)"},
+    {"where": "REPORT-SUB200-structure-extractor.md table", "was": "extractor/schema.py 190; assemble.py 183; ingest.py 170; selftest/test_wall_face.py 168; probe/catalog_docks.py 101; selftest/test_provenance.py 61; probe/catalog.py 27; extractor/__init__.py 9", "is": "192; 187; 171; 169; 102; 66; 28; 10 (drift; max 194; catalog 149)"},
+    {"where": "REPORT-SUB200-hub-vessels.md table", "was": "hub/serve_app.py 188; hub/test_hub.py 79; vessels/serve_hub_v4.py 69; vessels/v2_squiggle_drop.mjs 115", "is": "191; 80; 71; 116 (drift; <=195 bound still holds)"},
+    {"where": "REPORT-SUB200-editor-shell.md table", "was": "src/cell/cell.ts 181; src/index.ts 27; lsp-types.ts 48; probe/catalog.ts 46; conn-lsp.ts 100; diag-verdict.ts 82; mount-buffer.ts 69; render-gate-wall.ts 64; select-map.ts 72; sha256.ts 67; test/07-latency.test.ts 156", "is": "182; 29; 51; 49; 104; 86; 72; 67; 74; 71; 155 (drift; max still 199; catalog 128)"},
+    {"where": "REPORT-SUB200-outerwall.md table", "was": "probelog.py 96; provenance.py 144; system_pins.py 125; test_outerwall_pins.py 135", "is": "97; 147; 129; 138 (drift; <=185 bound still holds; fault-d anchor still unique)"},
+    {"where": "REPORT-SUB200-acceptance.md table", "was": "checks/suites.py 52; faultcheck/run_faults.py 145; faultlib/__init__.py 9; faultlib/harness.py 130; faultlib/catalog.py 113; run_all_suites.py 167", "is": "59; 152; 10; 141; 135; 169 (drift; all <=199)"},
+    {"where": "REPORT-SUB200-app-src.md table", "was": "fsSourceApi.ts 154; App.tsx 128; layout.ts 101; lspTransport.ts 89; fsSource.ts 40; dialogs.tsx 25", "is": "160; 129; 107; 90; 46; 27 (drift; measured max still 188)"},
+    {"where": "REPORT-SUB200-app-tests.md table + 'all area files <=198' headline", "was": "shell.face.test.tsx 141; shell.face.save.test.tsx 91; shell1c.skin.test.tsx 198; vitest.acceptance.config.ts 40; area max <=198", "is": "143; 92; 199; 37; area max 199 (<200 ceiling holds; config-file delta not attributable to post-report drift)"}
+  ],
+  "unverifiable": [
+    {"where": "REPORT-SUB200-app-tests.md: vitest.acceptance.config.ts claimed 40 lines", "why": "file is 37 lines and unmodified since 2026-08-02 19:53; cannot cheaply determine whether the report's 40 was wrong at writing or the file changed between measurement and 19:53 (no VCS history — not a git repo)"},
+    {"where": "byte-stability prose claims other than schemagen --check (goldens byte-identical, editor-shell fixture-generator byte-compare, catalog diffed against pre-split snapshot)", "why": "would require re-running suites/generators or a pre-split snapshot that no longer exists; existence + GENERATED headers + current catalog sizes (93/104+12/128/149/89/168) were verified instead"}
+  ],
+  "verifiedHighlights": [
+    "727 table rows re-measured: 662 exact today, 65 drifted (all post-report edits), 0 missing files",
+    "Completeness: no unlisted source file in any of the 13 areas (all extras are explicitly-exempted fixtures); no non-exempt file >=200 lines anywhere",
+    "Exemptions: all 11 schema exempt paths exist (gen/ has exactly 7 files, GENERATED headers, PIN carries schemaHash 3f3123699c45); graph-model schema artifacts + out/ + manifests/roots exist; Driver.lean + richpkg.recorded.json + lean-toolchain exist; acceptance generated artifacts + vendored real_py/real_lean + 2 PROVENANCE.md exist; TRACE-node.json + fixtures_v2 exist; editor-shell lockfile 1916 and all 9 fixture line counts exact",
+    "Facades spot-imported live: schemagen (full surface), graph-model wall (all 9 names) + probe.catalog (116/104, 12 graph-model.wall.* leads, matches out/probe_catalog.json), capability probes(89)/probe/spine/wall, structure-extractor wall/catalog(149)/pipeline.ALL_DOCKS, hub server(.HubServer.render_graph_payload unique)/pipeline(HUB_PROBE_CATALOG)/lsp_backend, vessels v1 facade (__all__ 11), outerwall init/analyze/system_pins, acceptance checks/shellchecks/faultlib, ai service+server under node (full claimed surfaces, secret literals, maybeRunCli tail), byok wall/goldens/gemini/buildCatalog()=168 with 5 wall.*",
+    "Grep-verified facades (vite/tsx areas): graph-view probeCatalog(93 entries)/layout/ingest, editor-shell cell.ts/probe-catalog(128)/verdict.ts, app-src layout2/dialogs/graphSource/App.tsx",
+    "python schemagen.py --check re-run: exit 0, '8 generated artifacts in sync (schemaHash 3f3123699c45...)' — verbatim match to the claim cited in 5 reports"
+  ]
+}

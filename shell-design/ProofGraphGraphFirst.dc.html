@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+html,body{height:100%;margin:0}
+a{color:#6C63C8;text-decoration:none}a:hover{color:#584FB8;text-decoration:underline}
+[data-pg1c]{--acc:#7C6FD4;--ui:"Segoe UI",system-ui,-apple-system,sans-serif;--mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+--cv:#ECEEF2;--is:#FFFFFF;--rs:#F2F3F7;--bd:#D8DAE0;--tx:#27282E;--txd:#6C707E;--hov:#E7E9EE;--sel:rgba(124,111,212,.15);--pop:#FFFFFF;--popbd:#D3D5DB;--lnhl:rgba(124,111,212,.12);--edge:#B7BBC2;--gdot:rgba(0,0,0,.07);--shadow:0 1px 3px rgba(30,32,40,.08);
+--syK:#0033B3;--syS:#067D17;--syC:#8C8C8C;--syF:#00627A;--syD:#1750EB;--syA:#9E880D;--syP:#94558D;--syX:#080808;
+--bnE:#FCE8E8;--bnEb:#E8B4B4;--bnW:#FBF3DC;--bnWb:#E0CD90;--bnI:#E9F1FB;--bnIb:#B5CDE8}
+[data-pg1c][data-theme="dark"]{--cv:#131417;--is:#1E1F22;--rs:#2B2D30;--bd:#333539;--tx:#DFE1E5;--txd:#9095A0;--hov:#33353A;--sel:rgba(124,111,212,.28);--pop:#26282C;--popbd:#404248;--lnhl:rgba(124,111,212,.17);--edge:#5C6066;--gdot:rgba(255,255,255,.055);--shadow:0 2px 6px rgba(0,0,0,.3);
+--syK:#CF8E6D;--syS:#6AAB73;--syC:#7A7E85;--syF:#56A8F5;--syD:#2AACB8;--syA:#B3AE60;--syP:#C77DBB;--syX:#BCBEC4;
+--bnE:#43302F;--bnEb:#6E4341;--bnW:#403A29;--bnWb:#6E6238;--bnI:#2C3A4A;--bnIb:#41586F}
+[data-pg1c] ::-webkit-scrollbar{width:10px;height:10px}
+[data-pg1c] ::-webkit-scrollbar-thumb{background:var(--bd);border:3px solid transparent;background-clip:content-box;border-radius:7px}
+[data-pg1c] ::-webkit-scrollbar-track{background:transparent}
+</style>
+<script src="proofdata.js"></script>
+</helmet>
+<div data-pg1c="1" data-screen-label="1c graph-first shell" data-theme="{{ theme }}" style="--acc:{{ ac }};position:relative;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;width:100%;height:100%;min-height:640px;background:var(--cv);color:var(--tx);font:13px var(--ui);overflow:hidden;user-select:none">
+
+  <div style="display:flex;align-items:center;height:42px;padding:0 10px;gap:4px;border-bottom:1px solid var(--bd)">
+    <button onClick="{{ barTg }}" title="toggle the main menu bar" style="display:flex;align-items:center;justify-content:center;width:30px;height:30px;border:none;border-radius:7px;background:transparent;color:var(--txd);cursor:pointer" style-hover="background:var(--hov)">
+      <svg width="16" height="16" viewBox="0 0 16 16"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg></button>
+    <svg width="18" height="18" viewBox="0 0 16 16"><circle cx="4" cy="3.5" r="2.1" fill="var(--acc)"></circle><circle cx="12" cy="6" r="2.1" fill="#2E7D32"></circle><circle cx="6.5" cy="12.5" r="2.1" fill="#C62828"></circle><path d="M5.5 5L10.5 5.8M5 5.5L6.2 10.6M11 7.8L7.6 11.2" stroke="var(--txd)" stroke-width="1.1" fill="none"></path></svg>
+    <div style="position:relative">
+      <button onClick="{{ projTg }}" title="project switcher" style="display:flex;align-items:center;gap:7px;height:30px;padding:0 10px;border:none;border-radius:7px;background:transparent;cursor:pointer;color:var(--tx);font:600 13px var(--ui)" style-hover="background:var(--hov)">
+        moatpkg <span style="color:var(--txd);font-weight:400">{{ projSub }}</span><span style="color:var(--txd);font-size:9px">▾</span></button>
+      <sc-if value="{{ projPop }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;top:100%;left:0;z-index:90;min-width:270px;background:var(--pop);border:1px solid var(--popbd);border-radius:10px;box-shadow:0 14px 38px rgba(0,0,0,.24);padding:6px;margin-top:4px">
+          <div style="padding:5px 10px;color:var(--txd);font:600 10.5px var(--ui);letter-spacing:.6px">RECENT PROJECTS</div>
+          <sc-for list="{{ recents }}" as="r" hint-placeholder-count="3">
+            <div onClick="{{ r.act }}" style="display:flex;gap:8px;align-items:center;padding:6px 10px;border-radius:6px;cursor:pointer" style-hover="background:var(--hov)">
+              <span style="color:var(--txd)">{{ r.ic }}</span><span style="font-family:var(--mono);font-size:12px">{{ r.p }}</span>
+              <span style="flex:1"></span><span style="color:var(--txd);font-size:11px">{{ r.k }}</span>
+            </div>
+          </sc-for>
+          <div style="height:1px;background:var(--bd);margin:5px 8px"></div>
+          <div onClick="{{ closeProjAct }}" style="padding:6px 10px;border-radius:6px;cursor:pointer" style-hover="background:var(--hov)">Close project</div>
+        </div>
+      </sc-if>
+    </div>
+    <sc-if value="{{ barOn }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;align-items:center">
+        <sc-for list="{{ menus }}" as="m" hint-placeholder-count="5">
+          <div style="position:relative">
+            <button onClick="{{ m.tg }}" onMouseEnter="{{ m.hv }}" style="border:none;cursor:pointer;height:30px;padding:0 11px;border-radius:7px;background:{{ m.bg }};color:var(--tx);font:13px var(--ui)" style-hover="background:var(--hov)">{{ m.label }}</button>
+            <sc-if value="{{ m.open }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;top:100%;left:0;z-index:90;min-width:300px;background:var(--pop);border:1px solid var(--popbd);border-radius:10px;box-shadow:0 14px 38px rgba(0,0,0,.24);padding:6px;margin-top:4px">
+                <sc-for list="{{ m.items }}" as="it">
+                  <sc-if value="{{ it.sep }}" hint-placeholder-val="{{ false }}"><div style="height:1px;background:var(--bd);margin:5px 8px"></div></sc-if>
+                  <div onClick="{{ it.act }}" title="{{ it.tip }}" style="display:flex;gap:8px;align-items:center;height:28px;padding:0 12px 0 8px;border-radius:6px;cursor:{{ it.cur }};color:{{ it.col }}" style-hover="background:{{ it.hbg }}">
+                    <span style="width:14px;color:var(--acc);font-weight:700">{{ it.chk }}</span>
+                    <span style="flex:1;white-space:nowrap">{{ it.label }}</span>
+                    <span style="color:var(--txd);font:11.5px var(--ui)">{{ it.short }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+    <span style="flex:1"></span>
+    <sc-if value="{{ notWelcome }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;align-items:center;margin:0 2px">
+        <button onClick="{{ reAct }}" title="POST /analyze — declared roots, never inferred" style="display:flex;align-items:center;gap:7px;height:30px;padding:0 12px;border:none;border-radius:7px 0 0 7px;background:var(--acc);color:#fff;font:600 12.5px var(--ui);cursor:pointer">
+          <svg width="12" height="12" viewBox="0 0 16 16"><path d="M4 2.5l9 5.5-9 5.5z" fill="#fff"></path></svg>
+          analyze</button>
+        <div style="position:relative">
+          <button onClick="{{ runTg }}" title="analyze configuration" style="display:flex;align-items:center;gap:5px;height:30px;padding:0 10px;border:none;border-left:1px solid rgba(255,255,255,.3);border-radius:0 7px 7px 0;background:var(--acc);color:#fff;font:11.5px var(--ui);cursor:pointer">declared roots <span style="font-size:8px">▾</span></button>
+          <sc-if value="{{ runPop }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:100%;right:0;z-index:90;min-width:280px;background:var(--pop);border:1px solid var(--popbd);border-radius:10px;box-shadow:0 14px 38px rgba(0,0,0,.24);padding:6px;margin-top:4px">
+              <sc-for list="{{ runItems }}" as="it">
+                <sc-if value="{{ it.sep }}" hint-placeholder-val="{{ false }}"><div style="height:1px;background:var(--bd);margin:5px 8px"></div></sc-if>
+                <div onClick="{{ it.act }}" title="{{ it.tip }}" style="display:flex;gap:8px;align-items:center;height:28px;padding:0 12px 0 8px;border-radius:6px;cursor:{{ it.cur }};color:{{ it.col }}" style-hover="background:{{ it.hbg }}">
+                  <span style="width:14px;color:var(--acc);font-weight:700">{{ it.chk }}</span>
+                  <span style="flex:1;white-space:nowrap">{{ it.label }}</span>
+                  <span style="color:var(--txd);font:11.5px var(--ui)">{{ it.short }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+      <button onClick="{{ searchAct }}" title="search everywhere — files and graph nodes" style="display:flex;align-items:center;justify-content:center;width:30px;height:30px;border:none;border-radius:7px;background:transparent;color:var(--txd);cursor:pointer" style-hover="background:var(--hov)">
+        <svg width="16" height="16" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.2" fill="none" stroke="currentColor" stroke-width="1.5"></circle><path d="M10.2 10.2L13.6 13.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg></button>
+    </sc-if>
+    <div style="position:relative">
+      <button onClick="{{ setTg }}" title="Settings — theme, accent (Ctrl+,)" style="display:flex;align-items:center;justify-content:center;width:30px;height:30px;border:none;border-radius:7px;background:transparent;color:var(--txd);cursor:pointer" style-hover="background:var(--hov)">
+        <svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 4.5h12M2 8h12M2 11.5h12" stroke="currentColor" stroke-width="1.5"></path><circle cx="6" cy="4.5" r="1.8" fill="var(--cv)" stroke="currentColor" stroke-width="1.5"></circle><circle cx="11" cy="8" r="1.8" fill="var(--cv)" stroke="currentColor" stroke-width="1.5"></circle><circle cx="4.5" cy="11.5" r="1.8" fill="var(--cv)" stroke="currentColor" stroke-width="1.5"></circle></svg></button>
+      <sc-if value="{{ setPop }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;top:100%;right:0;z-index:90;min-width:230px;background:var(--pop);border:1px solid var(--popbd);border-radius:10px;box-shadow:0 14px 38px rgba(0,0,0,.24);padding:6px;margin-top:4px">
+          <sc-for list="{{ setItems }}" as="it">
+            <sc-if value="{{ it.sep }}" hint-placeholder-val="{{ false }}"><div style="height:1px;background:var(--bd);margin:5px 8px"></div></sc-if>
+            <div onClick="{{ it.act }}" title="{{ it.tip }}" style="display:flex;gap:8px;align-items:center;height:28px;padding:0 12px 0 8px;border-radius:6px;cursor:{{ it.cur }};color:{{ it.col }}" style-hover="background:{{ it.hbg }}">
+              <span style="width:14px;color:var(--acc);font-weight:700">{{ it.chk }}</span>
+              <span style="flex:1;white-space:nowrap">{{ it.label }}</span>
+              <span style="color:var(--txd);font:11.5px var(--ui)">{{ it.short }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+    <span onClick="{{ hubAct }}" title="hub transport — click to simulate an outage (demo)" style="display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border:1px solid var(--bd);border-radius:13px;font:11px var(--mono);color:var(--txd);cursor:pointer;margin-left:4px" style-hover="background:var(--hov)">
+      <span style="width:7px;height:7px;border-radius:50%;background:{{ hubDot }}"></span>{{ hubTxt }}</span>
+  </div>
+
+  <div style="display:flex;flex-direction:column;padding:0 8px">
+    <sc-for list="{{ banners }}" as="b" hint-placeholder-count="0">
+      <div style="display:flex;gap:8px;align-items:baseline;padding:6px 12px;background:{{ b.bg }};border:1px solid {{ b.bd }};border-radius:8px;margin-top:6px;font-size:12.5px">
+        <b style="font-family:var(--mono);font-size:11.5px">{{ b.fc }}</b><span style="flex:1">{{ b.d }}</span>
+        <button onClick="{{ b.dis }}" style="border:none;background:none;color:var(--txd);cursor:pointer">✕</button>
+      </div>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{ welcome }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;align-items:center;justify-content:center;min-height:0">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;width:480px">
+        <svg width="68" height="68" viewBox="0 0 16 16"><circle cx="4" cy="3.5" r="2.1" fill="var(--acc)"></circle><circle cx="12" cy="6" r="2.1" fill="#2E7D32"></circle><circle cx="6.5" cy="12.5" r="2.1" fill="#C62828"></circle><path d="M5.5 5L10.5 5.8M5 5.5L6.2 10.6M11 7.8L7.6 11.2" stroke="var(--txd)" stroke-width="1.1" fill="none"></path></svg>
+        <div style="font:600 26px var(--ui);margin-top:8px">Welcome to ProofGraph</div>
+        <div style="color:var(--txd);font-size:12.5px">{{ verText }}</div>
+        <div style="display:flex;gap:10px;margin-top:24px">
+          <button onClick="{{ wSample }}" style="height:34px;padding:0 18px;border:none;border-radius:8px;background:var(--acc);color:#fff;font:600 13px var(--ui);cursor:pointer">Open sample workspace</button>
+          <button onClick="{{ wEmpty }}" style="height:34px;padding:0 18px;border:1px solid var(--bd);border-radius:8px;background:var(--is);color:var(--tx);font:13px var(--ui);cursor:pointer" style-hover="background:var(--hov)">New empty workspace</button>
+        </div>
+        <div style="width:100%;margin-top:26px;border:1px solid var(--bd);border-radius:12px;background:var(--is);box-shadow:var(--shadow);overflow:hidden">
+          <div style="padding:9px 14px;border-bottom:1px solid var(--bd);color:var(--txd);font:600 10.5px var(--ui);letter-spacing:.6px">RECENT</div>
+          <sc-for list="{{ recents }}" as="r" hint-placeholder-count="3">
+            <div onClick="{{ r.act }}" style="display:flex;gap:9px;align-items:center;padding:9px 14px;cursor:pointer" style-hover="background:var(--hov)">
+              <span style="color:var(--txd)">{{ r.ic }}</span><span style="font-family:var(--mono);font-size:12.5px">{{ r.p }}</span>
+              <span style="flex:1"></span><span style="color:var(--txd);font-size:11px">{{ r.k }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="color:var(--txd);font-size:11.5px;margin-top:16px">the hub serves /graph · /analysis · workspace fs — the browser never touches disk</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ notWelcome }}" hint-placeholder-val="{{ true }}">
+  <div style="display:flex;min-height:0">
+    <div style="width:44px;flex:none;display:flex;flex-direction:column;align-items:center;padding:6px 0;gap:4px;border-right:1px solid var(--bd)">
+      <button onClick="{{ twProj }}" title="Project tool window (Ctrl+Shift+E)" style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;border:none;border-radius:9px;background:{{ projRBg }};color:{{ projRIc }};cursor:pointer" style-hover="background:var(--hov)">
+        <svg width="17" height="17" viewBox="0 0 16 16"><path d="M2 3.5h4l1.4 1.5H14v8H2z" fill="none" stroke="currentColor" stroke-width="1.5"></path></svg></button>
+      <button onClick="{{ twEd }}" title="Editor tool window" style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;border:none;border-radius:9px;background:{{ edRBg }};color:{{ edRIc }};cursor:pointer" style-hover="background:var(--hov)">
+        <svg width="17" height="17" viewBox="0 0 16 16"><path d="M5.5 4L2.5 8l3 4M10.5 4l3 4-3 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+      <span style="flex:1"></span>
+      <button onClick="{{ twAi }}" title="AI outlet tool window" style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;border:none;border-radius:9px;background:{{ aiRBg }};color:{{ aiRIc }};cursor:pointer" style-hover="background:var(--hov)">
+        <svg width="17" height="17" viewBox="0 0 16 16"><path d="M8 1.5L9.4 6.1 14 8l-4.6 1.4L8 14.5 6.6 9.4 2 8l4.6-1.9z" fill="currentColor"></path></svg></button>
+      <button onClick="{{ twDiag }}" title="Diagnostics tool window" style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;border:none;border-radius:9px;background:{{ diagRBg }};color:{{ diagRIc }};cursor:pointer" style-hover="background:var(--hov)">
+        <svg width="17" height="17" viewBox="0 0 16 16"><path d="M8 2L14.5 13.5H1.5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path><path d="M8 6.5v3.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path><circle cx="8" cy="11.8" r=".9" fill="currentColor"></circle></svg></button>
+      <button onClick="{{ twPins }}" title="Pins console tool window" style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;border:none;border-radius:9px;background:{{ pinRBg }};color:{{ pinRIc }};cursor:pointer" style-hover="background:var(--hov)">
+        <svg width="17" height="17" viewBox="0 0 16 16"><path d="M3 4.5l4 3.5-4 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.5 12h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg></button>
+      <button onClick="{{ setAct }}" title="Settings (Ctrl+,)" style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;border:none;border-radius:9px;background:transparent;color:var(--txd);cursor:pointer;margin-top:4px" style-hover="background:var(--hov)">
+        <svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.2" fill="none" stroke="currentColor" stroke-width="1.5"></circle><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2M3.6 3.6l1.4 1.4M11 11l1.4 1.4M12.4 3.6L11 5M5 11l-1.4 1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg></button>
+    </div>
+
+    <div style="flex:1;position:relative;min-width:0;overflow:hidden">
+      <div ref="{{ gref }}" onPointerDown="{{ panDown }}" style="position:absolute;inset:0;overflow:hidden;background-image:radial-gradient(var(--gdot) 1px,transparent 1.5px);background-size:24px 24px;cursor:grab">
+        <sc-if value="{{ gNote }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--txd);font-size:12.5px;padding:0 60px;text-align:center;line-height:1.6">{{ gNote }}</div>
+        </sc-if>
+        <sc-if value="{{ gOn }}" hint-placeholder-val="{{ true }}">
+          <div style="position:absolute;left:0;top:0;transform:translate({{ panX }}px,{{ panY }}px) scale({{ zoom }});transform-origin:0 0;width:920px;height:620px">
+            <svg width="920" height="620" style="position:absolute;left:0;top:0;pointer-events:none;overflow:visible">
+              <path d="{{ edgeD }}" fill="none" stroke="var(--edge)" stroke-width="1.5"></path>
+              <path d="{{ leadD }}" fill="none" stroke="#9E9E9E" stroke-width="1.6" stroke-dasharray="7 5"></path>
+              <path d="{{ selD }}" fill="none" stroke="var(--acc)" stroke-width="2.4"></path>
+            </svg>
+            <sc-for list="{{ gnodes }}" as="n" hint-placeholder-count="6">
+              <div data-gnode="1" onClick="{{ n.pick }}" onDoubleClick="{{ n.dbl }}" title="{{ n.tip }}" style="position:absolute;left:{{ n.x }}px;top:{{ n.y }}px;width:{{ n.w }}px;height:46px;box-sizing:border-box;border-radius:9px;background:{{ n.bg }};border:{{ n.ring }};color:{{ n.tc }};padding:5px 10px;cursor:pointer;box-shadow:{{ n.sh }}">
+                <div style="font:600 12px var(--ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.s }}</div>
+                <div style="font:9.5px var(--mono);opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.meta }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{ gOn }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;top:12px;left:{{ ovL }}px;z-index:6;color:var(--txd);font:11px var(--ui);background:var(--is);border:1px solid var(--bd);border-radius:9px;padding:5px 11px;box-shadow:var(--shadow);max-width:520px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ gHint }}</div>
+      </sc-if>
+      <div style="position:absolute;top:12px;right:{{ ovR }}px;z-index:6;display:flex;align-items:center;gap:1px;background:var(--is);border:1px solid var(--bd);border-radius:9px;padding:2px 5px;box-shadow:var(--shadow)">
+        <button onClick="{{ zout }}" title="zoom out" style="border:none;background:none;color:var(--txd);cursor:pointer;font-size:14px;padding:0 5px" style-hover="color:var(--tx)">−</button>
+        <span style="color:var(--txd);font:10.5px var(--mono);width:36px;text-align:center">{{ zoomPct }}</span>
+        <button onClick="{{ zin }}" title="zoom in" style="border:none;background:none;color:var(--txd);cursor:pointer;font-size:14px;padding:0 5px" style-hover="color:var(--tx)">+</button>
+        <button onClick="{{ fit }}" title="zoom to fit (accounts for docked windows)" style="border:none;background:none;color:var(--txd);cursor:pointer;font-size:13px;padding:0 6px" style-hover="color:var(--tx)">⤢</button>
+      </div>
+
+      <div style="position:absolute;left:{{ ovL }}px;bottom:{{ ovB }}px;z-index:6;display:flex;flex-direction:column;gap:6px;align-items:flex-start">
+        <sc-if value="{{ legendOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="background:var(--is);border:1px solid var(--bd);border-radius:10px;box-shadow:var(--shadow);padding:9px 12px;display:flex;flex-direction:column;gap:6px;font-size:10.5px;color:var(--txd);max-width:560px">
+            <div style="display:flex;gap:11px;flex-wrap:wrap">
+              <span title="verdict from a real check" style="display:inline-flex;gap:4px;align-items:center"><span style="width:9px;height:9px;border-radius:3px;background:#2E7D32"></span>green</span>
+              <span title="warnings" style="display:inline-flex;gap:4px;align-items:center"><span style="width:9px;height:9px;border-radius:3px;background:#F9A825"></span>amber</span>
+              <span title="failing" style="display:inline-flex;gap:4px;align-items:center"><span style="width:9px;height:9px;border-radius:3px;background:#C62828"></span>red</span>
+              <span title="definition / axiom-like" style="display:inline-flex;gap:4px;align-items:center"><span style="width:9px;height:9px;border-radius:3px;background:#1565C0"></span>blue</span>
+              <span title="NOT green — hatched grey (honest ceiling)" style="display:inline-flex;gap:4px;align-items:center"><span style="width:9px;height:9px;border-radius:3px;background:repeating-linear-gradient(45deg,#9E9E9E,#9E9E9E 2px,#bdbdbd 2px,#bdbdbd 4px)"></span>unknown ≠ green</span>
+              <span title="outline not computed — grey ring, never green" style="display:inline-flex;gap:4px;align-items:center"><span style="width:8px;height:8px;border-radius:50%;border:1.5px dashed #9E9E9E"></span>null ring</span>
+              <span title="lead (resolved=false) — dashed, never an edge, never followed" style="display:inline-flex;gap:4px;align-items:center"><span style="width:14px;border-top:2px dashed #9E9E9E"></span>lead</span>
+            </div>
+            <div style="font-family:var(--mono);font-size:9.5px">worst-case-wins: {{ worstOrder }} · unrecognized token ranks WORST · unknown never upgrades</div>
+          </div>
+        </sc-if>
+        <div onClick="{{ legTg }}" style="display:flex;align-items:center;gap:6px;height:24px;padding:0 11px;cursor:pointer;color:var(--txd);font-size:10.5px;background:var(--is);border:1px solid var(--bd);border-radius:9px;box-shadow:var(--shadow)" style-hover="color:var(--tx)">
+          <span style="font-size:9px">{{ legTw }}</span> verdict legend (canonical: packages/schema/gen)
+        </div>
+      </div>
+
+      <sc-if value="{{ insp }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;right:{{ ovR }}px;bottom:{{ ovB }}px;z-index:7;width:320px;background:var(--is);border:1px solid var(--bd);border-radius:11px;box-shadow:var(--shadow);padding:10px 12px;display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;align-items:baseline;gap:8px">
+            <b style="font-size:12.5px">{{ inspName }}</b>
+            <span style="color:var(--txd);font:10.5px var(--mono);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ inspId }}</span>
+            <button onClick="{{ inspClear }}" style="border:none;background:none;color:var(--txd);cursor:pointer;font-size:11px">✕</button>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+            <span style="display:inline-flex;align-items:center;gap:5px;background:var(--rs);border-radius:6px;padding:2px 8px;font:10.5px var(--mono)"><span style="width:8px;height:8px;border-radius:2.5px;background:{{ inspFillBg }}"></span>fill {{ inspFill }}</span>
+            <span style="display:inline-flex;align-items:center;gap:5px;background:var(--rs);border-radius:6px;padding:2px 8px;font:10.5px var(--mono)"><span style="width:8px;height:8px;border-radius:50%;border:2px {{ inspRingStyle }} {{ inspRingC }}"></span>{{ inspRing }}</span>
+            <span style="color:var(--txd);font-size:10.5px">{{ inspWorst }}</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button onClick="{{ inspReveal }}" title="opens the Editor tool window at this line" style="border:1px solid var(--bd);background:transparent;color:var(--tx);border-radius:6px;height:22px;padding:0 9px;font:11.5px var(--ui);cursor:pointer" style-hover="background:var(--hov)">↗ reveal in editor</button>
+            <span style="color:var(--txd);font:10.5px var(--mono)">{{ inspLoc }}</span>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-for list="{{ visWins }}" as="w" hint-placeholder-count="2">
+        <div onPointerDown="{{ w.front }}" style="position:absolute;left:{{ w.x }}px;top:{{ w.y }}px;width:{{ w.w }}px;height:{{ w.h }}px;z-index:{{ w.z }};display:flex;flex-direction:column;background:var(--is);border:1px solid {{ w.bd }};border-radius:11px;box-shadow:{{ w.sh }};overflow:hidden">
+          <div onPointerDown="{{ w.drag }}" title="drag to float — drop on an edge zone to dock" style="display:flex;align-items:center;gap:7px;height:32px;flex:none;padding:0 6px 0 12px;border-bottom:1px solid var(--bd);cursor:grab">
+            <span style="font:600 12px var(--ui);white-space:nowrap">{{ w.title }}</span>
+            <span style="color:var(--txd);font:10px var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1">{{ w.sub }}</span>
+            <span title="current view mode — change via the gear menu" style="flex:none;color:var(--txd);font:9.5px var(--ui);border:1px solid var(--bd);border-radius:5px;padding:1.5px 6px;white-space:nowrap">{{ w.modeTag }}</span>
+            <span data-nodrag="1" onPointerDown="{{ w.stopPd }}" style="display:flex;flex:none;gap:1px">
+              <button onClick="{{ w.gearTg }}" title="tool window options — view mode · move to · hide" style="display:flex;align-items:center;justify-content:center;width:24px;height:24px;border:none;border-radius:6px;background:{{ w.gearBg }};color:var(--txd);cursor:pointer" style-hover="background:var(--hov)">
+                <svg width="13" height="13" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.2" fill="none" stroke="currentColor" stroke-width="1.5"></circle><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2M3.6 3.6l1.4 1.4M11 11l1.4 1.4M12.4 3.6L11 5M5 11l-1.4 1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg></button>
+              <button onClick="{{ w.hide }}" title="hide — the rail icon restores it" style="display:flex;align-items:center;justify-content:center;width:24px;height:24px;border:none;border-radius:6px;background:transparent;color:var(--txd);cursor:pointer;font-size:14px" style-hover="background:var(--hov)">—</button>
+            </span>
+          </div>
+          <sc-if value="{{ w.isProj }}" hint-placeholder-val="{{ false }}">
+            <div style="flex:1;overflow:auto;padding:5px 4px;min-height:0">
+              <sc-if value="{{ wsNote }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:8px 10px;color:{{ wsNoteCol }};font-size:12px;line-height:1.5"><b style="font-family:var(--mono)">{{ wsNoteFc }}</b> {{ wsNote }}</div>
+              </sc-if>
+              <sc-for list="{{ treeRows }}" as="r" hint-placeholder-count="8">
+                <div onClick="{{ r.act }}" title="{{ r.key }}" style="display:flex;align-items:center;gap:6px;height:25px;padding-left:{{ r.pad }}px;padding-right:8px;cursor:pointer;background:{{ r.bg }};border-radius:6px;white-space:nowrap" style-hover="background:var(--hov)">
+                  <span style="width:10px;color:var(--txd);font-size:9px">{{ r.tw }}</span>
+                  <span style="width:18px;height:16px;border-radius:4px;background:{{ r.icbg }};color:{{ r.icc }};font:600 8.5px var(--mono);display:flex;align-items:center;justify-content:center">{{ r.ic }}</span>
+                  <span style="font-size:12.5px">{{ r.name }}</span>
+                  <span style="color:var(--acc);font-size:10px">{{ r.badge }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ w.isEd }}" hint-placeholder-val="{{ false }}">
+            <div style="flex:1;display:flex;flex-direction:column;min-height:0">
+              <div style="display:flex;align-items:stretch;height:30px;flex:none;border-bottom:1px solid var(--bd);padding:0 6px;overflow:hidden">
+                <sc-for list="{{ tabsR }}" as="t" hint-placeholder-count="2">
+                  <span style="display:flex;align-items:center;gap:6px;padding:0 7px 0 9px;box-shadow:{{ t.line }};cursor:pointer" title="{{ t.key }}">
+                    <span onClick="{{ t.act }}" style="display:flex;align-items:center;gap:6px">
+                      <span style="width:17px;height:15px;border-radius:4px;background:{{ t.icbg }};color:{{ t.icc }};font:600 8px var(--mono);display:flex;align-items:center;justify-content:center">{{ t.ic }}</span>
+                      <span style="font-size:12px;color:{{ t.col }}">{{ t.name }}</span>
+                      <span style="color:var(--acc);font-size:10px">{{ t.dirty }}</span>
+                    </span>
+                    <span onClick="{{ t.close }}" title="{{ t.closeTip }}" style="color:var(--txd);font-size:11px;padding:2px 4px;border-radius:5px" style-hover="background:var(--hov)">✕</span>
+                  </span>
+                </sc-for>
+                <sc-if value="{{ noTabs }}" hint-placeholder-val="{{ false }}"><span style="align-self:center;padding:0 12px;color:var(--txd);font-size:12px">no open files — File › Open file…</span></sc-if>
+              </div>
+              <sc-if value="{{ edNote }}" hint-placeholder-val="{{ false }}">
+                <div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--txd);font-size:12.5px">{{ edNote }}</div>
+              </sc-if>
+              <sc-if value="{{ edOn }}" hint-placeholder-val="{{ true }}">
+                <div style="flex:1;overflow:auto;min-height:0">
+                  <div style="min-width:max-content;padding:4px 0 16px;font-size:12.5px;line-height:1.65;font-family:var(--mono)">
+                    <sc-for list="{{ codeLines }}" as="L" hint-placeholder-count="10">
+                      <div onClick="{{ L.click }}" style="display:flex;background:{{ L.bg }}">
+                        <span style="width:44px;flex:none;text-align:right;padding-right:8px;color:var(--txd);opacity:.7">{{ L.n }}</span>
+                        <span style="width:10px;flex:none;color:{{ L.dotC }};font-size:8px;line-height:inherit">{{ L.dot }}</span>
+                        <span style="padding:0 16px 0 8px;white-space:pre;text-decoration:{{ L.deco }}"><sc-for list="{{ L.sp }}" as="s"><span style="color:var(--sy{{ s.t }})">{{ s.x }}</span></sc-for></span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+          <sc-if value="{{ w.isAi }}" hint-placeholder-val="{{ false }}">
+            <div style="flex:1;display:flex;flex-direction:column;min-height:0">
+              <div style="display:flex;gap:6px;padding:7px 12px;flex-wrap:wrap">
+                <span style="background:var(--rs);border-radius:6px;padding:2px 8px;font:10px var(--mono);color:var(--txd)">transport: FAKE — labels itself</span>
+                <span style="background:var(--rs);border-radius:6px;padding:2px 8px;font:10px var(--mono);color:var(--txd)">keys stay in the ai-server (:8478)</span>
+              </div>
+              <div style="flex:1;overflow:auto;padding:2px 14px 8px;display:flex;flex-direction:column;gap:9px">
+                <sc-for list="{{ aiLog }}" as="a" hint-placeholder-count="2">
+                  <div style="display:flex;gap:10px">
+                    <span style="flex:none;width:30px;text-align:right;color:{{ a.whoC }};font:600 10.5px var(--mono)">{{ a.who }}</span>
+                    <div style="flex:1;min-width:0">
+                      <div style="font-size:12.5px;line-height:1.55;user-select:text">{{ a.text }}</div>
+                      <sc-if value="{{ a.hasCtx }}" hint-placeholder-val="{{ false }}">
+                        <div style="display:flex;gap:5px;margin-top:5px;flex-wrap:wrap">
+                          <sc-for list="{{ a.ctx }}" as="c"><span style="background:var(--sel);border-radius:6px;padding:1px 7px;font:10px var(--mono);color:var(--acc)">{{ c.t }}</span></sc-for>
+                        </div>
+                      </sc-if>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;gap:7px;padding:8px 12px;border-top:1px solid var(--bd)">
+                <input value="{{ aiQ }}" onChange="{{ setAiQ }}" placeholder="ask about the graph, a node, or a failure class…" style="flex:1;min-width:0;height:28px;border:1px solid var(--bd);border-radius:8px;background:var(--rs);color:var(--tx);padding:0 10px;font:12.5px var(--ui);outline:none">
+                <button onClick="{{ sendAi }}" style="height:28px;padding:0 14px;border:none;border-radius:8px;background:var(--acc);color:#fff;font:600 12px var(--ui);cursor:pointer">Ask</button>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ w.isDiag }}" hint-placeholder-val="{{ false }}">
+            <div style="flex:1;overflow:auto;padding:4px 0;min-height:0">
+              <div style="padding:4px 14px;color:var(--txd);font-size:10.5px">{{ diagNote }}</div>
+              <sc-if value="{{ diagEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:6px 14px;color:var(--txd);font-size:12px">no diagnostics received — an empty list here is the honest state</div></sc-if>
+              <sc-for list="{{ diagRows }}" as="d" hint-placeholder-count="5">
+                <div onClick="{{ d.act }}" title="open in the Editor tool window" style="display:flex;gap:9px;align-items:baseline;padding:4px 14px;cursor:pointer" style-hover="background:var(--hov)">
+                  <span style="flex:none;width:54px;text-align:center;border-radius:5px;background:{{ d.sevBg }};color:{{ d.sevC }};font:600 9.5px var(--mono);padding:2px 0">{{ d.sev }}</span>
+                  <span style="flex:none;color:var(--acc);font:11px var(--mono)">{{ d.loc }}</span>
+                  <span style="font-size:12.5px">{{ d.m }}</span>
+                  <span style="color:var(--txd);font-size:10.5px">{{ d.meta }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ w.isPins }}" hint-placeholder-val="{{ false }}">
+            <div style="flex:1;display:flex;flex-direction:column;min-height:0">
+              <div style="display:flex;gap:8px;align-items:center;padding:7px 12px;border-bottom:1px solid var(--bd)">
+                <input value="{{ pinQ }}" onChange="{{ setPinQ }}" placeholder="filter probes (id / stream / payload substring)…" style="flex:1;min-width:0;max-width:360px;height:24px;border:1px solid var(--bd);border-radius:7px;background:var(--rs);color:var(--tx);padding:0 9px;font:11px var(--ui);outline:none">
+                <span style="color:var(--txd);font-size:10.5px;white-space:nowrap">{{ pinNote }}</span>
+              </div>
+              <sc-if value="{{ pinFail }}" hint-placeholder-val="{{ false }}">
+                <div style="margin:6px 12px 0;padding:4px 10px;background:var(--bnW);border:1px solid var(--bnWb);border-radius:7px;font-size:11px"><b style="font-family:var(--mono)">hub-unreachable</b>: hub pins unavailable — showing the app-shell log only</div>
+              </sc-if>
+              <div style="flex:1;overflow:auto;padding:5px 0">
+                <sc-for list="{{ pinRows }}" as="p" hint-placeholder-count="8">
+                  <div style="display:flex;gap:8px;align-items:baseline;padding:2.5px 14px;font:10.5px var(--mono)">
+                    <span style="flex:none;width:80px;text-align:center;border-radius:5px;background:{{ p.sbg }};color:{{ p.sc }};padding:1.5px 0;font-size:9.5px">{{ p.stream }}</span>
+                    <b>{{ p.pid }}</b>
+                    <span style="color:var(--txd);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.payload }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ w.hCorner }}" hint-placeholder-val="{{ false }}"><div onPointerDown="{{ w.rzCorner }}" title="resize" style="position:absolute;right:0;bottom:0;width:15px;height:15px;cursor:nwse-resize;border-radius:9px 0 10px 0" style-hover="background:var(--sel)"></div></sc-if>
+          <sc-if value="{{ w.hRight }}" hint-placeholder-val="{{ false }}"><div onPointerDown="{{ w.rzRight }}" title="resize dock" style="position:absolute;top:0;bottom:0;right:0;width:6px;cursor:col-resize" style-hover="background:var(--sel)"></div></sc-if>
+          <sc-if value="{{ w.hLeft }}" hint-placeholder-val="{{ false }}"><div onPointerDown="{{ w.rzLeft }}" title="resize dock" style="position:absolute;top:0;bottom:0;left:0;width:6px;cursor:col-resize" style-hover="background:var(--sel)"></div></sc-if>
+          <sc-if value="{{ w.hTop }}" hint-placeholder-val="{{ false }}"><div onPointerDown="{{ w.rzTop }}" title="resize dock" style="position:absolute;left:0;right:0;top:0;height:6px;cursor:row-resize" style-hover="background:var(--sel)"></div></sc-if>
+        </div>
+      </sc-for>
+
+      <sc-if value="{{ gearOn }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;left:{{ gearX }}px;top:{{ gearY }}px;z-index:76;min-width:238px;background:var(--pop);border:1px solid var(--popbd);border-radius:10px;box-shadow:0 14px 38px rgba(0,0,0,.35);padding:6px">
+          <sc-for list="{{ gearRows }}" as="g">
+            <sc-if value="{{ g.head }}" hint-placeholder-val="{{ false }}"><div style="padding:5px 10px 3px;color:var(--txd);font:600 9.5px var(--ui);letter-spacing:.7px">{{ g.head }}</div></sc-if>
+            <sc-if value="{{ g.sep }}" hint-placeholder-val="{{ false }}"><div style="height:1px;background:var(--bd);margin:5px 8px"></div></sc-if>
+            <sc-if value="{{ g.row }}" hint-placeholder-val="{{ true }}">
+              <div onClick="{{ g.act }}" title="{{ g.tip }}" style="display:flex;gap:8px;align-items:center;height:26px;padding:0 12px 0 8px;border-radius:6px;cursor:{{ g.cur }};color:{{ g.col }}" style-hover="background:{{ g.hbg }}">
+                <span style="width:13px;color:var(--acc);font-weight:700">{{ g.chk }}</span>
+                <span style="flex:1;white-space:nowrap">{{ g.label }}</span>
+              </div>
+            </sc-if>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ dzOn }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;left:{{ dzX }}px;top:{{ dzY }}px;width:{{ dzW }}px;height:{{ dzH }}px;z-index:70;pointer-events:none;background:var(--sel);border:2px dashed var(--acc);border-radius:12px"></div>
+      </sc-if>
+    </div>
+  </div>
+  </sc-if>
+  <sc-if value="{{ welcome }}" hint-placeholder-val="{{ false }}"><div></div></sc-if>
+
+  <div style="display:flex;align-items:center;gap:2px;height:26px;border-top:1px solid var(--bd);padding:0 12px;font:11.5px var(--ui);color:var(--txd);overflow:hidden">
+    <sc-for list="{{ crumbs }}" as="c" hint-placeholder-count="0">
+      <span style="display:inline-flex;align-items:center;padding:2px 4px;border-radius:5px;white-space:nowrap">{{ c.t }}</span>
+      <span style="opacity:.55;font-size:9.5px">{{ c.sep }}</span>
+    </sc-for>
+    <span style="flex:1"></span>
+    <sc-for list="{{ segs }}" as="s" hint-placeholder-count="5">
+      <span onClick="{{ s.act }}" title="{{ s.tip }}" style="display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:6px;cursor:{{ s.cur }};color:{{ s.col }};font-family:{{ s.ff }};white-space:nowrap" style-hover="background:var(--hov)">
+        <sc-if value="{{ s.dot }}" hint-placeholder-val="{{ false }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ s.dot }}"></span></sc-if>
+        {{ s.t }}
+      </span>
+    </sc-for>
+    <span style="font-family:var(--mono);white-space:nowrap;padding-left:6px">{{ selSeg }}</span>
+  </div>
+
+  <sc-if value="{{ dlgPrefs }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:95;background:rgba(15,16,20,.4);display:flex;align-items:center;justify-content:center">
+      <div style="width:720px;max-width:92%;height:480px;max-height:88%;display:flex;flex-direction:column;background:var(--is);border:1px solid var(--popbd);box-shadow:0 30px 70px rgba(0,0,0,.35);border-radius:14px;overflow:hidden">
+        <div style="display:flex;align-items:center;height:44px;padding:0 18px;border-bottom:1px solid var(--bd)">
+          <b style="font-size:14px">Settings</b><span style="margin-left:10px;color:var(--txd);font-size:11.5px">changes apply live in this prototype · full pages live in 1a/1b</span>
+          <span style="flex:1"></span><button onClick="{{ closeDlg }}" style="border:none;background:none;color:var(--txd);cursor:pointer;font-size:15px" style-hover="color:var(--tx)">✕</button>
+        </div>
+        <div style="flex:1;display:flex;min-height:0">
+          <div style="width:200px;flex:none;border-right:1px solid var(--bd);display:flex;flex-direction:column;padding:10px 8px;gap:2px">
+            <sc-for list="{{ navRows }}" as="n" hint-placeholder-count="2">
+              <div onClick="{{ n.act }}" style="padding:7px 12px;border-radius:7px;cursor:pointer;background:{{ n.bg }};font-size:12.5px" style-hover="background:var(--hov)">{{ n.label }}</div>
+            </sc-for>
+          </div>
+          <div style="flex:1;overflow:auto;padding:20px 24px">
+            <sc-if value="{{ pgApp }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;gap:18px">
+                <div><b style="font-size:13px">Theme</b>
+                  <div style="display:flex;gap:10px;margin-top:9px">
+                    <sc-for list="{{ themeRows }}" as="t">
+                      <button onClick="{{ t.act }}" style="height:64px;width:128px;border-radius:9px;cursor:pointer;border:{{ t.bd }};background:{{ t.bg }};color:{{ t.col }};font:12.5px var(--ui)">{{ t.label }}</button>
+                    </sc-for>
+                  </div>
+                </div>
+                <div><b style="font-size:13px">Accent</b>
+                  <div style="display:flex;gap:10px;align-items:center;margin-top:9px">
+                    <input type="color" value="{{ acHex }}" onChange="{{ accPick }}" title="pick any accent color" style="width:40px;height:32px;border:1px solid var(--bd);border-radius:7px;background:var(--rs);padding:2px;cursor:pointer">
+                    <input value="{{ acHex }}" onChange="{{ accHexSet }}" style="width:86px;height:28px;border:1px solid var(--bd);border-radius:7px;background:var(--rs);color:var(--tx);padding:0 9px;font:12px var(--mono);outline:none">
+                    <span style="width:1px;height:22px;background:var(--bd)"></span>
+                    <sc-for list="{{ swatches }}" as="v">
+                      <button onClick="{{ v.act }}" title="{{ v.c }}" style="width:26px;height:26px;border-radius:50%;cursor:pointer;background:{{ v.c }};border:none;box-shadow:{{ v.ring }}"></button>
+                    </sc-for>
+                  </div>
+                  <div style="color:var(--txd);font-size:11.5px;margin-top:7px">any color you like — verdict fills (green · amber · red · blue · unknown) stay canonical: they are proof semantics, never theme</div>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ pgAn }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:18px">
+                <div><b style="font-size:13px">Pyright</b>
+                  <div style="display:flex;flex-direction:column;gap:7px;margin-top:9px">
+                    <sc-for list="{{ pyRows }}" as="r">
+                      <div onClick="{{ r.act }}" style="display:flex;gap:9px;align-items:center;cursor:pointer">
+                        <span style="width:15px;height:15px;border-radius:50%;border:1.5px solid var(--bd);display:flex;align-items:center;justify-content:center"><span style="width:8px;height:8px;border-radius:50%;background:{{ r.dot }}"></span></span>
+                        <span style="font-size:12.5px">{{ r.label }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+                <div onClick="{{ autoAct }}" style="display:flex;gap:9px;align-items:center;cursor:pointer">
+                  <span style="width:15px;height:15px;border-radius:4px;border:1.5px solid var(--bd);background:{{ autoBg }};color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center">{{ autoChk }}</span>
+                  <span style="font-size:12.5px">Re-analyze automatically on save</span>
+                </div>
+                <div><b style="font-size:13px">Graph node cap</b>
+                  <div style="display:flex;gap:11px;align-items:center;margin-top:9px">
+                    <button onClick="{{ capMinus }}" style="width:26px;height:26px;border:1px solid var(--bd);border-radius:7px;background:transparent;color:var(--tx);cursor:pointer">−</button>
+                    <b style="font-family:var(--mono)">{{ capV }}</b>
+                    <button onClick="{{ capPlus }}" style="width:26px;height:26px;border:1px solid var(--bd);border-radius:7px;background:transparent;color:var(--tx);cursor:pointer">+</button>
+                    <span style="color:var(--txd);font-size:11.5px">caps stay probed + bannered by the cell, never silent</span>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:9px;padding:12px 18px;border-top:1px solid var(--bd)">
+          <button onClick="{{ closeDlg }}" style="height:28px;padding:0 15px;border:1px solid var(--bd);border-radius:7px;background:transparent;color:var(--tx);font:12.5px var(--ui);cursor:pointer" style-hover="background:var(--hov)">Cancel</button>
+          <button onClick="{{ closeDlg }}" style="height:28px;padding:0 17px;border:none;border-radius:7px;background:var(--acc);color:#fff;font:600 12.5px var(--ui);cursor:pointer">OK</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ dlgAbout }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeDlg }}" style="position:absolute;inset:0;z-index:95;background:rgba(15,16,20,.4);display:flex;align-items:center;justify-content:center">
+      <div style="width:440px;background:var(--is);border:1px solid var(--popbd);box-shadow:0 30px 70px rgba(0,0,0,.35);border-radius:14px;padding:28px 30px;display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;gap:15px;align-items:center">
+          <svg width="46" height="46" viewBox="0 0 16 16"><circle cx="4" cy="3.5" r="2.1" fill="var(--acc)"></circle><circle cx="12" cy="6" r="2.1" fill="#2E7D32"></circle><circle cx="6.5" cy="12.5" r="2.1" fill="#C62828"></circle><path d="M5.5 5L10.5 5.8M5 5.5L6.2 10.6M11 7.8L7.6 11.2" stroke="var(--txd)" stroke-width="1.1" fill="none"></path></svg>
+          <div><div style="font:600 18px var(--ui)">ProofGraph</div><div style="color:var(--txd);font-size:12px">2026.2 · assembly build PG-262.SHELL · 1c graph-first</div></div>
+        </div>
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:5px;font:11.5px var(--mono);color:var(--txd)">
+          <span>schema pin: <b style="color:var(--tx)">{{ hVer }}/{{ hHash }}…</b> (GET /health — never hardcoded)</span>
+          <span>walls: {{ hWalls }}</span>
+          <span>runtime: hub 127.0.0.1:8477 · ai-server 127.0.0.1:8478</span>
+          <span>tool windows: Dock Pinned · Dock Unpinned · Undock · Float (Window mode needs the desktop shell)</span>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:9px;margin-top:14px">
+          <button onClick="{{ aboutCopy }}" style="height:28px;padding:0 13px;border:1px solid var(--bd);border-radius:7px;background:transparent;color:var(--tx);font:12.5px var(--ui);cursor:pointer" style-hover="background:var(--hov)">Copy</button>
+          <button onClick="{{ closeDlg }}" style="height:28px;padding:0 17px;border:none;border-radius:7px;background:var(--acc);color:#fff;font:600 12.5px var(--ui);cursor:pointer">Close</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ dlgRoots }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:95;background:rgba(15,16,20,.4);display:flex;align-items:center;justify-content:center">
+      <div style="width:480px;background:var(--is);border:1px solid var(--popbd);box-shadow:0 30px 70px rgba(0,0,0,.35);border-radius:14px;overflow:hidden">
+        <div style="display:flex;align-items:center;height:44px;padding:0 18px;border-bottom:1px solid var(--bd)"><b style="font-size:14px">Choose declared roots</b><span style="flex:1"></span><button onClick="{{ closeDlg }}" style="border:none;background:none;color:var(--txd);cursor:pointer;font-size:15px">✕</button></div>
+        <div style="padding:11px 18px;color:var(--txd);font-size:12px">roots are DECLARED, never inferred — candidates from hub /fs/roots-candidates</div>
+        <div style="display:flex;flex-direction:column;padding:0 10px 10px">
+          <sc-for list="{{ rootRows }}" as="r" hint-placeholder-count="4">
+            <div onClick="{{ r.act }}" style="display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:8px;cursor:pointer" style-hover="background:var(--hov)">
+              <span style="width:15px;height:15px;border-radius:4px;border:1.5px solid var(--bd);background:{{ r.bg }};color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center">{{ r.chk }}</span>
+              <span style="font-family:var(--mono);font-size:12.5px">{{ r.p }}</span>
+              <span style="flex:1"></span><span style="color:var(--txd);font-size:11.5px">{{ r.note }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:9px;padding:12px 18px;border-top:1px solid var(--bd)">
+          <button onClick="{{ closeDlg }}" style="height:28px;padding:0 15px;border:1px solid var(--bd);border-radius:7px;background:transparent;color:var(--tx);font:12.5px var(--ui);cursor:pointer" style-hover="background:var(--hov)">Cancel</button>
+          <button onClick="{{ applyRoots }}" style="height:28px;padding:0 17px;border:none;border-radius:7px;background:var(--acc);color:#fff;font:600 12.5px var(--ui);cursor:pointer">Analyze</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ dlgGap }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:95;background:rgba(15,16,20,.4);display:flex;align-items:center;justify-content:center">
+      <div style="width:640px;max-width:94%;background:var(--is);border:1px solid var(--popbd);box-shadow:0 30px 70px rgba(0,0,0,.35);border-radius:14px;overflow:hidden">
+        <div style="display:flex;align-items:center;height:44px;padding:0 18px;border-bottom:1px solid var(--bd)"><b style="font-size:14px">Gap report</b><span style="margin-left:10px;color:var(--txd);font-size:11.5px">from the SERVED /analysis — the shell never recomputes it</span><span style="flex:1"></span><button onClick="{{ closeDlg }}" style="border:none;background:none;color:var(--txd);cursor:pointer;font-size:15px">✕</button></div>
+        <div style="padding:8px 18px 4px">
+          <div style="display:flex;gap:8px;padding:5px 0;color:var(--txd);font:600 10px var(--ui);letter-spacing:.5px;border-bottom:1px solid var(--bd)"><span style="width:225px">NODE</span><span style="width:85px">DECLARED</span><span style="flex:1">DERIVED (worst-case-wins)</span><span style="width:72px">STATE</span></div>
+          <sc-for list="{{ gapRows }}" as="g" hint-placeholder-count="5">
+            <div style="display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--bd);align-items:baseline">
+              <span style="width:225px;font:11px var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ g.n }}</span>
+              <span style="width:85px;font-size:11.5px;color:var(--txd)">{{ g.d }}</span>
+              <span style="flex:1;font:11px var(--mono)">{{ g.w }}</span>
+              <span style="width:72px;font:600 10px var(--ui);color:{{ g.okc }}">{{ g.ok }}</span>
+            </div>
+          </sc-for>
+          <div style="padding:9px 0;color:var(--txd);font:10.5px var(--mono)">order: {{ worstOrder }} · unrecognized token ranks WORST and renders unknown</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ dlgOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:95;background:rgba(15,16,20,.4);display:flex;align-items:flex-start;justify-content:center;padding-top:70px">
+      <div style="width:560px;background:var(--is);border:1px solid var(--popbd);box-shadow:0 30px 70px rgba(0,0,0,.35);border-radius:14px;overflow:hidden">
+        <div style="padding:12px 14px;border-bottom:1px solid var(--bd)">
+          <input value="{{ openQ }}" onChange="{{ setOpenQ }}" placeholder="{{ openPh }}" style="width:100%;box-sizing:border-box;height:32px;border:1px solid var(--bd);border-radius:8px;background:var(--rs);color:var(--tx);padding:0 11px;font:13px var(--ui);outline:none">
+        </div>
+        <div style="max-height:320px;overflow:auto;padding:6px">
+          <sc-for list="{{ openRows }}" as="o" hint-placeholder-count="6">
+            <div onClick="{{ o.act }}" style="display:flex;gap:10px;align-items:center;padding:7px 12px;border-radius:7px;cursor:pointer" style-hover="background:var(--hov)">
+              <span style="width:18px;height:16px;border-radius:4px;background:{{ o.icbg }};color:{{ o.icc }};font:600 8.5px var(--mono);display:flex;align-items:center;justify-content:center">{{ o.ic }}</span>
+              <span style="font-family:var(--mono);font-size:12.5px">{{ o.p }}</span>
+              <span style="flex:1"></span><span style="color:var(--txd);font-size:10.5px">{{ o.kind }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="padding:9px 14px;border-top:1px solid var(--bd);color:var(--txd);font-size:11px">server-side browse — hub /fs/list, path-jailed · node hits select in the graph · Esc to close</div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600,&quot;height&quot;:1000},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;dark&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Shell&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#7C6FD4&quot;,&quot;#3574D4&quot;,&quot;#2FA080&quot;,&quot;#D4703A&quot;],&quot;default&quot;:&quot;#7C6FD4&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Shell&quot;},&quot;view&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ide&quot;,&quot;welcome&quot;],&quot;default&quot;:&quot;ide&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Shell&quot;}}">
+class Component extends DCLogic {
+  state = {ready:!!window.PGDATA,theme:null,accent:null,mode:null,menu:null,dlg:null,openMode:'file',page:'app',barOn:false,projPop:false,setPop:false,runPop:false,accDraft:null,
+    wins:{project:{open:true,mode:'dock',side:'left',pinned:true,x:90,y:70,w:320,h:380,z:31},
+          editor:{open:true,mode:'float',side:'right',pinned:true,x:640,y:40,w:620,h:430,z:32},
+          ai:{open:false,mode:'float',side:'right',pinned:true,x:430,y:210,w:520,h:330,z:33},
+          diag:{open:true,mode:'dock',side:'bottom',pinned:true,x:260,y:320,w:560,h:300,z:34},
+          pins:{open:false,mode:'dock',side:'bottom',pinned:false,x:300,y:360,w:600,h:320,z:35}},
+    sizeL:296,sizeR:340,sizeB:204,gear:null,dropHint:null,mainW:0,mainH:0,
+    tabs:['moatpkg/core.py','moatpkg/api.py'],act:'moatpkg/core.py',dirty:{'moatpkg/core.py':1},
+    exp:{'moatpkg':1},sel:'moatpkg.api.resolve_imports',hub:true,pyright:'live',autoRe:true,cap:500,
+    banners:[],zoom:.7,panX:340,panY:60,pinQ:'',setQ:'',openQ:'',aiQ:'',aiLog:null,hl:0,hlF:null,legend:false,rootSel:null};
+  gref = React.createRef();
+  _zTop = 40;
+  componentDidMount(){
+    if(!this.state.ready){ this._iv=setInterval(()=>{ if(window.PGDATA){ clearInterval(this._iv); this.setState({ready:true},()=>this.fit()); } },40); }
+    this._esc=(e)=>{ if(e.key==='Escape') this.setState({menu:null,dlg:null,projPop:false,setPop:false,runPop:false,gear:null}); };
+    document.addEventListener('keydown',this._esc);
+    this._ro=new ResizeObserver((es)=>{ const r=es[0].contentRect; const first=!this.state.mainW;
+      this.setState({mainW:r.width,mainH:r.height},()=>{ if(first) this.fit(); }); });
+    this._obs();
+  }
+  componentDidUpdate(){ this._obs(); }
+  _obs(){ const el=this.gref.current; if(el&&el!==this._obsEl){ if(this._obsEl) this._ro.unobserve(this._obsEl); this._ro.observe(el); this._obsEl=el; } }
+  componentWillUnmount(){ clearInterval(this._iv); document.removeEventListener('keydown',this._esc); if(this._ro) this._ro.disconnect(); }
+  th(){ return this.state.theme ?? this.props.theme ?? 'dark'; }
+  ac(){ return this.state.accent ?? this.props.accent ?? '#7C6FD4'; }
+  md(){ return this.state.mode ?? (this.props.view==='welcome' ? 'welcome' : 'sample'); }
+  ban(sev,fc,d){ this.setState(s=>({banners:[...s.banners.slice(-2),{sev,fc,d}]})); }
+  run(fn){ return ()=>{ this.setState({menu:null,projPop:false,setPop:false,runPop:false,gear:null}); if(fn) fn(); }; }
+  setWin(id,patch){ this.setState(s=>({wins:{...s.wins,[id]:{...s.wins[id],...patch}}})); }
+  toggleWin(id){ this.setState(s=>({wins:{...s.wins,[id]:{...s.wins[id],open:!s.wins[id].open,z:++this._zTop}}})); }
+  insets(){ const S=this.state,w=S.wins; const on=(sd)=>Object.keys(w).some(k=>w[k].open&&w[k].mode==='dock'&&w[k].side===sd);
+    return {l:on('left')?S.sizeL+14:0, r:on('right')?S.sizeR+14:0, b:on('bottom')?S.sizeB+14:0}; }
+  toggleHub = ()=>{
+    const on=!this.state.hub;
+    this.setState({hub:on,banners:[],menu:null});
+    if(!on) this.ban('error','hub-unreachable','GET /graph failed: fetch refused \u2014 start the hub: python hub/serve_app.py (HTTP 8477). Every hub failure renders its NAMED class here, never a blank pane.');
+    else this.ban('info','hub-restored','reconnected \u2014 /graph + /analysis + /workspace refetched: 14 nodes \u00b7 18 edges \u00b7 3 leads served, 11 verdicts applied');
+  };
+  reanalyze = ()=>{
+    if(!this.state.hub) return this.ban('error','hub-unreachable','POST /analyze failed: fetch refused \u2014 start the hub: python hub/serve_app.py (HTTP 8477)');
+    if(this.md()==='empty'){ this.openSample(); this.ban('info','shell.analyze.ok','declared roots [moatpkg, tests] \u2192 14 nodes \u00b7 18 edges \u00b7 3 leads served; 11 verdicts applied (3 unverdicted stay grey)'); return; }
+    this.ban('info','shell.analyze.ok','re-applied: 11 verdicts \u2014 3 unverdicted stay grey (pending is honest, never green)');
+  };
+  save = ()=>{
+    const t=this.state.act;
+    if(!t||!this.state.dirty[t]||!this.state.hub) return;
+    const d={...this.state.dirty}; delete d[t]; this.setState({dirty:d});
+    if(this.state.autoRe) this.ban('info','shell.save.ok',t+' \u2192 PUT /fs/file (path-jailed) \u00b7 auto-reanalyze-on-save ran (preference)');
+  };
+  openFile(p,line){
+    if(!window.PGDATA.CODE[p]) return;
+    const tabs=this.state.tabs.includes(p)?this.state.tabs:[...this.state.tabs,p];
+    this.setState(s=>({tabs,act:p,menu:null,dlg:null,hl:line||0,hlF:line?p:null,
+      wins:{...s.wins,editor:{...s.wins.editor,open:true,z:++this._zTop}}}));
+  }
+  closeTab(p){
+    if(this.state.dirty[p]&&!window.confirm(p+' has unsaved changes \u2014 close and discard?')) return;
+    const tabs=this.state.tabs.filter(x=>x!==p);
+    const d={...this.state.dirty}; delete d[p];
+    this.setState({tabs,dirty:d,act:this.state.act===p?(tabs[tabs.length-1]||null):this.state.act});
+  }
+  openSample = ()=>this.setState({mode:'sample',tabs:['moatpkg/core.py','moatpkg/api.py'],act:'moatpkg/core.py',dirty:{'moatpkg/core.py':1},exp:{'moatpkg':1},banners:[],sel:null,menu:null,projPop:false,hub:true});
+  openEmpty = ()=>{ this.setState({mode:'empty',tabs:[],act:null,dirty:{},sel:null,banners:[],menu:null,projPop:false}); this.ban('info','workspace-not-open','empty workspace declared \u2014 run Analysis \u203a Run analyze (declared roots) to serve a graph; nothing renders green until a real check says so'); };
+  closeProject = ()=>this.setState({mode:'welcome',tabs:[],act:null,dirty:{},sel:null,banners:[],menu:null,dlg:null,projPop:false});
+  defaultWins(){ return {project:{open:true,mode:'dock',side:'left',pinned:true,x:90,y:70,w:320,h:380,z:31},
+    editor:{open:true,mode:'float',side:'right',pinned:true,x:640,y:40,w:620,h:430,z:32},
+    ai:{open:false,mode:'float',side:'right',pinned:true,x:430,y:210,w:520,h:330,z:33},
+    diag:{open:true,mode:'dock',side:'bottom',pinned:true,x:260,y:320,w:560,h:300,z:34},
+    pins:{open:false,mode:'dock',side:'bottom',pinned:false,x:300,y:360,w:600,h:320,z:35}}; }
+  resetLayout = ()=>this.setState({wins:this.defaultWins(),sizeL:296,sizeR:340,sizeB:204,gear:null,menu:null},()=>this.fit());
+  fit = ()=>{
+    const D=window.PGDATA; if(!D) return;
+    const MW=this.state.mainW||1500, MH=this.state.mainH||880, ins=this.insets();
+    const uw=Math.max(320,MW-ins.l-ins.r), uh=Math.max(260,MH-ins.b);
+    const z=Math.max(.2,Math.min(1.3,Math.min(uw/(D.GW+140),uh/(D.GH+140))));
+    this.setState({zoom:z,panX:ins.l+(uw-D.GW*z)/2,panY:Math.max(10,(uh-D.GH*z)/2)});
+  };
+  panDown = (e)=>{
+    const S=this.state; let wins=null;
+    Object.keys(S.wins).forEach(k=>{ const w=S.wins[k];
+      if(w.open&&((w.mode==='dock'&&!w.pinned)||w.mode==='undock')){ wins=wins||{...S.wins}; wins[k]={...w,open:false}; } });
+    if(wins||S.gear||S.menu||S.projPop||S.setPop||S.runPop)
+      this.setState(Object.assign({gear:null,menu:null,projPop:false,setPop:false,runPop:false},wins?{wins}:{}));
+    if(e.target.closest('[data-gnode]')||e.target.closest('button')) return;
+    e.preventDefault();
+    const sx=e.clientX-S.panX, sy=e.clientY-S.panY;
+    const mv=(ev)=>this.setState({panX:ev.clientX-sx,panY:ev.clientY-sy});
+    const up=()=>{ window.removeEventListener('pointermove',mv); window.removeEventListener('pointerup',up); };
+    window.addEventListener('pointermove',mv); window.addEventListener('pointerup',up);
+  };
+  winDrag(id){ return (e)=>{
+    if(e.target.closest('[data-nodrag]')) return;
+    e.preventDefault();
+    const el=this.gref.current; if(!el) return;
+    const rect=el.getBoundingClientRect();
+    const w0={...this.state.wins[id]}; const sx=e.clientX, sy=e.clientY;
+    let started=false;
+    const grabX=Math.min(w0.w-60,170);
+    let dragZ=0;
+    const mv=(ev)=>{
+      if(!started&&Math.abs(ev.clientX-sx)+Math.abs(ev.clientY-sy)<5) return;
+      if(!started){ started=true; dragZ=++this._zTop; }
+      const px=ev.clientX-rect.left, py=ev.clientY-rect.top;
+      let hint=null;
+      if(px<70) hint='left'; else if(px>rect.width-70) hint='right'; else if(py>rect.height-80) hint='bottom';
+      this.setState(s=>({dropHint:hint,gear:null,
+        wins:{...s.wins,[id]:{...s.wins[id],mode:'float',z:dragZ,x:px-grabX,y:Math.max(2,py-14)}}}));
+    };
+    const up=()=>{
+      window.removeEventListener('pointermove',mv); window.removeEventListener('pointerup',up);
+      const hint=this.state.dropHint;
+      if(started&&hint) this.setWin(id,{mode:'dock',side:hint,pinned:true});
+      this.setState({dropHint:null});
+    };
+    window.addEventListener('pointermove',mv); window.addEventListener('pointerup',up);
+  };}
+  winResize(id,kind){ return (e)=>{
+    e.preventDefault(); e.stopPropagation();
+    const S=this.state; const s0={w:S.wins[id].w,h:S.wins[id].h,sl:S.sizeL,sr:S.sizeR,sb:S.sizeB};
+    const sx=e.clientX, sy=e.clientY;
+    const mv=(ev)=>{ const dx=ev.clientX-sx, dy=ev.clientY-sy;
+      if(kind==='corner') this.setWin(id,{w:Math.max(280,s0.w+dx),h:Math.max(170,s0.h+dy)});
+      else if(kind==='sizeL') this.setState({sizeL:Math.max(220,Math.min(540,s0.sl+dx))});
+      else if(kind==='sizeR') this.setState({sizeR:Math.max(240,Math.min(640,s0.sr-dx))});
+      else this.setState({sizeB:Math.max(140,Math.min(460,s0.sb-dy))});
+    };
+    const up=()=>{ window.removeEventListener('pointermove',mv); window.removeEventListener('pointerup',up); };
+    window.addEventListener('pointermove',mv); window.addEventListener('pointerup',up);
+  };}
+  gearRowsFor(id){
+    const w=this.state.wins[id];
+    const set=(patch)=>()=>{ this.setState({gear:null}); this.setWin(id,Object.assign({},patch,patch.mode==='float'?{z:++this._zTop}:{})); };
+    const row=(label,chk,en,tip,act)=>({row:true,label,chk:chk?'\u2713':'',tip:tip||'',
+      col:en?'var(--tx)':'var(--txd)',cur:en?'pointer':'default',hbg:en?'var(--sel)':'transparent',act:en?act:()=>{}});
+    const docked=w.mode!=='float';
+    return [
+      {head:'VIEW MODE'},
+      row('Dock Pinned',w.mode==='dock'&&w.pinned,true,'attached to the edge, always visible',set({mode:'dock',pinned:true})),
+      row('Dock Unpinned',w.mode==='dock'&&!w.pinned,true,'auto-hides when you click into the canvas \u2014 the rail icon restores it',set({mode:'dock',pinned:false})),
+      row('Undock',w.mode==='undock',true,'detaches from the dock stack and overlays the canvas at its edge; hides on canvas focus',set({mode:'undock'})),
+      row('Float',w.mode==='float',true,'free window \u2014 drag anywhere; drop on an edge zone to re-dock',set({mode:'float'})),
+      row('Window',false,false,'a separate OS window needs the desktop shell \u2014 the browser mock keeps every surface in-frame',null),
+      {head:'MOVE TO'},
+      row('Left',docked&&w.side==='left',!(docked&&w.side==='left'),'dock into the left edge',set({mode:'dock',side:'left'})),
+      row('Right',docked&&w.side==='right',!(docked&&w.side==='right'),'dock into the right edge',set({mode:'dock',side:'right'})),
+      row('Bottom',docked&&w.side==='bottom',!(docked&&w.side==='bottom'),'dock into the bottom edge',set({mode:'dock',side:'bottom'})),
+      {sep:true},
+      row('Hide',false,true,'the rail icon restores it',()=>this.setState(s=>({gear:null,wins:{...s.wins,[id]:{...s.wins[id],open:false}}}))),
+    ];
+  }
+  dl(name,obj){
+    try{
+      const b=new Blob([JSON.stringify(obj,null,1)],{type:'application/json'});
+      const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download=name; a.click(); URL.revokeObjectURL(u);
+      this.ban('info','shell.export.ok',name+' \u2014 served bytes verbatim, never re-serialized (demo: local corpus)');
+    }catch(e){ this.ban('error','export-failed',String(e)); }
+  }
+  ext(n){ const D=window.PGDATA; const e=n.slice(n.lastIndexOf('.')+1); return D.EXTC[e]||['\u00b7','transparent','var(--txd)']; }
+  mkMenus(){
+    const S=this.state, W=S.wins, md=this.md(), hub=S.hub, served=md==='sample'&&hub;
+    const actT=S.act, dirty=actT&&S.dirty[actT];
+    const fsWhy='hub /fs endpoints unavailable (hub-unreachable) \u2014 explorer and file ops are disabled with this reason';
+    const edWhy='Monaco editor wall is not mounted in this shell mock (headless host \u2014 same keyed dispose+mount path)';
+    const mk=(label,o)=>Object.assign({label,en:true,sep:false,chk:'',short:''},o);
+    const menus=[
+      {id:'file',label:'File',items:[
+        mk('Open folder\u2026',{en:hub,why:fsWhy,a:()=>this.setState({dlg:'open',openMode:'folder',openQ:''})}),
+        mk('Open file\u2026',{en:hub,why:fsWhy,a:()=>this.setState({dlg:'open',openMode:'file',openQ:''})}),
+        mk('Save',{short:'Ctrl+S',en:!!(dirty&&hub),why:!actT?'no file tab is open':!hub?fsWhy:'no unsaved changes in the active tab',a:this.save}),
+        mk('Re-analyze',{sep:true,a:this.reanalyze}),
+        mk('Export graph JSON',{en:served,why:'no /graph envelope served yet \u2014 nothing to export (export writes the SERVED bytes verbatim)',a:()=>this.dl('proofgraph-graph.json',{schema:'v5.2',nodes:window.PGDATA.NODES.map(n=>n.id),edges:window.PGDATA.counts.edges,leads:window.PGDATA.counts.leads})}),
+        mk('Export analysis JSON',{en:served,why:'no computed /analysis served \u2014 pending is never exported as green',a:()=>this.dl('proofgraph-analysis.json',{applied:11,unverdicted:3,gapAnalysis:window.PGDATA.GAPS})}),
+        mk('Close project',{sep:true,a:this.closeProject}),
+      ]},
+      {id:'edit',label:'Edit',items:[
+        mk('Undo',{short:'Ctrl+Z',en:false,why:edWhy}), mk('Redo',{short:'Ctrl+Y',en:false,why:edWhy}),
+        mk('Find',{short:'Ctrl+F',sep:true,en:false,why:edWhy}), mk('Replace',{short:'Ctrl+H',en:false,why:edWhy}),
+      ]},
+      {id:'view',label:'View',items:[
+        mk('Project window',{chk:W.project.open?'\u2713':'',a:()=>this.toggleWin('project')}),
+        mk('Editor window',{chk:W.editor.open?'\u2713':'',a:()=>this.toggleWin('editor')}),
+        mk('AI outlet window',{chk:W.ai.open?'\u2713':'',a:()=>this.toggleWin('ai')}),
+        mk('Diagnostics window',{chk:W.diag.open?'\u2713':'',a:()=>this.toggleWin('diag')}),
+        mk('Pins console window',{chk:W.pins.open?'\u2713':'',a:()=>this.toggleWin('pins')}),
+        mk('Main menu bar',{chk:S.barOn?'\u2713':'',a:()=>this.setState({barOn:!S.barOn})}),
+        mk('Light theme',{sep:true,chk:this.th()==='light'?'\u2713':'',a:()=>this.setState({theme:'light'})}),
+        mk('Dark theme',{chk:this.th()==='dark'?'\u2713':'',a:()=>this.setState({theme:'dark'})}),
+        mk('Zoom graph to fit',{sep:true,en:served,why:'graph wall not mounted (no served envelope)',a:this.fit}),
+        mk('Reset window layout',{a:this.resetLayout}),
+        mk('Settings\u2026',{short:'Ctrl+,',sep:true,a:()=>this.setState({dlg:'prefs'})}),
+      ]},
+      {id:'analysis',label:'Analysis',items:[
+        mk('Run analyze',{a:this.reanalyze}),
+        mk('Choose declared roots\u2026',{en:hub,why:'hub unreachable \u2014 /fs/roots-candidates cannot answer',a:()=>this.setState({dlg:'roots'})}),
+        mk('Pyright: live',{sep:true,chk:S.pyright==='live'?'\u2713':'',a:()=>this.setState({pyright:'live'})}),
+        mk('Pyright: none (cross-module calls stay LEADS \u2014 honest)',{chk:S.pyright==='none'?'\u2713':'',a:()=>this.setState({pyright:'none'})}),
+        mk('Show gap report',{sep:true,en:served,why:'gapAnalysis comes from the SERVED /analysis \u2014 not served; the shell never recomputes it',a:()=>this.setState({dlg:'gap'})}),
+      ]},
+      {id:'help',label:'Help',items:[
+        mk('About ProofGraph',{a:()=>this.setState({dlg:'about'})}),
+        mk('Simulate hub outage (demo)',{sep:true,chk:!S.hub?'\u2713':'',a:this.toggleHub}),
+      ]},
+    ];
+    return menus.map(m=>({label:m.label,open:S.menu===m.id,
+      bg:S.menu===m.id?'var(--hov)':'transparent',
+      tg:()=>this.setState({menu:S.menu===m.id?null:m.id,projPop:false,setPop:false,runPop:false,gear:null}),
+      hv:()=>{ if(S.menu&&S.menu!==m.id) this.setState({menu:m.id}); },
+      items:m.items.map(it=>({label:it.label,sep:it.sep,chk:it.chk,short:it.short,
+        tip:it.en?(it.short||''):(it.why||''),
+        col:it.en?'var(--tx)':'var(--txd)',cur:it.en?'pointer':'default',hbg:it.en?'var(--sel)':'transparent',
+        act:it.en?this.run(it.a):()=>{}}))}));
+  }
+  renderVals(){
+    const S=this.state, D=window.PGDATA, ready=S.ready&&!!D;
+    const theme=this.th(), ac=this.ac();
+    const noop=()=>{};
+    const base={theme,ac,ready,welcome:false,notWelcome:true,barOn:S.barOn,projPop:S.projPop,setPop:S.setPop,runPop:S.runPop,
+      banners:[],menus:[],setItems:[],runItems:[],recents:[],crumbs:[],segs:[],selSeg:'',projSub:'',
+      visWins:[],gearOn:false,gearX:0,gearY:0,gearRows:[],dzOn:false,dzX:0,dzY:0,dzW:0,dzH:0,
+      treeRows:[],wsNote:null,wsNoteFc:'',wsNoteCol:'var(--txd)',tabsR:[],noTabs:false,edNote:null,edOn:false,codeLines:[],
+      aiLog:[],aiQ:'',diagRows:[],diagNote:'',diagEmpty:false,pinRows:[],pinQ:'',pinNote:'',pinFail:false,
+      gnodes:[],edgeD:'',leadD:'',selD:'',gNote:null,gOn:false,gHint:'',zoomPct:'',zoom:S.zoom,panX:S.panX,panY:S.panY,gref:this.gref,
+      ovR:14,ovL:14,ovB:14,legendOpen:false,legTw:'\u25b8',worstOrder:'',
+      insp:false,inspName:'',inspId:'',inspFill:'',inspFillBg:'transparent',inspRing:'',inspRingC:'#9E9E9E',inspRingStyle:'solid',inspWorst:'',inspLoc:'',
+      projRBg:'transparent',projRIc:'var(--txd)',edRBg:'transparent',edRIc:'var(--txd)',aiRBg:'transparent',aiRIc:'var(--txd)',diagRBg:'transparent',diagRIc:'var(--txd)',pinRBg:'transparent',pinRIc:'var(--txd)',
+      dlgPrefs:false,dlgAbout:false,dlgRoots:false,dlgGap:false,dlgOpen:false,
+      navRows:[],pgApp:true,pgAn:false,themeRows:[],swatches:[],pyRows:[],rootRows:[],gapRows:[],openRows:[],
+      setQ:'',openQ:'',openPh:'',acHex:'#7C6FD4',capV:S.cap,autoBg:'transparent',autoChk:'',
+      hVer:'',hHash:'',hWalls:'',verText:'',hubDot:'#3FB27F',hubTxt:'hub :8477',
+      barTg:()=>this.setState({barOn:!this.state.barOn}),
+      projTg:()=>this.setState({projPop:!this.state.projPop,menu:null,setPop:false,runPop:false,gear:null}),
+      setTg:()=>this.setState({setPop:!this.state.setPop,runPop:false,menu:null,projPop:false,gear:null}),
+      runTg:()=>this.setState({runPop:!this.state.runPop,setPop:false,menu:null,projPop:false,gear:null}),
+      closeDlg:()=>this.setState({dlg:null}),reAct:this.reanalyze,searchAct:noop,setAct:()=>this.setState({dlg:'prefs'}),
+      hubAct:this.toggleHub,wSample:this.openSample,wEmpty:this.openEmpty,closeProjAct:this.run(this.closeProject),
+      twProj:noop,twEd:noop,twAi:noop,twDiag:noop,twPins:noop,
+      zin:noop,zout:noop,fit:this.fit,panDown:this.panDown,legTg:noop,inspClear:noop,inspReveal:noop,
+      setAiQ:noop,sendAi:noop,setPinQ:noop,setSetQ:noop,setOpenQ:noop,accPick:noop,accHexSet:noop,
+      autoAct:noop,capMinus:noop,capPlus:noop,aboutCopy:noop,applyRoots:noop};
+    if(!ready) return base;
+    const md=this.md(), hub=S.hub, sample=md==='sample', served=sample&&hub, welcome=md==='welcome';
+    const sevMap={error:['#C62828','rgba(198,40,40,.14)','#C62828'],warning:['#B98A11','rgba(249,168,37,.16)','#A57F15'],hint:['#9E9E9E','rgba(158,158,158,.16)','var(--txd)']};
+    if(theme==='dark'){ sevMap.error[2]='#F28B8B'; sevMap.warning[2]='#E5C558'; }
+    const bnv={error:['var(--bnE)','var(--bnEb)'],warn:['var(--bnW)','var(--bnWb)'],info:['var(--bnI)','var(--bnIb)']};
+    let treeRows=[],wsNote=null,wsNoteFc='',wsNoteCol='var(--txd)';
+    if(md==='empty'){ wsNote='File \u203a Open folder\u2026 (hub fs live) \u2014 or run Analysis \u203a Run analyze on declared roots.'; wsNoteFc='workspace-not-open:'; }
+    else if(sample&&!hub){ wsNote='GET /fs/list failed \u2014 explorer and file ops are disabled with this reason; the bundled moatpkg fixture backs the editor.'; wsNoteFc='hub-unreachable:'; wsNoteCol='#C46A6A'; }
+    else if(sample){
+      const walk=(list,basePath,depth)=>{
+        [...list].sort((a,b)=>((b.c?1:0)-(a.c?1:0))||a.n.localeCompare(b.n)).forEach(e=>{
+          const p=basePath?basePath+'/'+e.n:e.n;
+          if(e.c){ const open=!!S.exp[p];
+            treeRows.push({key:p,name:e.n,tw:open?'\u25be':'\u25b8',ic:'',icbg:'transparent',icc:'var(--txd)',pad:8+depth*15,bg:'transparent',badge:'',act:()=>{const ex={...this.state.exp}; if(ex[p])delete ex[p]; else ex[p]=1; this.setState({exp:ex});}});
+            if(open) walk(e.c,p,depth+1);
+          } else {
+            const ic=this.ext(e.n);
+            treeRows.push({key:p,name:e.n,tw:'',ic:ic[0],icbg:ic[1],icc:ic[2],pad:22+depth*15,bg:S.act===p?'var(--sel)':'transparent',badge:S.dirty[p]?'\u25cf':'',act:()=>this.openFile(p)});
+          }
+        });
+      };
+      walk(D.TREE,'',0);
+    }
+    const tabsR=S.tabs.map(p=>{ const ic=this.ext(p);
+      return {key:p,name:p.split('/').pop(),ic:ic[0],icbg:ic[1],icc:ic[2],dirty:S.dirty[p]?'\u25cf':'',col:S.act===p?'var(--tx)':'var(--txd)',
+        line:S.act===p?'inset 0 -2.5px 0 var(--acc)':'none',
+        act:()=>this.setState({act:p}),close:(e)=>{e.stopPropagation();this.closeTab(p);},closeTip:S.dirty[p]?'unsaved changes \u2014 closing asks before discarding':'close tab'};});
+    const diagsFor=(f)=>{const m={}; D.DIAGS.forEach(d=>{ if(d.f===f) m[d.l]=d.sev; }); return m;};
+    let codeLines=[],edNote=null;
+    if(!S.act) edNote='no active editor tab \u2014 File \u203a Open file\u2026';
+    else { const dm=diagsFor(S.act);
+      codeLines=D.CODE[S.act].map((sp,i)=>{ const n=i+1,sev=dm[n];
+        return {n,sp:sp.map(t=>({t:t[0],x:t[1]})),
+          bg:(S.hl===n&&S.hlF===S.act)?'var(--lnhl)':'transparent',
+          deco:sev==='error'?'underline wavy #C62828':sev==='warning'?'underline wavy #C99A3C':'none',
+          dot:sev?'\u25cf':'',dotC:sev?sevMap[sev][0]:'transparent',
+          click:()=>this.setState({hl:n,hlF:this.state.act})};});
+    }
+    let gnodes=[],gNote=null;
+    if(!served) gNote=!hub&&sample?'graph wall refused / unreachable \u2014 see the banner region (named class, never blank)':'no envelope served \u2014 run Analysis \u203a Run analyze on the declared roots';
+    else {
+      const mkN=(n,ghost)=>({x:n.x,y:n.y,w:n.w,s:n.s,meta:ghost?'lead \u00b7 resolved:false \u00b7 never followed':n.meta,tip:ghost?n.id+'\nlead (resolved=false) \u2014 dashed, never an edge, never followed':n.tip+'\ndouble-click: reveal in editor',
+        bg:ghost?'var(--cv)':n.bg,tc:ghost?'var(--txd)':n.tc,ring:ghost?'1.5px dashed #9E9E9E':n.ring,
+        sh:S.sel===n.id?'0 0 0 3px var(--acc)':'0 1px 3px rgba(20,22,28,.25)',
+        pick:()=>this.setState({sel:this.state.sel===n.id?null:n.id}),
+        dbl:ghost?()=>{}:()=>this.openFile(n.file,n.line)});
+      gnodes=[...D.NODES.map(n=>mkN(n,false)),...D.GHOSTS.map(g=>mkN(g,true))];
+    }
+    const selN=S.sel?D.NODES.find(n=>n.id===S.sel):null;
+    const selG=S.sel&&!selN?D.GHOSTS.find(g=>g.id===S.sel):null;
+    const diagRows=served?D.DIAGS.map(d=>({sev:d.sev,sevBg:sevMap[d.sev][1],sevC:sevMap[d.sev][2],loc:d.f.split('/').pop()+':'+d.l,m:d.m,meta:'pyright \u00b7 '+d.rule+' \u00b7 v'+d.v,act:()=>this.openFile(d.f,d.l)})):[];
+    const diagNote=!served?(hub?'no workspace analyzed \u2014 the stub floor (tier G) names itself; an empty list is the honest state':'hub-lsp-ws bridge down (hub-unreachable) \u2014 no live diagnostics stream exists'):'live pyright over the hub WS bridge \u2014 rows read VERBATIM off editor.lsp.in.diagnostics (the cell\u2019s probe, never re-derived)';
+    const streams={hub:['rgba(86,168,245,.15)','#3A7BC8'],'graph-view':['rgba(42,172,184,.15)','#1E8A94'],'editor-shell':['rgba(158,136,13,.14)','#8A7A2A'],'app-shell':['rgba(124,111,212,.16)','var(--acc)']};
+    if(theme==='dark'){ streams.hub[1]='#56A8F5'; streams['graph-view'][1]='#2AACB8'; streams['editor-shell'][1]='#B3AE60'; }
+    const q=S.pinQ.trim().toLowerCase();
+    const pinRows=D.PINS.filter(p=>hub||p[0]==='app-shell').filter(p=>!q||p.join(' ').toLowerCase().includes(q)).map(p=>({stream:p[0],sbg:streams[p[0]][0],sc:streams[p[0]][1],pid:p[1],payload:p[2]}));
+    const aiLog=(S.aiLog||[{who:'you',text:D.AI.q},{who:'ai',text:D.AI.a,ctx:D.AI.ctx}]).map(a=>({who:a.who,whoC:a.who==='ai'?'var(--acc)':'var(--txd)',text:a.text,hasCtx:!!(a.ctx&&a.ctx.length),ctx:(a.ctx||[]).map(t=>({t}))}));
+    const MW=S.mainW||1500, MH=S.mainH||860;
+    const order=['project','editor','ai','diag','pins'];
+    const META={project:{t:'Project',sub:sample?'~/proofgraph/moatpkg':''},editor:{t:'Editor',sub:S.act||'no file'},ai:{t:'AI Outlet',sub:'transport: FAKE'},diag:{t:'Diagnostics',sub:diagRows.length+' rows \u00b7 pyright'},pins:{t:'Pins Console',sub:'tail 120/stream'}};
+    const stacks={left:[],right:[],bottom:[]};
+    order.forEach(id=>{ const w=S.wins[id]; if(w.open&&w.mode==='dock') stacks[w.side].push(id); });
+    const rect={};
+    ['left','right'].forEach(side=>{ const ids=stacks[side]; if(!ids.length) return;
+      const sw=side==='left'?S.sizeL:S.sizeR;
+      const h=(MH-12-(ids.length-1)*10)/ids.length;
+      ids.forEach((id,i)=>{ rect[id]={x:side==='left'?6:MW-sw-6,y:6+i*(h+10),w:sw,h,z:10+i,kind:side==='left'?'dockL':'dockR'}; });
+    });
+    if(stacks.bottom.length){ const ids=stacks.bottom;
+      const w=(MW-12-(ids.length-1)*10)/ids.length;
+      ids.forEach((id,i)=>{ rect[id]={x:6+i*(w+10),y:MH-S.sizeB-6,w,h:S.sizeB,z:14+i,kind:'dockB'}; });
+    }
+    order.forEach(id=>{ const w=S.wins[id]; if(!w.open) return;
+      if(w.mode==='float') rect[id]={x:Math.max(4,Math.min(w.x,MW-140)),y:Math.max(4,Math.min(w.y,MH-70)),w:Math.min(w.w,MW-20),h:Math.min(w.h,MH-20),z:w.z,kind:'float'};
+      else if(w.mode==='undock'){
+        if(w.side==='bottom') rect[id]={x:6,y:MH-Math.min(w.h,MH-90)-6,w:MW-12,h:Math.min(w.h,MH-90),z:44,kind:'undock'};
+        else rect[id]={x:w.side==='left'?6:MW-Math.min(w.w,MW-220)-6,y:6,w:Math.min(w.w,MW-220),h:MH-12,z:44,kind:'undock'};
+      }
+    });
+    const stopPd=(e)=>e.stopPropagation();
+    const visWins=order.filter(id=>S.wins[id].open&&rect[id]).map(id=>{
+      const w=S.wins[id],r=rect[id],m=META[id];
+      const modeTag=w.mode==='float'?'floating':w.mode==='undock'?'undocked':w.pinned?'docked \u00b7 pinned':'docked \u00b7 unpinned';
+      return {id,title:m.t,sub:m.sub,x:Math.round(r.x),y:Math.round(r.y),w:Math.round(r.w),h:Math.round(r.h),z:r.z,
+        sh:r.kind==='float'?'0 18px 50px rgba(0,0,0,.45)':r.kind==='undock'?'0 14px 40px rgba(0,0,0,.4)':'var(--shadow)',
+        bd:r.kind==='float'||r.kind==='undock'?'var(--popbd)':'var(--bd)',
+        modeTag,gearBg:S.gear===id?'var(--sel)':'transparent',
+        drag:this.winDrag(id),stopPd,
+        front:()=>{ const cur=this.state; const patch={}; let need=false;
+          if(cur.gear&&cur.gear!==id){ patch.gear=null; need=true; }
+          if(cur.wins[id].mode==='float'&&cur.wins[id].z!==this._zTop){ patch.wins={...cur.wins,[id]:{...cur.wins[id],z:++this._zTop}}; need=true; }
+          if(need) this.setState(patch); },
+        gearTg:(e)=>{ e.stopPropagation(); this.setState(s=>({gear:s.gear===id?null:id})); },
+        hide:()=>this.setState(s=>({gear:null,wins:{...s.wins,[id]:{...s.wins[id],open:false}}})),
+        isProj:id==='project',isEd:id==='editor',isAi:id==='ai',isDiag:id==='diag',isPins:id==='pins',
+        hCorner:r.kind==='float',hRight:r.kind==='dockL',hLeft:r.kind==='dockR',hTop:r.kind==='dockB',
+        rzCorner:this.winResize(id,'corner'),rzRight:this.winResize(id,'sizeL'),rzLeft:this.winResize(id,'sizeR'),rzTop:this.winResize(id,'sizeB')};
+    });
+    let gearOn=false,gearX=0,gearY=0,gearRows=[];
+    if(S.gear&&rect[S.gear]){ gearOn=true; const r=rect[S.gear];
+      gearX=Math.max(6,Math.min(r.x+r.w-248,MW-256)); gearY=Math.min(r.y+36,MH-330); gearRows=this.gearRowsFor(S.gear); }
+    let dzOn=false,dzX=0,dzY=0,dzW=0,dzH=0;
+    if(S.dropHint){ dzOn=true;
+      if(S.dropHint==='left'){ dzX=4;dzY=4;dzW=S.sizeL+4;dzH=MH-8; }
+      else if(S.dropHint==='right'){ dzX=MW-S.sizeR-8;dzY=4;dzW=S.sizeR+4;dzH=MH-8; }
+      else { dzX=4;dzY=MH-S.sizeB-8;dzW=MW-8;dzH=S.sizeB+4; } }
+    const ins=this.insets();
+    const ovL=(ins.l||0)+14, ovR=(ins.r||0)+14, ovB=(ins.b||0)+14;
+    const segs=[];
+    segs.push({t:hub?'pin: '+D.HEALTH.v+'/'+D.HEALTH.hash.slice(0,8)+'\u2026':'pin: unserved',col:'var(--txd)',ff:'var(--mono)',cur:'default',tip:'hub-served schema pin (GET /health) \u2014 never hardcoded'});
+    segs.push({t:hub?'tier F \u00b7 hub-lsp-ws':'tier ? \u00b7 probing',col:'var(--txd)',ff:'var(--mono)',cur:'default',tip:'measured tier \u2014 capability.wall.construct pin verbatim; the stub floor declares itself'});
+    segs.push({t:served?D.counts.nodes+' nodes \u00b7 '+D.counts.edges+' edges \u00b7 '+D.counts.leads+' leads':'no graph served yet',col:'var(--txd)',ff:'var(--ui)',cur:'default',tip:'counts from the byte-gated served /graph envelope id sets'});
+    segs.push({t:served?'analysis: applied (11 verdicts)':hub?'analysis: \u2026':'analysis: failed (hub-unreachable)',col:'var(--txd)',ff:'var(--ui)',cur:'default',tip:'GET /analysis state \u2014 pending is honest, never green'});
+    const nDirty=Object.keys(S.dirty).filter(k=>S.tabs.includes(k)).length;
+    if(nDirty) segs.push({t:'\u25cf '+nDirty+' unsaved',col:'var(--acc)',ff:'var(--ui)',cur:'default',tip:'tabs with unsaved changes'});
+    const navRows=[['app','Appearance'],['an','Analysis']].map(p=>({label:p[1],bg:S.page===p[0]?'var(--sel)':'transparent',act:()=>this.setState({page:p[0]})}));
+    const themeRows=[{k:'light',label:'Light (New UI)'},{k:'dark',label:'Dark (New UI)'}].map(t=>({label:t.label,bd:theme===t.k?'2px solid var(--acc)':'1px solid var(--bd)',bg:t.k==='dark'?'#1E1F22':'#FFFFFF',col:t.k==='dark'?'#DFE1E5':'#27282E',act:()=>this.setState({theme:t.k})}));
+    const swatches=['#7C6FD4','#3574D4','#2FA080','#D4703A'].map(c=>({c,ring:ac===c?'0 0 0 2px var(--is),0 0 0 4px '+c:'none',act:()=>this.setState({accent:c})}));
+    const pyRows=[{k:'live',label:'live \u2014 resolve cross-module calls over the hub bridge'},{k:'none',label:'none \u2014 cross-module calls stay LEADS (honest)'}].map(r=>({label:r.label,dot:S.pyright===r.k?'var(--acc)':'transparent',act:()=>this.setState({pyright:r.k})}));
+    const rsel=S.rootSel||Object.fromEntries(D.ROOTS.map(r=>[r.p,!!r.on]));
+    const rootRows=D.ROOTS.map(r=>({p:r.p,note:r.note,chk:rsel[r.p]?'\u2713':'',bg:rsel[r.p]?'var(--acc)':'transparent',act:()=>this.setState({rootSel:{...rsel,[r.p]:!rsel[r.p]}})}));
+    const oq=S.openQ.trim().toLowerCase();
+    let openRows=[];
+    if(S.dlg==='open'){
+      if(S.openMode==='folder'){
+        openRows=['moatpkg','tests','examples/mini','tools/gen'].filter(p=>!oq||p.includes(oq)).map(p=>({p,ic:'\u25a4',icbg:'transparent',icc:'var(--txd)',kind:'folder \u2192 /analyze',act:()=>{ this.setState({dlg:null}); if(md!=='sample')this.openSample(); this.ban('info','shell.folder.open',p+' \u2192 POST /analyze {root} \u2192 full refresh'); }}));
+      } else {
+        const files=Object.keys(D.CODE).map(p=>{ const ic=this.ext(p); return {p,ic:ic[0],icbg:ic[1],icc:ic[2],kind:'file',act:()=>{ if(md!=='sample')this.openSample(); this.openFile(p); }};});
+        const nodes=D.NODES.map(n=>({p:n.id,ic:'\u25c9',icbg:'transparent',icc:n.fill==='unknown'?'var(--txd)':D.COLORS[n.fill],kind:'node \u2192 graph',act:()=>{ if(md!=='sample')this.openSample(); this.setState({dlg:null,sel:n.id}); }}));
+        openRows=[...files,...nodes].filter(r=>!oq||r.p.toLowerCase().includes(oq)).slice(0,12);
+      }
+    }
+    const railBg=(on)=>on?'var(--sel)':'transparent', railIc=(on)=>on?'var(--acc)':'var(--txd)';
+    const W=S.wins;
+    return Object.assign(base,{
+      welcome,notWelcome:!welcome,
+      menus:this.mkMenus(),
+      setItems:[
+        {label:'Theme: Light',short:'',sep:false,chk:theme==='light'?'\u2713':'',col:'var(--tx)',cur:'pointer',hbg:'var(--sel)',tip:'',act:()=>this.setState({theme:'light',setPop:false})},
+        {label:'Theme: Dark',short:'',sep:false,chk:theme==='dark'?'\u2713':'',col:'var(--tx)',cur:'pointer',hbg:'var(--sel)',tip:'',act:()=>this.setState({theme:'dark',setPop:false})},
+        {label:'Plugins\u2026',short:'',sep:true,chk:'',col:'var(--txd)',cur:'default',hbg:'transparent',tip:'the marketplace page lives in the 1a/1b Settings mock \u2014 trimmed in this exploration',act:()=>{}},
+        {label:'Settings\u2026',short:'Ctrl+,',sep:true,chk:'',col:'var(--tx)',cur:'pointer',hbg:'var(--sel)',tip:'',act:()=>this.setState({dlg:'prefs',page:'app',setPop:false})}],
+      runItems:[
+        {label:'declared roots (moatpkg \u00b7 tests)',short:'',sep:false,chk:'\u2713',col:'var(--tx)',cur:'pointer',hbg:'var(--sel)',tip:'POST /analyze {roots} \u2014 roots are declared, never inferred',act:()=>{this.setState({runPop:false});this.reanalyze();}},
+        {label:'Choose declared roots\u2026',short:'',sep:false,chk:'',col:'var(--tx)',cur:'pointer',hbg:'var(--sel)',tip:'',act:()=>this.setState({runPop:false,dlg:'roots'})},
+        {label:'current file only',short:'',sep:true,chk:'',col:'var(--txd)',cur:'default',hbg:'transparent',tip:'per-file analyze is not on the hub contract \u2014 /analyze takes declared roots',act:()=>{}}],
+      crumbs:(sample&&S.act?['moatpkg'].concat(S.act.split('/')):[]).map((t,i,arr)=>({t,sep:i<arr.length-1?'\u203a':''})),
+      banners:S.banners.map((b,i)=>({fc:b.fc,d:b.d,bg:bnv[b.sev][0],bd:bnv[b.sev][1],dis:()=>this.setState({banners:this.state.banners.filter((_,j)=>j!==i)})})),
+      projSub:welcome?'(no project)':md==='empty'?'(empty)':'~/proofgraph',
+      searchAct:()=>this.setState({dlg:'open',openMode:'file',openQ:''}),
+      hubDot:hub?'#3FB27F':'#C62828',hubTxt:hub?'hub :8477':'hub down',
+      verText:'2026.2 \u00b7 assembly build PG-262.SHELL \u00b7 schema '+D.HEALTH.v,
+      recents:D.RECENTS.map(r=>({p:r.p,k:r.k,ic:r.k==='folder'?'\u25a4':'\u00b7',act:()=>{ this.openSample(); if(r.k==='file') this.openFile(r.p); }})),
+      twProj:()=>this.toggleWin('project'),twEd:()=>this.toggleWin('editor'),twAi:()=>this.toggleWin('ai'),twDiag:()=>this.toggleWin('diag'),twPins:()=>this.toggleWin('pins'),
+      projRBg:railBg(W.project.open),projRIc:railIc(W.project.open),edRBg:railBg(W.editor.open),edRIc:railIc(W.editor.open),
+      aiRBg:railBg(W.ai.open),aiRIc:railIc(W.ai.open),diagRBg:railBg(W.diag.open),diagRIc:railIc(W.diag.open),pinRBg:railBg(W.pins.open),pinRIc:railIc(W.pins.open),
+      visWins,gearOn,gearX:Math.round(gearX),gearY:Math.round(gearY),gearRows,
+      dzOn,dzX:Math.round(dzX),dzY:Math.round(dzY),dzW:Math.round(dzW),dzH:Math.round(dzH),
+      treeRows,wsNote,wsNoteFc,wsNoteCol,tabsR,noTabs:tabsR.length===0,codeLines,edNote,edOn:!edNote,
+      gNote,gOn:!gNote,gnodes,edgeD:served?D.edgeD:'',leadD:served?D.leadD:'',selD:served&&S.sel?(D.SELD[S.sel]||''):'',
+      gHint:served?D.counts.nodes+' nodes \u00b7 '+D.counts.edges+' edges \u00b7 '+D.counts.leads+' leads \u2014 drag window titles \u00b7 drop on an edge zone to dock \u00b7 gear menu for view modes':'',
+      zoomPct:Math.round(S.zoom*100)+'%',
+      zin:()=>this.setState({zoom:Math.min(1.6,S.zoom*1.2)}),zout:()=>this.setState({zoom:Math.max(.2,S.zoom/1.2)}),
+      ovL,ovR,ovB,legendOpen:S.legend,legTg:()=>this.setState({legend:!S.legend}),legTw:S.legend?'\u25be':'\u25b8',worstOrder:D.WORST_ORDER,
+      insp:!!(selN||selG),inspName:selN?selN.s:selG?selG.s:'',inspId:S.sel||'',
+      inspFill:selN?selN.fill+(selN.fill==='unknown'?' (\u2260 green)':''):'lead',inspFillBg:selN?selN.bg:'transparent',
+      inspRing:selN?(selN.outline===null?'ring: null \u2192 not-yet-computed':'ring '+selN.outline):'resolved:false',
+      inspRingC:selN?(selN.outline===null?'#9E9E9E':D.COLORS[selN.outline]):'#9E9E9E',inspRingStyle:selN&&selN.outline!==null?'solid':'dashed',
+      inspWorst:selN?(selN.worst.length>1?'worstOf ['+selN.worst.join(', ')+'] \u2014 worst-case-wins':''):'never an edge, never followed',
+      inspLoc:selN?selN.file+':'+selN.line:'unresolved cross-module call',
+      inspReveal:selN?()=>this.openFile(selN.file,selN.line):()=>{},inspClear:()=>this.setState({sel:null}),
+      aiLog,aiQ:S.aiQ,setAiQ:(e)=>this.setState({aiQ:e.target.value}),
+      sendAi:()=>{ const t=S.aiQ.trim(); if(!t) return;
+        const cur=S.aiLog||[{who:'you',text:D.AI.q},{who:'ai',text:D.AI.a,ctx:D.AI.ctx}];
+        const a=S.sel?('With '+S.sel+' selected: its verdict facts are on the inspector \u2014 FAKE transport answers locally; a live ai-server (:8478) would receive {question, nodeId} and the served verdict context.'):'FAKE transport (labels itself): the ai-server (:8478) is not attached in this shell mock, so this is a canned local reply. Keys never enter the browser \u2014 they stay in the ai-server process.';
+        this.setState({aiLog:[...cur,{who:'you',text:t},{who:'ai',text:a,ctx:S.sel?[S.sel]:[]}],aiQ:''}); },
+      diagRows,diagNote,diagEmpty:diagRows.length===0,
+      pinRows,pinQ:S.pinQ,setPinQ:(e)=>this.setState({pinQ:e.target.value}),pinNote:'tail bound 120/stream \u00b7 hub + app-shell merged',pinFail:!hub,
+      segs,selSeg:S.sel?'sel: '+S.sel:'no selection',
+      dlgPrefs:S.dlg==='prefs',dlgAbout:S.dlg==='about',dlgRoots:S.dlg==='roots',dlgGap:S.dlg==='gap',dlgOpen:S.dlg==='open',
+      navRows,pgApp:S.page!=='an',pgAn:S.page==='an',themeRows,swatches,
+      acHex:S.accDraft!==null&&S.accDraft!==undefined?S.accDraft:ac,
+      accPick:(e)=>this.setState({accent:e.target.value,accDraft:null}),
+      accHexSet:(e)=>{const raw=e.target.value;let v=raw.trim();if(v&&v[0]!=='#')v='#'+v;if(/^#[0-9a-fA-F]{6}$/.test(v)){this.setState({accent:v,accDraft:null});}else{this.setState({accDraft:raw});}},
+      pyRows,autoAct:()=>this.setState({autoRe:!S.autoRe}),autoBg:S.autoRe?'var(--acc)':'transparent',autoChk:S.autoRe?'\u2713':'',
+      capV:S.cap,capMinus:()=>this.setState({cap:Math.max(100,S.cap-100)}),capPlus:()=>this.setState({cap:Math.min(2000,S.cap+100)}),
+      hVer:D.HEALTH.v,hHash:D.HEALTH.hash.slice(0,8),hWalls:D.HEALTH.walls.map(w=>w[0]+' '+w[1]).join(' \u00b7 '),
+      aboutCopy:()=>{ try{ navigator.clipboard.writeText('ProofGraph 2026.2 \u00b7 schema '+D.HEALTH.v+'/'+D.HEALTH.hash); this.ban('info','copied','about info copied to clipboard'); }catch(e){ this.ban('warn','copy-failed',String(e)); } },
+      rootRows,applyRoots:()=>{ const sel=Object.entries(S.rootSel||Object.fromEntries(D.ROOTS.map(r=>[r.p,!!r.on]))).filter(e=>e[1]).map(e=>e[0]); this.setState({dlg:null}); if(md==='empty') this.openSample(); this.ban('info','shell.analyze.request','declared roots ['+sel.join(', ')+'] \u2192 POST /analyze (roots are declared, never inferred)'); },
+      gapRows:D.GAPS.map(g=>({n:g.n,d:g.d,w:g.w,ok:g.ok,okc:g.ok==='consistent'?'#2E7D32':g.ok==='guarded'?'#B98A11':'var(--txd)'})),
+      openRows,openQ:S.openQ,setOpenQ:(e)=>this.setState({openQ:e.target.value}),openPh:S.openMode==='folder'?'open folder \u2014 POST /analyze {root}\u2026':'search everywhere \u2014 files and graph nodes\u2026',
+    });
+  }
+}
+</script>
+</body>
+</html>

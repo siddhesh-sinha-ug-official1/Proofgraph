@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "v0",
+  "nodes": [
+    { "id":"A", "kind":"theorem",  "lang":"lean", "name":"thm.add_comm", "signature":"a + b = b + a",
+      "span":{"file":"a.lean","byteStart":0,"byteEnd":40},
+      "fill":{"status":"green","source":"lean4-kernel"},
+      "outline":{"status":"green","worstOf":[]},
+      "origin":"checked", "provenance":{"tier":"T1","extractor":"lean-extract","resolved":true} },
+    { "id":"B", "kind":"theorem",  "lang":"lean", "name":"thm.uses_add_comm", "signature":"P a b",
+      "span":{"file":"a.lean","byteStart":41,"byteEnd":90},
+      "fill":{"status":"amber","source":"sorry-admitted"},
+      "outline":{"status":"red","worstOf":["red"]},
+      "origin":"assumed", "provenance":{"tier":"T1","extractor":"lean-extract","resolved":true} },
+    { "id":"C", "kind":"decl",     "lang":"lean", "name":"ext.opaque_axiom", "signature":null,
+      "span":{"file":"a.lean","byteStart":91,"byteEnd":120},
+      "fill":{"status":"unknown","source":"none"},
+      "outline":null,
+      "origin":"given", "provenance":{"tier":"T1","extractor":"lean-extract","resolved":false} }
+  ],
+  "edges": [
+    { "id":"e-AB", "kind":"proof_uses", "srcId":"B", "dstId":"A", "resolved":true,
+      "resolver":"lean-extract", "provenance":{"tier":"T2","extractor":"lean-extract"} }
+  ],
+  "leads": [
+    { "id":"e-BC", "kind":"references", "srcId":"B", "dstId":"C", "resolved":false,
+      "resolver":"", "provenance":{"tier":"T2","extractor":"lean-extract"} }
+  ]
+}

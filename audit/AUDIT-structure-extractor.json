@@ -1,0 +1,995 @@
+{
+  "area": "packages/structure-extractor",
+  "files": [
+    {
+      "path": "packages/structure-extractor/README.md",
+      "lines": 101,
+      "verifiedPurpose": "Package README: quick start (run_skeleton, run_all), ExtractorCell entry points, directory layout, the honesty model (leads vs edges, tier caps, attested lean green only), license posture and status; counts re-verified this audit (140 tests, 149 probe leads).",
+      "claims": {
+        "confirmed": 18,
+        "overclaim": 1,
+        "underclaim": 1,
+        "stale": 1
+      },
+      "notes": "Fixed: stale 'Tree 1 stub' for schema.py (verified-in-sync mirror since the assembly swap); overclaim 'resolved=true set in exactly one place per dock' (two call sites per CT dock) reworded to the decide_resolved single-helper truth; evidence list gained the lean driver (underclaim since LEAN-DOCK)."
+    },
+    {
+      "path": "packages/structure-extractor/MEMBRANE-SPEC.md",
+      "lines": 122,
+      "verifiedPurpose": "One-page wall contract: face signatures, V1 capability socket + declared friction, what stays a pin, honest-ceiling surface, CT lean face bounds, seven failure classes, catalog census 143+6=149 — each row cross-checked against wall.py/wall_support.py/wall_pin.py and the wall tests.",
+      "claims": {
+        "confirmed": 16,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 1
+      },
+      "notes": "Fixed: conformance ledger cited only test_wall_conformance.py; since the SUB200 split half the listed assertions live in test_wall_face.py — both files now named."
+    },
+    {
+      "path": "packages/structure-extractor/ASSEMBLY-CHANGES.md",
+      "lines": 323,
+      "verifiedPurpose": "Cumulative change record across schema swap, wall promotion, package-root-uri fix, lean-driver spike, LEAN-DOCK wiring, REAL-INPUTS decl matching and the SUB200 restructure; suite trail 68->85->103->104->131->140 and catalog trail 131->137->148->149 both match the live suite (140) and catalog (149).",
+      "claims": {
+        "confirmed": 12,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/wall.py",
+      "lines": 186,
+      "verifiedPurpose": "Phase-1 wall facade: ExtractorWall.extract() runs the cell and returns the canonical envelope + honestCeilings, honestCeiling(lang) serves declared/undeclared/typed-refusal surfaces, .pins exposes the diagnostic quartet; asserts the schema PIN at construction and before every extract; re-exports the failure classes from wall_support and assemble (wall_pin supplies assert_schema_pin, not classes).",
+      "refuterNote": "Corrected the re-export provenance: the audit said failure classes come 'from wall_support/wall_pin', but wall.py imports WallRefusal/WallSchemaPinMismatch/UnknownLanguageError/LeadInEdgesError/IdMismatchError from wall_support and TierInflationError/FakedEdgeError/UnbackedGreenError from extractor.assemble; wall_pin exports only the assert_schema_pin function.",
+      "claims": {
+        "confirmed": 10,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/run_skeleton.py",
+      "lines": 31,
+      "verifiedPurpose": "Demo script: runs ExtractorCell over fixtures/python with roots=[pkg.a], prints the summary, unusedSet ([pkg.c]) and the first 12 probe events.",
+      "claims": {
+        "confirmed": 3,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/__init__.py",
+      "lines": 10,
+      "verifiedPurpose": "Package docstring naming the ExtractorCell entry points and the probe quartet; no code.",
+      "claims": {
+        "confirmed": 2,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 1
+      },
+      "notes": "Fixed: '(membrane deferred)' was stale — the Phase-1 wall (wall.py) is wired and promoted over the pins."
+    },
+    {
+      "path": "packages/structure-extractor/extractor/assemble.py",
+      "lines": 187,
+      "verifiedPurpose": "S3: normalizes dock decisions into deduped SchemaEdges with provenance and enforces the tier-inflation, faked-edge (incl. post-dedup 1:1 backstop), unbacked-green and anonymous-provenance guards; tier-inflation, unbacked-green and the anonymous-node path probe their violation before raising, the faked-edge raise sites do NOT (only the pipeline-level extractor.error.caught fires during propagation); called by ExtractorCell._run.",
+      "claims": {
+        "confirmed": 7,
+        "overclaim": 1,
+        "underclaim": 0,
+        "stale": 0
+      },
+      "refuterNote": "REFUTED 'all probed before raising': the module docstring claimed 'All raise; all probe first' but all three FakedEdgeError raise sites (count mismatch, missing decision key, post-dedup backstop) and the final anonymous-edges SchemaViolation emit no probe before raising — no faked-edge probe id exists in the catalog and test_honest_ceiling only asserts the raise. Docstring fixed in place (text-only); one confirmed reclassified to overclaim."
+    },
+    {
+      "path": "packages/structure-extractor/extractor/boundary.py",
+      "lines": 97,
+      "verifiedPurpose": "Import-boundary gate: ast-scans every .py under extractor/, allows only DECLARED_DEPS/stdlib/intra-cell imports, rejects SUBPROCESS_ONLY tools as imports, probes every check plus the SPDX license posture; wired first in the pipeline (asserted by test_boundary).",
+      "claims": {
+        "confirmed": 5,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/capability.py",
+      "lines": 70,
+      "verifiedPurpose": "Local stub of cell 2's capability(lang): python and lean report CT (each honestly reachable in this environment), all other langs G; allows_resolution() mirrors the canonical CT-only table (sync-asserted); replaced at run time via PipelineConfig.capability_fn.",
+      "claims": {
+        "confirmed": 6,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/ingest.py",
+      "lines": 171,
+      "verifiedPurpose": "S0: walks the root, detects language (extension/shebang/content), groups per-lang SourceSets, detects backend-specific project roots, resolves capability tiers and picks docks; every file, decision and applied cap is probed.",
+      "claims": {
+        "confirmed": 5,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 2
+      },
+      "notes": "Two stale probe-payload strings reported as code findings (runtime data, not patched): the dock.selected reason calls every non-python dock 'design-stub ... leads only' (false for lean at CT) and the no-lakefile root reason still calls the Lean dock a design-stub."
+    },
+    {
+      "path": "packages/structure-extractor/extractor/pipeline.py",
+      "lines": 193,
+      "verifiedPurpose": "ExtractorCell: orchestrates boundary->ingest->T1->docks->assemble->T3->output under stage timers, exposes probeCatalog/dump/tap/history, writes graph.json/honest_ceilings.json/history.jsonl, returns the canonical envelope with edges[] and leads[] split.",
+      "claims": {
+        "confirmed": 7,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/pipeline_config.py",
+      "lines": 47,
+      "verifiedPurpose": "PipelineConfig dataclass (roots, pyright mode/recording, johnson bound, capability_fn, out_dir, exclude names, lean driver knobs) plus the 7-entry HONEST_GAPS list S5 probes verbatim (count asserted by test_connectors).",
+      "claims": {
+        "confirmed": 3,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/pipeline_docks.py",
+      "lines": 73,
+      "verifiedPurpose": "make_dock: builds the per-language dock from config — lean driver knobs threaded, python pyright backend chosen by mode (live/record/recorded/none), stale recordings refused loudly (leads only), out-of-root files dropped via probed caps; docks mapping stays a call-time parameter so the pipeline.ALL_DOCKS test seam works.",
+      "claims": {
+        "confirmed": 4,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/schema.py",
+      "lines": 192,
+      "verifiedPurpose": "Frozen Schema v0 mirror: enum constants, pinned schema identity, the green-attestation predicate (origin 'checked' + 'lean-kernel:' source), the 'unresolved:' placeholder helper, and SchemaNode/SchemaEdge whose validate() enforces kinds, unbacked-green, placeholder and provenance rules; re-exports the mint from schema_ids (facade).",
+      "claims": {
+        "confirmed": 9,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/schema_ids.py",
+      "lines": 85,
+      "verifiedPurpose": "The content-addressed ID mint: sha256 over 0x1f-joined domain-tagged structural preimages truncated to 16 hex with n_/e_ prefixes; byte-agrees with packages/schema/ids.py (asserted against vectors.json by the membrane test).",
+      "claims": {
+        "confirmed": 4,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/t3.py",
+      "lines": 178,
+      "verifiedPurpose": "S4: excludes leads first (probed), builds the rustworkx digraph, computes SCCs, bounded Johnson cycles (caps probed), reachability from uniquely-matched roots (unmatched raises), unused vs unreferenced kept distinct, condensation-DAG check; delegates the NetworkX cross-check and export to t3_checks.",
+      "claims": {
+        "confirmed": 6,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/t3_checks.py",
+      "lines": 90,
+      "verifiedPurpose": "S4 helpers: the NetworkX agreement oracle (SCC/cycles/reachability recompute + diff; cycle comparison skipped under a hit count cap, and says so) and the DOT/JSON T3 export; called only by compute_t3.",
+      "claims": {
+        "confirmed": 3,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/wall_pin.py",
+      "lines": 67,
+      "verifiedPurpose": "assert_schema_pin: three-way agreement between the cell's pinned pair (read at call time — drift after birth still refuses), packages/schema/PIN, and the recomputed canonical schema.json hash; probes the check and raises WallSchemaPinMismatch on disagreement or unreadability.",
+      "claims": {
+        "confirmed": 4,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/wall_support.py",
+      "lines": 150,
+      "verifiedPurpose": "Wall support: the WallRefusal hierarchy + FAILURE_CLASSES registry (7 classes), validate_envelope (edges resolved-only, leads placeholder-prefixed, every id recomputes under the mint), the WallPins quartet accessor, and _merge_config; wall.py re-exports all of it.",
+      "claims": {
+        "confirmed": 5,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/__init__.py",
+      "lines": 7,
+      "verifiedPurpose": "Dock registry: re-exports the contract datatypes and maps lang -> dock class in ALL_DOCKS (python/lean/latex/typst).",
+      "claims": {
+        "confirmed": 1,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/base.py",
+      "lines": 146,
+      "verifiedPurpose": "The Dock contract: CandidateEdge/ResolverDecision/HonestCeiling/DockResult datatypes, the decide_* constructors, edges_from_decisions (the single validated edge builder every dock uses), and the innermost-owner/node-at span lookups.",
+      "claims": {
+        "confirmed": 5,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/latex_dock.py",
+      "lines": 135,
+      "verifiedPurpose": "LaTeX dock, design-stub at G: turns T1 labelref/cite/include anchors into references/cites/includes candidates, all emitted as U_STUB leads (dups X_DUP, ownerless X_NO_OWNER, both probed), probes a syntactic unused-label finding at its declared grade, and declares the LaTeXML/texlab designed pipeline in its ceiling.",
+      "claims": {
+        "confirmed": 6,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/lean_common.py",
+      "lines": 56,
+      "verifiedPurpose": "Lean dock shared bits: STAGE, driver dir/timeout constants, cell-2 pin string (divergence declaration only), lean-exe resolution ($LEAN_EXE -> elan shim -> PATH), driver pos->byte conversion, the typed DriverDead failure and the run_ref evidence helper.",
+      "claims": {
+        "confirmed": 4,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/lean_ct.py",
+      "lines": 162,
+      "verifiedPurpose": "CT orchestrator: probes lean facts and the toolchain-pin divergence, drives the driver once per file, matches driver decls to nodes via match_decls (every decision probed), applies verdicts, mints proof_uses/imports edges and dead-file leads, and declares the kernel-grade ceiling with the driver's limits[] verbatim.",
+      "claims": {
+        "confirmed": 7,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/lean_ct_driver.py",
+      "lines": 89,
+      "verifiedPurpose": "run_driver: spawns `lean --run Driver.lean <file>` with cwd pinned to lean_driver/ (toolchain rule), tree-kills on timeout (taskkill /T), types crash/bad-json failures as DriverDead, hashes verbatim stdout as run evidence, probes req/resp/timing.",
+      "claims": {
+        "confirmed": 5,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/lean_ct_edges.py",
+      "lines": 194,
+      "verifiedPurpose": "CT edge minting: proof_uses from decls[].refs filtered to owned+ingested decls (X_CORE/X_SELF/X_DUP rejections probed, never silent), imports from elaborated headers merged with T1 anchors (implicit Init = X_CORE; unelaborated anchor = lead), and U_BACKEND_* leads plus unknown-verdict probes for driver-dead files.",
+      "claims": {
+        "confirmed": 5,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/lean_ct_fill.py",
+      "lines": 94,
+      "verifiedPurpose": "apply_file_verdicts: maps driver verdicts onto one file's decl nodes via lean_verdict (fill+origin written only for non-unknown; green source cites decl + runSha), probes every verdict and unusedHypotheses payload, and surfaces errors outside every decl span as red on the module node.",
+      "claims": {
+        "confirmed": 4,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/lean_dock.py",
+      "lines": 121,
+      "verifiedPurpose": "LeanDock facade: dispatches CT tier -> extract_ct and every other tier -> extract_g (placeholder preserved; no self-upgrade), probes the Lean facts (import-cycle NA, #8840) on both paths, threads driver knobs, and re-exports lean_verdict/match_decls for tests.",
+      "claims": {
+        "confirmed": 8,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/lean_g.py",
+      "lines": 128,
+      "verifiedPurpose": "G-tier placeholder path: T1 import anchors and syntactic name co-occurrence become candidate seeds, every one a lead (U_TIER_G/U_STUB) or a probed rejection; declares the designed InfoTree/lake ceiling with design-stub status; byte-stable behavior pinned by the tier-G golden.",
+      "claims": {
+        "confirmed": 4,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/lean_verdicts.py",
+      "lines": 133,
+      "verifiedPurpose": "Pure functions: lean_verdict (green only kernelAccepted and not usesSorry and unexpectedAxioms=[] in an error-free file; sorry->amber; in-span error->red; else unknown — never green from absence) and match_decls (per-file exact-beats-suffix written-identifier matching where any tie on either side attests nothing).",
+      "claims": {
+        "confirmed": 5,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/pyright_backend.py",
+      "lines": 33,
+      "verifiedPurpose": "Facade re-exporting the pyright protocol, typed failures, position math and the three backend implementations from pyright_common/pyright_lsp/pyright_recorded; public surface unchanged since the SUB200 split.",
+      "claims": {
+        "confirmed": 4,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/pyright_common.py",
+      "lines": 85,
+      "verifiedPurpose": "Shared pyright seam: BackendTimeout/LspError/StaleRecordingError, the PyrightBackend protocol, byte-offset <-> LSP-position conversion (UTF-16 aware), and normcase path/uri helpers absorbing Windows drive-letter case.",
+      "claims": {
+        "confirmed": 4,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/pyright_lsp.py",
+      "lines": 187,
+      "verifiedPurpose": "Live pyright-langserver JSON-RPC client over an npx subprocess: didOpens absolute paths under the detected project root, maps response uris back into the dock's rel vocabulary (normcase reverse table), answers server config requests, tree-kills the cmd/npx process tree on close (Windows).",
+      "claims": {
+        "confirmed": 5,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/pyright_recorded.py",
+      "lines": 74,
+      "verifiedPurpose": "RecordedPyrightBackend replays a v2 recording only when every per-file sha matches the current sources (StaleRecordingError otherwise, pre-v2 refused); RecordingWrapper wraps a live backend and captures {files: shas, responses} for later replay.",
+      "claims": {
+        "confirmed": 4,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/python_ceiling.py",
+      "lines": 57,
+      "verifiedPurpose": "Python dock constants (STAGE, PY_BUILTINS, dynamic-import callees, designed resolves) and effective_ceiling — reports what THIS run could actually resolve given tier/packages/backend, with the full design in extra.designedResolves.",
+      "claims": {
+        "confirmed": 3,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/python_dock.py",
+      "lines": 153,
+      "verifiedPurpose": "PythonDock facade: tier-gates grimp and pyright at CT, probes no-package/loose-module caps, delegates the grimp and pyright sub-paths (shared duplicate-key set keeps resolved edges 1:1 through dedup), probes every decision + edge provenance, records decision D2, returns the effective ceiling.",
+      "claims": {
+        "confirmed": 8,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/python_grimp.py",
+      "lines": 108,
+      "verifiedPurpose": "grimp sub-path: builds the real import graph per package (sys.path pinned to the project root), probes modules/pairs, resolves module->module imports when both ends are ingested (typed rejections/leads otherwise), and probes grimp downstream-reachability answers for configured roots.",
+      "claims": {
+        "confirmed": 4,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/python_pyright_path.py",
+      "lines": 174,
+      "verifiedPurpose": "pyright sub-path: turns call/base anchors into calls/inherits decisions — owner lookup (X_NO_OWNER probed), dynamic-import and dynamic-callee leads, builtin rejection Pyright-first (name-heuristic only without a backend), typed timeout/LSP-error leads, X_SELF collapse and the C10 duplicate-collapse gate.",
+      "claims": {
+        "confirmed": 6,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/reasons.py",
+      "lines": 66,
+      "verifiedPurpose": "The verbatim resolver-reason taxonomy (resolved/unresolved/rejected constants; this round's additions marked) plus histogram(), which buckets decisions per dock by these exact strings.",
+      "claims": {
+        "confirmed": 3,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      },
+      "notes": "R_LEAN_KERNEL ('bound via InfoTree resolved constant') is defined but unused by any live path — dormant vocabulary for the unwired InfoTree design, consistent with the catalog's dormant entries."
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/typst_dock.py",
+      "lines": 125,
+      "verifiedPurpose": "Typst dock, design-stub at G: turns T1 ref/import anchors into references/imports candidates, all leads (dups/ownerless typed + probed), probes the typst-query deprecation (D4) and the pinMain warning, and declares the typst-ide designed pipeline in its ceiling.",
+      "claims": {
+        "confirmed": 6,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/lean_driver/README.md",
+      "lines": 70,
+      "verifiedPurpose": "Driver-dir README: wired-spike status, the one-line JSON output shape, exit-code contract (0 clean/1 errors/2 usage), run + smoke commands, the v4.31.0 pin and declared design choices; matches run_smoke.py and lean_ct_driver.py behavior.",
+      "claims": {
+        "confirmed": 8,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/docks/lean_driver/run_smoke.py",
+      "lines": 169,
+      "verifiedPurpose": "Standalone driver smoke: runs Driver.lean over three scratch fixtures plus the read-only acceptance fixture and asserts kernel acceptance, refs, sorryAx surfaced (never allowlisted), unused-hypothesis flags, the toolchain pin and non-empty limits[]; exit 0 only when every check passes.",
+      "claims": {
+        "confirmed": 6,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/probe/__init__.py",
+      "lines": 23,
+      "verifiedPurpose": "Probe package surface: re-exports the bus datatypes/errors and CATALOG, plus make_bus() returning a ProbeBus with the full catalog registered.",
+      "claims": {
+        "confirmed": 2,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/probe/bus.py",
+      "lines": 136,
+      "verifiedPurpose": "ProbeBus: catalog registration with duplicate/kind checks, emit() enforcing catalogued-id + declared-kind with logicalClock ordering and secret redaction, live taps, filtered event queries, history/jsonl; StageTimer emits per-stage wall timing.",
+      "claims": {
+        "confirmed": 6,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/probe/events.py",
+      "lines": 96,
+      "verifiedPurpose": "Probe datatypes: the PROBE_KINDS vocabulary, CELL_ID, typed catalog errors, the one sanctioned redaction (secret keys -> presence + last-4), CatalogEntry, and ProbeEvent with ref() causal ids and wallNanos stripping for determinism views.",
+      "claims": {
+        "confirmed": 4,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/probe/catalog.py",
+      "lines": 28,
+      "verifiedPurpose": "Catalog aggregator: concatenates the four section modules in spec order into CATALOG; 149 entries = 143 pre-wall + 6 wall, zero duplicates (re-verified this audit).",
+      "claims": {
+        "confirmed": 4,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/probe/catalog_stages.py",
+      "lines": 80,
+      "verifiedPurpose": "Catalog section (spec 6.0-6.2): 32 cross-cutting/ingest/T1 lead entries, aggregated in order by catalog.py.",
+      "claims": {
+        "confirmed": 3,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/probe/catalog_docks.py",
+      "lines": 102,
+      "verifiedPurpose": "Catalog section (spec 6.3-6.5b): 41 entries — dock dispatch, the python dock, the lean dock G+dormant design entries, and the 10 additive CT-driver leads; dormant entries say so in their descriptions.",
+      "claims": {
+        "confirmed": 4,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/probe/catalog_docs_graph.py",
+      "lines": 115,
+      "verifiedPurpose": "Catalog section (spec 6.6-6.9): 48 entries — latex/typst docks (dormant backends marked), S3 assemble incl. the two green-guard leads, and S4 T3.",
+      "claims": {
+        "confirmed": 3,
+        "overclaim": 0,
+        "underclaim": 2,
+        "stale": 0
+      },
+      "notes": "Two payloadType underclaims (runtime data, noted not patched): t3.cycle.bound.cap payload also carries countCap+lengthDroppedCount; t3.roots.selected payload also carries unmatched."
+    },
+    {
+      "path": "packages/structure-extractor/extractor/probe/catalog_output_infra.py",
+      "lines": 69,
+      "verifiedPurpose": "Catalog section (spec 6.10-6.14 + 7.8): 28 entries — S5 output, backend req/resp pairs (dormant ones marked), provenance/tier discipline, reason histogram, honest gaps, and the six wall leads.",
+      "claims": {
+        "confirmed": 3,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/t1/__init__.py",
+      "lines": 1,
+      "verifiedPurpose": "Re-exports Anchor and extract_t1 from extract — the t1 package surface.",
+      "claims": {
+        "confirmed": 1,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/t1/common.py",
+      "lines": 71,
+      "verifiedPurpose": "T1 shared datatypes/helpers: Anchor and _RawNode records, first-line signature slicing, top-level checks (python decorated defs; c/cpp nesting walk), dotted module naming and earliest-capture lookup.",
+      "claims": {
+        "confirmed": 3,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/t1/engine.py",
+      "lines": 92,
+      "verifiedPurpose": "tree-sitter wrapper: grammar metadata, parse() with ERROR/MISSING collection and the byte-exact reprint check, tags.scm loading + deterministic match ordering, node text slicing; declares which languages use DIY vs first-party tags.",
+      "claims": {
+        "confirmed": 5,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/t1/extract.py",
+      "lines": 146,
+      "verifiedPurpose": "extract_t1 facade: per SourceSet probes grammar/DIY warnings, parses each file, dispatches the per-language interpreters, mints nodes via the canonical structural identity (probed preimages, loud dedup), validates + provenance-stamps every node, emits anchors and roundtrip/count probes.",
+      "claims": {
+        "confirmed": 6,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/t1/interpret_code.py",
+      "lines": 133,
+      "verifiedPurpose": "Match interpreters for python/go/c/cpp/lean: promote top-level defs/classes/decls (nested rejected with reasons), collect python call/base anchors with query offsets and dynamic flags, lean earliest-identifier decl naming and import anchors.",
+      "claims": {
+        "confirmed": 4,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/t1/interpret_docs.py",
+      "lines": 138,
+      "verifiedPurpose": "Match interpreters for latex/typst: sections/labels/theorem envs/figures promoted (unregistered environments and non-figure calls rejected with reasons), labelref/cite/include and ref/import anchors collected; typst let-binding names deduped to the earliest ident with body idents rejected.",
+      "claims": {
+        "confirmed": 4,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/t1/tags/c.scm",
+      "lines": 4,
+      "verifiedPurpose": "Tree-sitter capture rules for C: top-level functions, structs and declarations (first-party capture semantics).",
+      "claims": {
+        "confirmed": 1,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/t1/tags/cpp.scm",
+      "lines": 6,
+      "verifiedPurpose": "Tree-sitter capture rules for C++: functions (plain + qualified), classes/structs and namespaces (first-party capture semantics).",
+      "claims": {
+        "confirmed": 1,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/t1/tags/go.scm",
+      "lines": 5,
+      "verifiedPurpose": "Tree-sitter capture rules for Go: functions, methods, type declarations and the package clause (first-party capture semantics).",
+      "claims": {
+        "confirmed": 1,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/t1/tags/python.scm",
+      "lines": 7,
+      "verifiedPurpose": "Tree-sitter capture rules for Python: function/class definitions plus call and superclass T2 anchors (first-party capture semantics).",
+      "claims": {
+        "confirmed": 2,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/t1/tags/lean.scm",
+      "lines": 10,
+      "verifiedPurpose": "DIY tree-sitter capture rules for Lean: def/theorem/structure/section declarations and the import T2 anchor; DIY status flagged per-run by the T1 probes.",
+      "claims": {
+        "confirmed": 2,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/t1/tags/latex.scm",
+      "lines": 16,
+      "verifiedPurpose": "DIY tree-sitter capture rules for LaTeX: sections, label definitions, newtheorem envs, generic environments (figure/theorem promotion in code) and labelref/cite/include T2 anchors.",
+      "claims": {
+        "confirmed": 2,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/extractor/t1/tags/typst.scm",
+      "lines": 17,
+      "verifiedPurpose": "DIY tree-sitter capture rules for Typst: headings, labels, let declarations, call captures (figure promotion in code) and ref/import T2 anchors.",
+      "claims": {
+        "confirmed": 2,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/run_all.py",
+      "lines": 28,
+      "verifiedPurpose": "unittest discovery runner over selftest/test_*.py; --fast filters out live-pyright cases; exit code mirrors suite success. Verified: full run = 140 tests OK.",
+      "claims": {
+        "confirmed": 3,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/harness.py",
+      "lines": 180,
+      "verifiedPurpose": "Test harness: sys.path setup, fixture runners (skeleton/rich/lang) with config overrides, the force_tier_g pin, payload/trace helpers, the name-keyed edge_view and the scip-style snapshot_render the goldens diff against.",
+      "claims": {
+        "confirmed": 4,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/lean_ct_common.py",
+      "lines": 28,
+      "verifiedPurpose": "Shared LEAN-CT test helpers: LOUD skip when no lean binary is reachable, and a SchemaNode factory for the decl-matching tests.",
+      "claims": {
+        "confirmed": 2,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/schema_sync_common.py",
+      "lines": 33,
+      "verifiedPurpose": "Loads the canonical packages/schema modules for the membrane tests (ids/schema_tools/pin via temporary sys.path, gen constants flat-loaded by file path) plus vectors.json.",
+      "claims": {
+        "confirmed": 2,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/wall_test_common.py",
+      "lines": 31,
+      "verifiedPurpose": "Wall-test shared bits: flat canonical-ids import, the skeleton config, face key list, the 143 pre-wall catalog census (131+11+1 — re-verified against the live catalog) and wall-pin payload helpers.",
+      "claims": {
+        "confirmed": 3,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/test_boundary.py",
+      "lines": 53,
+      "verifiedPurpose": "Boundary-gate tests: zero violations on the real cell, license posture probed, undeclared/copyleft imports raise with denied checks probed, and the gate fires before any feature probe in a real run.",
+      "claims": {
+        "confirmed": 4,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/test_connectors.py",
+      "lines": 164,
+      "verifiedPurpose": "Connector gates: grimp wire, capability stub tiers (lean CT, others G), position/uri conversion roundtrips, recorded replay + stale-recording refusal, deterministic mints and raw-name placeholders, backend req/resp pairing, moat anchor seeds at pinned G, probed design decisions, the 7 honest gaps.",
+      "claims": {
+        "confirmed": 8,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/test_golden.py",
+      "lines": 52,
+      "verifiedPurpose": "Golden gates: skeleton/rich edge views and the rich snapshot byte-equal to hand-reviewed goldens; lean (pinned G regression) / latex / typst lead goldens; the CT lean_ct edge golden.",
+      "claims": {
+        "confirmed": 5,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/test_honest_ceiling.py",
+      "lines": 171,
+      "verifiedPurpose": "Load-bearing gates: resolved edges == resolved decisions per lang, every dock emits a ceiling, stub docks zero resolved, reasons non-empty + histogram probed, leads excluded from T3, placeholders never real nodes, G/S tier caps, forged-resolved and faked-edge raises.",
+      "claims": {
+        "confirmed": 7,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/test_lean_ct_dock.py",
+      "lines": 150,
+      "verifiedPurpose": "Live CT path over fixtures/lean_ct: kernel-attested greens citing runSha, sorry->amber naming sorryAx, module stays unknown, the driver-refs proof_uses edge + its decision, probed X_CORE rejections, unusedHyp payload/summary riding the ceiling, limits verbatim, invocation/timing probes, declared pin divergence, full verdict coverage, CT determinism.",
+      "claims": {
+        "confirmed": 9,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/test_lean_ct_guards.py",
+      "lines": 175,
+      "verifiedPurpose": "Guard tests: the pure verdict-mapping table (kernel-rejected/absence/unexpected-axiom/errored-file never green), the unbacked-green guard at schema/assemble/tier level with the attested green passing, and typed driver-dead paths (timeout tree-killed green-free, crash typed, pinned-G runs never touch the driver).",
+      "claims": {
+        "confirmed": 7,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/test_lean_decl_match.py",
+      "lines": 139,
+      "verifiedPurpose": "match_decls pure tests (collision disambiguated exact-beats-suffix, unique names preserved, auxiliaries unowned, ties in both directions attest nothing, outranked typed) plus the live Collide.lean regression: attestations and the proof_uses edge land on each node's OWN decl.",
+      "claims": {
+        "confirmed": 6,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/test_live_pyright_oracle.py",
+      "lines": 80,
+      "verifiedPurpose": "Live-pyright oracle: the recorded-replay edge view must equal a live run, and a bare package-dir extraction resolves live (parent detected as project root, ingest-relative span files, resolved calls exist, full relation parity) — loud skip without npx.",
+      "claims": {
+        "confirmed": 5,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/test_probe_bus.py",
+      "lines": 101,
+      "verifiedPurpose": "Probe-bus contract tests: must-have leads catalogued, uncatalogued/kind-mismatch raise, every fired probe catalogued, last-4 secret redaction, live taps, dangling-free causal chains, history deterministic modulo wallNanos incl. pinned-G stub docks.",
+      "claims": {
+        "confirmed": 7,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/test_provenance.py",
+      "lines": 66,
+      "verifiedPurpose": "Provenance gates: audit totals match, every node/edge stamped (T1 resolved=True per ruling 7), anonymous-violation silent in normal runs but raised+probed for an anonymous node, python-fixture fills stay unknown (attested lean greens covered elsewhere, message already updated) with outline null.",
+      "claims": {
+        "confirmed": 5,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/test_schema_rulings.py",
+      "lines": 87,
+      "verifiedPurpose": "Rulings 6/2/3 as tests: raw-name placeholders required on unresolved dsts, DEPTH table CT-only + sync + dead TIER_MAX_GRADES absent, and written graph.json envelopes split edges[]/leads[] with prefixes.",
+      "claims": {
+        "confirmed": 4,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/test_schema_sync.py",
+      "lines": 135,
+      "verifiedPurpose": "The membrane test: canonical pin holds and the cell's pinned pair matches it, enum/worst-order/placeholder sync with gen constants, mint byte-agreement on all vectors + fresh inputs, emitted ids match the idScheme regexes.",
+      "claims": {
+        "confirmed": 6,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/test_skeleton_trace.py",
+      "lines": 79,
+      "verifiedPurpose": "Walking-skeleton acceptance: the ordered expected probe trace (boundary->ingest->T1->grimp->assemble->T3->ceiling report) and the result values (unusedSet [pkg.c]; the single resolved grimp import edge).",
+      "claims": {
+        "confirmed": 4,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/test_t1.py",
+      "lines": 176,
+      "verifiedPurpose": "T1 gates: byte-exact roundtrip per language, error-tolerant parse, id stability across whitespace reformats AND body edits (ruling 5), probed preimages with file+path, the pure structural identity function, DIY-tag visibility, node-kind tables, anchor seeds, nested-def rejects.",
+      "claims": {
+        "confirmed": 7,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/test_t3.py",
+      "lines": 105,
+      "verifiedPurpose": "T3 gates: two-library agreement (skeleton + the rich cycle), condensation DAG, unused vs unreferenced distinct, the dynamic-import blind spot probed beside the claim, explicit probed roots (empty roots -> no unused claim), NA branches and caps logged.",
+      "claims": {
+        "confirmed": 6,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/test_wall_conformance.py",
+      "lines": 172,
+      "verifiedPurpose": "Wall conformance: the envelope equals the assemble-stage pins and dump() for the shipped python dock AND a pinned-G stub dock, face determinism, all-S runs surface zero resolved edges through the wall, and a forged resolved edge at S raises TierInflationError through extract() with the violation probed.",
+      "claims": {
+        "confirmed": 6,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/test_wall_face.py",
+      "lines": 169,
+      "verifiedPurpose": "Wall face tests: unknown-language typed refusal, undeclared ceilings surfaced without fabricating a tier, WALL_VERSION + pin probes, drift refusal at birth AND at a later extract, envelope-guard named classes, complete 7-class registry, catalog census 143+6, quartet live through the wall, wall-less runs fire no wall probes.",
+      "claims": {
+        "confirmed": 7,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    },
+    {
+      "path": "packages/structure-extractor/selftest/tools/gen_goldens.py",
+      "lines": 54,
+      "verifiedPurpose": "Golden generator: optionally re-records live pyright, then rewrites the skeleton/rich edge views + snapshot, the lean (pinned-G) / latex / typst lead goldens, and the CT lean_ct golden; goldens are hand-reviewed before freezing.",
+      "claims": {
+        "confirmed": 4,
+        "overclaim": 0,
+        "underclaim": 0,
+        "stale": 0
+      }
+    }
+  ],
+  "docFixes": [
+    {
+      "path": "packages/structure-extractor/extractor/__init__.py",
+      "what": "Stale docstring '(membrane deferred)' replaced — the Phase-1 membrane (wall.py) is wired and promoted over the pins."
+    },
+    {
+      "path": "packages/structure-extractor/README.md",
+      "what": "Layout row for schema.py: stale '(Tree 1 stub)' replaced with the verified-in-sync-mirror truth (membrane test asserts value-equality + PIN)."
+    },
+    {
+      "path": "packages/structure-extractor/README.md",
+      "what": "Honesty model: overclaim 'resolved=true is set in exactly one place per dock' reworded to the decide_resolved one-helper/one-call-site-per-resolution-path truth, and the binding-evidence list gained the lean kernel driver (missing since LEAN-DOCK)."
+    },
+    {
+      "path": "packages/structure-extractor/MEMBRANE-SPEC.md",
+      "what": "Conformance ledger now names test_wall_conformance.py + test_wall_face.py (the SUB200 split moved half the listed assertions; only the former was cited)."
+    },
+    {
+      "path": "packages/structure-extractor/extractor/assemble.py",
+      "what": "[stage-B refuter] docstring overclaim 'All raise; all probe first' fixed — the FakedEdgeError raise sites (incl. the post-dedup backstop) and the final anonymous-edges SchemaViolation probe nothing before raising; the text now says which guards probe first and that faked-edge's only probe trail is pipeline-level extractor.error.caught."
+    }
+  ],
+  "codeFindings": [
+    {
+      "path": "packages/structure-extractor/extractor/ingest.py",
+      "claim": "The extractor.ingest.dock.selected probe reason describes every non-python dock as 'design-stub dock at tier <T>: emits candidates as leads only'.",
+      "reality": "For lean at a CT capability response (the stub default) the LeanDock CT path mints RESOLVED proof_uses/imports edges and kernel-attested green fills — the emitted reason text is false for that branch. Runtime probe payload, so not patched by this doc-only audit; no test asserts the string for lean.",
+      "severity": "low"
+    },
+    {
+      "path": "packages/structure-extractor/extractor/ingest.py",
+      "claim": "The no-lakefile project-root reason says 'no lakefile found — Lean dock (design-stub) would need a Lake project when live'.",
+      "reality": "Since the LEAN-DOCK round the lean dock IS live at CT with a single-file kernel driver that needs no Lake project (lake is only the dormant `lake exe graph` design path); the emitted reason text is stale. Runtime probe payload, so not patched; fixtures/lean has no lakefile so this fires in real runs.",
+      "severity": "low"
+    }
+  ]
+}

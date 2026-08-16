@@ -1,0 +1,18 @@
+/* ── AI panel (window content; recolored onto the tokens) ── */
+.ai-panel { margin: 0; padding: 6px 12px; overflow: auto; user-select: text; }
+.panel-title { font-weight: 600; margin-bottom: 4px; }
+.panel-subtitle { font-weight: 600; margin-top: 8px; font-size: 12px; }
+.ai-ask-row { display: flex; gap: 7px; }
+.ai-ask-row input { flex: 1; background: var(--rs); color: var(--tx); border: 1px solid var(--bd); border-radius: 8px; padding: 6px 10px; font: 12.5px var(--ui); outline: none; }
+.ai-ask-row button { background: var(--acc); color: #fff; border: 0; border-radius: 8px; padding: 6px 14px; cursor: pointer; font: 600 12px var(--ui); }
+.ai-ask-row button[disabled] { opacity: .5; }
+.ai-badges { display: flex; gap: 6px; margin: 6px 0; flex-wrap: wrap; }
+.badge { background: var(--rs); border: 1px solid var(--bd); border-radius: 6px; padding: 1px 8px; font: 10px var(--mono); color: var(--txd); }
+.badge-fake { border-color: var(--bnWb); }
+.badge-error { border-color: var(--bnEb); }
+.badge-warn { border-color: var(--bnWb); }
+.ai-answer { padding: 8px; background: var(--rs); border-radius: 7px; white-space: pre-wrap; font-size: 12.5px; }
+.tool-call { margin: 6px 0; border: 1px solid var(--bd); border-radius: 7px; }
+.tool-call-error { border-color: var(--bnEb); }
+.tool-call-head { padding: 4px 8px; background: var(--rs); font-size: 11px; }
+.tool-call-output { margin: 0; padding: 6px 8px; font-size: 11px; overflow: auto; max-height: 220px; font-family: var(--mono); }

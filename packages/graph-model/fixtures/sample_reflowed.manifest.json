@@ -1,0 +1,49 @@
+{
+  "note": "reflowed presentation of the SAME logical file fixtures/sample.py (reformatting-invariance fixture: ids must not move, spans must)",
+  "module": {
+    "name": "sample",
+    "file": "fixtures/sample.py",
+    "lang": "python"
+  },
+  "decls": [
+    {
+      "ordinal": 1,
+      "kind": "function",
+      "name": "A",
+      "byteStart": 0,
+      "byteEnd": 25
+    },
+    {
+      "ordinal": 2,
+      "kind": "function",
+      "name": "B",
+      "byteStart": 28,
+      "byteEnd": 50
+    },
+    {
+      "ordinal": 3,
+      "kind": "function",
+      "name": "C",
+      "byteStart": 51,
+      "byteEnd": 81
+    }
+  ],
+  "trivia": [
+    {
+      "byteStart": 25,
+      "byteEnd": 28
+    },
+    {
+      "byteStart": 50,
+      "byteEnd": 51
+    }
+  ],
+  "refs": [
+    {
+      "fromDecl": "sample.A",
+      "refName": "B",
+      "kind": "calls",
+      "atByte": 21
+    }
+  ]
+}

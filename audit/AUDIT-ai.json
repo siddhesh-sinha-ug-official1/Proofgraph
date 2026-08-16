@@ -1,0 +1,156 @@
+{
+  "area": "ai",
+  "reverifyNote": "Independent second pass, 2026-08-03 (RESUME semantics — hub-precedent re-verification, prior audit kept, never redone): all 21 files re-read whole; every recorded line count wc-exact; the ai/server.ts overclaim fix, ARCHITECTURE-PHASE2.md:119 and app/README.md:169 stale fixes all confirmed in place; build-gate regex extraction of both secret literals from ai/server.ts re-matched against app/test/p3.build.gate.test.ts; byok bus uncatalogued emit+tap rejection re-confirmed (packages/byok-arena/src/probe/bus.ts:70,132); ai_check.mjs dynamic facade import re-confirmed (acceptance/headless/ai_check.mjs:34). ONE new stale found+fixed: ai/ASSEMBLY-CHANGES.md SUB200 table still recorded the server.ts facade at 83 lines — the prior audit's own header correction grew it to 88; dated drift note added (capability-layer precedent), history not rewritten. Left to the concurrent honesty-sweep verifiers (round-dated report corpus, not churned here): vessels/REPORT-SUB200-ai.md:12,54 same 83-line rows; vessels/REPORT-P3-face.md:16 + REPORT-V6.md:10 + REPORT-SUB200-byok-arena.md:7 name the pre-split test files (historical-then-true). Suite re-run after the fix: 14/14, count unchanged.",
+  "files": [
+    {
+      "path": "ai/service.ts",
+      "lines": 69,
+      "verifiedPurpose": "Facade at the original V6 path: re-exports the outlet public surface (createAiOutlet, OutletFailure, MAX_TOOL_ROUNDS, TOOL_OUTPUT_MAX_BYTES, all outlet types) from ai/outlet/*; its header carries the outlet contract (graph as data, one tool round, key-scrub invariants) that the impl modules and tests uphold.",
+      "claims": { "confirmed": 8, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "Header narrates the tool round as chat -> stopReason 'tool_calls'; the code triggers on first.toolCalls.length>0 (stopReason only consulted for the continuation's wantsMore). Same behavior on the wall's normalized results; noted, not churned."
+    },
+    {
+      "path": "ai/server.ts",
+      "lines": 88,
+      "verifiedPurpose": "Facade for the P3 ai face server: holds the two server-side secret literals (app/test/p3.build.gate.test.ts live-extracts them from this file's source), re-exports the server/* surface, and calls maybeRunCli(import.meta.url) so `node ai/server.ts` starts the server while a mere import never does.",
+      "claims": { "confirmed": 7, "overclaim": 1, "underclaim": 0, "stale": 0 },
+      "notes": "OVERCLAIM FIXED (doc-only): the failure-class list promised 'every OutletFailure class verbatim (incl. unknown-tool, key-leak)' and 'hub typed refusals passed through verbatim (incl. roots-undeclared)'. Reality: unknown-tool is answered inside the tool round as an isError tool result (never a typed refusal response); a hub /query refusal becomes the 200 honest no-claim path (class named in graphFacts.provenanceSource); only thrown OutletFailures (tool-loop-exceeded, graph-data-stale, lead-in-edges) reach 409 verbatim. Header rewritten to match; secret literals untouched (build gate re-run green)."
+    },
+    {
+      "path": "ai/outlet/types.ts",
+      "lines": 89,
+      "verifiedPurpose": "Defines the outlet's bounds (MAX_TOOL_ROUNDS=1, TOOL_OUTPUT_MAX_BYTES=16384), the OutletFailure error carrying one of five class names, and the type-only data shapes (graph envelope, provenance, probe events, ask options/result, outlet config) consumed by the other outlet modules; all cell imports are type-only and erased at runtime.",
+      "claims": { "confirmed": 5, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "The 'cell's bus hard-rejects uncatalogued ids' aside verified against packages/byok-arena/src/probe/bus.ts (throws on uncatalogued emit and tap); the outlet indeed never emits into the wall bus."
+    },
+    {
+      "path": "ai/outlet/pins.ts",
+      "lines": 56,
+      "verifiedPurpose": "In-memory probe-event stream for the outlet: emit() records seq-numbered events routing every payload through scrub(), which replaces any active secret with a [REDACTED-BY-OUTLET:last4=...] marker and pins outlet.keyLeak.redacted (failure class key-leak) on every hit; setActiveSecrets is set by ask() for one run and cleared in its finally block.",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "ai/outlet/tools.ts",
+      "lines": 161,
+      "verifiedPurpose": "Builds the four declared tool defs (listUnused, trustBase, nodeInfo, listLeads), the local executor answering purely from the handed-in graph/provenance data (honest no-claim when no unused set was provided; unknown tool -> named isError result), and the byte-bound wrapper truncating outputs over 16384 bytes with a logged pin; called only by outlet/core.ts.",
+      "claims": { "confirmed": 7, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "The four ToolDef description strings (probe-catalog-style claims) each verified against the executor: listUnused makes no claim without provenance; trustBase walks resolved edges only and counts-not-follows leads; nodeInfo returns the full canonical record; listLeads never promotes leads. Truncation is honestly labelled character-sliced after a byte measure."
+    },
+    {
+      "path": "ai/outlet/ask.ts",
+      "lines": 143,
+      "verifiedPurpose": "makeAsk() returns the ask() closure: validates question/apiKey/model, sets the api key as the pin-scrub active secret for the run, performs one byokWall.chat, executes any requested tools locally via the bound executor, submits results once via byokWall.submitToolResults, throws OutletFailure tool-loop-exceeded if the continuation requests tools again (bound pinned first), scrubs the final text and pins it digest-only; the key exists only as call arguments.",
+      "claims": { "confirmed": 6, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "ai/outlet/core.ts",
+      "lines": 83,
+      "verifiedPurpose": "createAiOutlet(): checks the byokWall face and envelope shape (plain Errors), refuses lead-in-edges (resolved flag on the wrong side) and graph-data-stale (provenance ids absent from this snapshot) as typed OutletFailures with the stale check pinned either way, then wires pins + tools + ask and returns the {ask, tools, pins} outlet; called by server/askroute.ts and the tests.",
+      "claims": { "confirmed": 5, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "ai/server/config.ts",
+      "lines": 36,
+      "verifiedPurpose": "Constants (AI_SERVER_VERSION, DEFAULT_PORT 8478, DEFAULT_HUB_BASE :8477, DEFAULT_MODEL) and the AiTransport/AiServerConfig/AiServerHandle shapes shared by the server modules; correctly notes the secret literals live in ai/server.ts for the build gate.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "ai/server/fakemodel.ts",
+      "lines": 115,
+      "verifiedPurpose": "fakeAnthropicRoutes(): one FakeRoute matching POST api.anthropic.com/v1/messages that first requests exactly one tool (listLeads for lead/unresolved-flavored questions, else listUnused) and then composes its answer text solely from the tool_result bytes present in the request, tagged [FAKE-transport ...]; consumed by server/core.ts through cell 6's makeFakeFetch, so nothing reaches the network.",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "ai/server/hub.ts",
+      "lines": 74,
+      "verifiedPurpose": "fetchHubSnapshot(): GETs {hubBase}/graph (transport failure -> HubDown; non-200 -> OutletHttpRefusal 503 carrying the hub's failureClass verbatim) then /query?kind=unused (200 -> roots/unused provenance; non-200 -> no-claim provenance naming the refusal class), returning the per-ask graph+provenance pair; called by askroute.ts on every /ask.",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "ai/server/askroute.ts",
+      "lines": 100,
+      "verifiedPurpose": "handleAsk(): buffers the POST /ask body, refuses bad JSON or a missing question (400 ai-bad-request), fetches a fresh hub snapshot, constructs the outlet and runs ask(), then sends answer + toolCalls (rebuilt from the outlet's own outlet.tool.exec pins) + bounds + usage + graphFacts through deps.send (core.ts's guard-2 chokepoint), mapping OutletHttpRefusal/HubDown/OutletFailure/other to their typed status+failureClass.",
+      "claims": { "confirmed": 5, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "ai/server/core.ts",
+      "lines": 135,
+      "verifiedPurpose": "createAiServer(): resolves config (fake vs live key sourcing — live without a key is a typed ai-live-key-missing refusal; masterSecret default chain cfg -> env -> facade literal), builds one byok wall per server (fake transport wired to fakeAnthropicRoutes), and serves /health and POST /ask over node:http where every response body is re-scanned for the process's own key material before writing (a hit becomes a 500 key-leak refusal); returns {server, port, transport, close}.",
+      "claims": { "confirmed": 5, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "'ONE wall per server process' is per server INSTANCE (tests create several per process, each with its own wall); in the CLI use one instance == one process. Precision note only."
+    },
+    {
+      "path": "ai/server/cli.ts",
+      "lines": 60,
+      "verifiedPurpose": "maybeRunCli(): starts the server only when the facade's module url equals pathToFileURL(argv[1]), parsing --live/--port/--hub, defaulting FAKE mode to a per-process randomized masterSecret (env AI_MASTER_SECRET wins; live mode falls through to the facade literal), printing a one-line ready/failure JSON; called once from the bottom of ai/server.ts.",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "ai/test/v6.outlet.fixtures.ts",
+      "lines": 151,
+      "verifiedPurpose": "Shared V6 test fixtures (not a test file): test secrets, a four-node python fixture graph with one resolved edge and one lead, golden Anthropic wire bodies, fake-route builders (happy path + looping adversary), a wall factory with deterministic clocks, and pin-payload helpers; imported by the three v6.outlet.*.test.ts files, which together hold the original 8 tests.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "ai/test/v6.outlet.golden.test.ts",
+      "lines": 146,
+      "verifiedPurpose": "The V6 golden-round test (1 test): one ask() through the fake transport must answer with the real unused node id while the outlet's pins, cell 6's adapter/wall pins, and the captured wire bodies agree byte-for-byte across the seam, and no key/masterSecret appears in the return, either pin stream, the wire, or wall.pins.dump(); the graph object must come back unmutated.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "ai/test/v6.outlet.security.test.ts",
+      "lines": 87,
+      "verifiedPurpose": "Three V6 security tests: a key planted in the question must be FOUND by the wall-side leak scan (proving the scanner) while the outlet's own pins and return stay key-free; the wall refuses dev-default/empty/missing masterSecret as insecure-master-secret; vessels/REPORT-V6.md must carry no test secret (skips if the report is absent).",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "ai/test/v6.outlet.gates.test.ts",
+      "lines": 114,
+      "verifiedPurpose": "Four V6 gate tests: a second tool round is refused as tool-loop-exceeded with the bound pinned and both wall calls having happened; stale provenance and a resolved=false record smuggled into edges[] are refused at construction; the four local tools answer from fixture data with unknown-node/unknown-tool as named isError results and an honest no-claim when no unused set was provided.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "ai/test/p3.server.fixtures.ts",
+      "lines": 114,
+      "verifiedPurpose": "P3 test fixtures (not a test file): a node:http fixture hub serving /graph and /query?kind=unused with injectable envelopes and refusals, the canonical four-node envelope factory, the test masterSecret, and a POST helper; imported by both p3.server.*.test.ts files, which together hold the original 6 tests.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "ai/test/p3.server.ask.test.ts",
+      "lines": 128,
+      "verifiedPurpose": "Three /ask seam tests against an ephemeral createAiServer + fixture hub: the answer must carry the real unused node id with the tool calls surfaced and no secret in the bytes; a leads question must route to listLeads citing the real lead id; bad body/missing question/unknown endpoint/hub-down map to their typed classes, and a hub /query refusal becomes a 200 honest no-claim naming the class in provenanceSource.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "ai/test/p3.server.custody.test.ts",
+      "lines": 108,
+      "verifiedPurpose": "Three key-custody tests: an api key planted as a fixture node name is served redacted with the loud REDACTED-BY-OUTLET marker (guard 1, outlet scrub); a planted masterSecret — which the outlet does not know — turns the whole response into a 500 key-leak refusal (guard 2, server response gate); /health is typed and secret-free and a direct fakeAnthropicRoutes continuation provably composes only from tool_result bytes.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "ai/package.json",
+      "lines": 10,
+      "verifiedPurpose": "Vessel manifest: type=module, npm test = node --test over test/*.test.ts (Node 24 native type-stripping), zero dependencies declared — matching its own description.",
+      "claims": { "confirmed": 2, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    }
+  ],
+  "docFixes": [
+    {
+      "path": "ai/server.ts",
+      "what": "Header failure-class enumeration corrected (comment-only): only thrown OutletFailure classes (tool-loop-exceeded, graph-data-stale, lead-in-edges) are served 409 verbatim; unknown-tool is answered inside the tool round as an isError tool result and hub /query refusals (roots-undeclared) become the 200 honest no-claim path — the old text promised every OutletFailure class and all hub refusals as typed refusals verbatim. Secret literals untouched; app/test/p3.build.gate.test.ts re-run green."
+    },
+    {
+      "path": "ARCHITECTURE-PHASE2.md",
+      "what": "Stale filename in the key-leak response-gate entry: ai/test/p3.server.test.ts -> ai/test/p3.server.custody.test.ts (the planted-masterSecret negative control moved there in the SUB200 split)."
+    },
+    {
+      "path": "app/README.md",
+      "what": "Stale filename in Key custody proof 2: ai/test/p3.server.test.ts -> ai/test/p3.server.custody.test.ts (SUB200 split)."
+    },
+    {
+      "path": "ai/ASSEMBLY-CHANGES.md",
+      "what": "STALE (found in the 2026-08-03 re-verification pass): the SUB200 table's server.ts facade row said 83 lines; the adversarial header correction had grown the facade to 88. Dated drift note added under the table; the historical row itself left as recorded (true at its date). All other table counts re-measured exact."
+    }
+  ],
+  "codeFindings": []
+}

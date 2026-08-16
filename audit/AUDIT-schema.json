@@ -1,0 +1,220 @@
+{
+  "area": "packages/schema",
+  "files": [
+    {
+      "path": "packages/schema/README.md",
+      "lines": 102,
+      "verifiedPurpose": "Package README: documents the v0.1 amendment rulings (verified against schema.json/capability.json), the file layout, the regen/test commands, and the per-cell TS/Python import patterns for the canonical schema package.",
+      "claims": {"confirmed": 14, "overclaim": 2, "underclaim": 1, "stale": 0},
+      "notes": "Overclaims fixed in place: (1) 'schema.json is the only hand-edited artifact' — capability.json is hand-edited too (the README's own regen section says edit BOTH); (2) layout said 'schemagen.py regenerates everything below' but vectors.json sits below and is never regenerated. Underclaim fixed: layout omitted the 8 schemagen_* split modules. 'five facts promoted into schema.json' checks out (rulings 1,4,5,6,7 land in schema.json; 2 in capability.json; 3 is the revision mechanism)."
+    },
+    {
+      "path": "packages/schema/ASSEMBLY-CHANGES.md",
+      "lines": 43,
+      "verifiedPurpose": "Change log for the SUB200 split: records which templates/generators/tests moved where with per-file line counts, and the unchanged suite counts. All line counts re-verified with wc -l; 23 py / 14 ts counts re-verified by running both suites; --check exits 0.",
+      "claims": {"confirmed": 10, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/package.json",
+      "lines": 11,
+      "verifiedPurpose": "npm manifest for @proofgraph/schema: private ESM package, no dependencies, two scripts (node --test suite; python schemagen.py --check).",
+      "claims": {"confirmed": 2, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/schema.json",
+      "lines": 103,
+      "verifiedPurpose": "Hand-edited Frozen Schema v0 (document revision v0.1): Node/Edge/Graph JSON-Schema $defs plus the promoted ruling facts (outlineWorstOrder, outlinePolicy, worstTokenToStatus, unresolvedPlaceholder, idScheme, and the ruling-7 provenance.resolved description); its canonical-JSON sha256 is the PIN hash. Never edited by this audit (hash-pinned by PIN, graph-model's hard-coded pin, and byte-compared into graph-model's cell copy).",
+      "claims": {"confirmed": 5, "overclaim": 0, "underclaim": 0, "stale": 0},
+      "notes": "Embedded prose claims (delimiterNote, idScheme.form, normalizedSpan, provenance.resolved description, Graph.leads description) all match ids.py/validate.py behavior and are asserted by test_constants_sync.",
+      "refuterNote": "Stage-B refuter: the promoted-facts enumeration omitted ruling 7 — the provenance.resolved description ($defs.Node.properties.provenance.properties.resolved.description) IS a promoted fact in schema.json, per the README's own amendment table and this audit's own README note (rulings 1,4,5,6,7 land in schema.json)."
+    },
+    {
+      "path": "packages/schema/capability.json",
+      "lines": 13,
+      "verifiedPurpose": "Hand-edited depth-tier seam source (CT|S|G|P): depthAllowsResolvedEdges (ruling 2: only CT true), depthToMaxProvenance, honestCeilings; projected into gen/capability_constants.{py,ts} and asserted by both capability-seam gates.",
+      "claims": {"confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/vectors.json",
+      "lines": 123,
+      "verifiedPurpose": "Frozen cross-language golden id vectors (5 node + 3 edge, incl. module-kind, unresolved-placeholder and non-ASCII cases); replayed byte-for-byte by tests/test_id_vectors.py, tests/id-mint.test.ts, and graph-model's test_canonical_sync.",
+      "claims": {"confirmed": 2, "overclaim": 0, "underclaim": 0, "stale": 1},
+      "notes": "EXEMPT (frozen golden) — reported, not edited: its 'note' metadata field still references retired tests/schema-package.test.ts (superseded by id-mint.test.ts in the SUB200 split). The vector data itself is what is frozen and it verifies clean; the stale filename is metadata only."
+    },
+    {
+      "path": "packages/schema/ids.py",
+      "lines": 97,
+      "verifiedPurpose": "Canonical id mint: builds US(0x1f)-joined domain-tagged preimages ('node:v0'/'edge:v0') and mints n_/e_ + sha256[:16]-hex ids; also canonical-name (module.member) and structural-path (module::member) builders, full identity dicts, and sorted manifest re-ingest. Imported by the Python cells; ported to gen/ids.ts.",
+      "claims": {"confirmed": 6, "overclaim": 0, "underclaim": 0, "stale": 0},
+      "notes": "Functionally byte-pinned by graph-model test_canonical_sync (top-level defs compared; module docstring exempt). All docstring claims verified against vectors.json replays."
+    },
+    {
+      "path": "packages/schema/pin.py",
+      "lines": 41,
+      "verifiedPurpose": "Parses the two-line PIN file (read_pin) and assert_pin() re-hashes schema.json and check_pin()s it against the pin, raising SchemaPinMismatch on drift and returning the parsed schema; consuming cells call it at startup.",
+      "claims": {"confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/schema_tools.py",
+      "lines": 42,
+      "verifiedPurpose": "Schema identity helpers: canonical_json (sorted keys, compact separators, non-ASCII raw), schema_hash over it, node/edge kind accessors, and check_pin which raises SchemaPinMismatch on version drift or same-version hash drift.",
+      "claims": {"confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0},
+      "notes": "Functionally byte-pinned by graph-model test_canonical_sync (import wiring + module docstring exempt)."
+    },
+    {
+      "path": "packages/schema/validate.py",
+      "lines": 95,
+      "verifiedPurpose": "Hand-rolled stdlib validator for the JSON-Schema subset schema.json uses, plus the leads-segregation invariant in both directions (resolved=false in edges[] and resolved=true in leads[] are errors); validate_graph returns (bool, full error list).",
+      "claims": {"confirmed": 3, "overclaim": 0, "underclaim": 1, "stale": 0},
+      "notes": "UNDERCLAIM reported, not fixed: the docstring's supported-keyword list omits 'minimum', which the code implements (line 56) and schema.json uses (span.byteStart/byteEnd minimum 0). NOT editable: graph-model test_canonical_sync::test_validate_py_byte_identical byte-compares this file wholesale against the read-only cell original — a docstring fix here would break that gate."
+    },
+    {
+      "path": "packages/schema/schemagen.py",
+      "lines": 66,
+      "verifiedPurpose": "Facade + CLI entry point after the SUB200 split: re-exports the full former schemagen surface (templates, generators, driver) from the schemagen_* modules unchanged and dispatches python schemagen.py --write|--check.",
+      "claims": {"confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/schemagen_common.py",
+      "lines": 69,
+      "verifiedPurpose": "Shared codegen helpers: _fill @KEY@ template substitution, TS/Python literal formatters, and _schema_facts — the single extractor pulling every templated value (enums, id scheme, rulings, placeholder, patterns) from parsed schema.json.",
+      "claims": {"confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/schemagen_cli.py",
+      "lines": 90,
+      "verifiedPurpose": "Codegen driver: regenerate() returns the 8 artifact texts (7 gen/ files + PIN), load_sources() parses schema.json + capability.json, main() implements --write (write all) and --check (byte-diff, exit 1 with failure-class=codegen-drift).",
+      "claims": {"confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/schemagen_ts_graph.py",
+      "lines": 145,
+      "verifiedPurpose": "Template + generator for gen/graph-schema.ts: enum consts/types, Node/Edge/Graph/Lead interfaces, id patterns, and the worst-of outline policy (rankWorstToken/worstOfVerdict), all interpolated from _schema_facts. Byte-regenerability proven by --check.",
+      "claims": {"confirmed": 2, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/schemagen_ts_ids.py",
+      "lines": 150,
+      "verifiedPurpose": "Template + generator for gen/ids.ts, the TypeScript port of the mint: same preimage/id functions as ids.py with sha256 via process.getBuiltinModule('node:crypto') and a setSha256Provider escape hatch for non-Node runtimes; constants from schema.json idScheme.",
+      "claims": {"confirmed": 2, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/schemagen_py_constants.py",
+      "lines": 94,
+      "verifiedPurpose": "Template + generator for gen/schema_constants.py, the Python mirror of graph-schema.ts: enum tuples, id patterns, outline order/status table/banned tokens, placeholder helper, and the worst-of policy functions.",
+      "claims": {"confirmed": 2, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/schemagen_capability.py",
+      "lines": 86,
+      "verifiedPurpose": "Templates + generators for gen/capability_constants.py and .ts from capability.json: depth tiers, depthAllowsResolvedEdges, depthToMaxProvenance, honestCeilings.",
+      "claims": {"confirmed": 2, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/schemagen_pin.py",
+      "lines": 66,
+      "verifiedPurpose": "Templates + generators for gen/pin.ts (pinned version/revision/hash consts, canonicalJson mirroring Python's dump form, checkPin) and the two-line PIN file, both derived from schema_hash(schema.json).",
+      "claims": {"confirmed": 2, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/schemagen_md.py",
+      "lines": 150,
+      "verifiedPurpose": "Template + generator for gen/schema.md, the human-readable spec projection: kinds, the constitution block, tiers, worst-of order/table, placeholder, hard invariants, and the content-addressing description, from _schema_facts.",
+      "claims": {"confirmed": 2, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/tests/context.py",
+      "lines": 39,
+      "verifiedPurpose": "Shared Python test context: puts packages/schema and gen/ on sys.path, loads schema/capability/vectors JSON once, and carries the 10-row VERDICT_CASES table mirrored value-for-value in context.ts (cross-language outline-policy gate).",
+      "claims": {"confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/tests/context.ts",
+      "lines": 48,
+      "verifiedPurpose": "Shared TS test context: resolves PKG_ROOT, loads the three JSON documents via node:fs, types the node/edge vector records, and duplicates the 10-row VERDICT_CASES table from context.py.",
+      "claims": {"confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/tests/test_schema_package.py",
+      "lines": 26,
+      "verifiedPurpose": "Runner facade preserving the historical `python tests/test_schema_package.py` entry point: discovers and runs the split test files (23 tests, verified), exits nonzero on failure, and contributes zero tests under `unittest discover` (no module-level TestCase).",
+      "claims": {"confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/tests/test_codegen_sync.py",
+      "lines": 37,
+      "verifiedPurpose": "Codegen byte-sync gate: asserts regenerate() yields exactly the 8 expected artifacts, each byte-equal to disk, and that the --check CLI exits 0.",
+      "claims": {"confirmed": 2, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/tests/test_pin_gate.py",
+      "lines": 40,
+      "verifiedPurpose": "PIN gate: asserts the PIN file matches the recomputed canonical hash of schema.json, assert_pin() passes on the canonical pair (v0 / v0.1), and check_pin raises SchemaPinMismatch on mutated-schema hash drift and on version drift.",
+      "claims": {"confirmed": 2, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/tests/test_id_vectors.py",
+      "lines": 56,
+      "verifiedPurpose": "Golden id-vector gate: replays every vectors.json vector through ids.py asserting byte-equal names/paths/preimages/ids, checks coverage (>=6 vectors, module kind, unresolved placeholder, non-ASCII name), and asserts US delimiter + domain tags in every preimage.",
+      "claims": {"confirmed": 2, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/tests/test_worst_of_policy.py",
+      "lines": 48,
+      "verifiedPurpose": "Outline worst-of policy gate over gen/schema_constants.py: asserts the ruling-4 order/status-table/banned-token constants, positional ranks with unrecognized ranking -1, the shared VERDICT_CASES table, and the unresolved-placeholder helpers.",
+      "claims": {"confirmed": 2, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/tests/test_constants_sync.py",
+      "lines": 74,
+      "verifiedPurpose": "Constants-mirror gate: asserts gen/schema_constants.py enums equal schema.json's, the seven v0.1 amendment facts are recorded in schema.json (rulings 1,3,4,5,6,7 + envelope const), and ids.py constants/prefixes match idScheme.",
+      "claims": {"confirmed": 2, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/tests/test_validate_graph.py",
+      "lines": 88,
+      "verifiedPurpose": "Envelope-validator gate: builds a minimal canonical graph with real minted ids and asserts validate_graph accepts it and rejects a resolved=false edge in edges[], a resolved=true lead, a wrong-format (24-hex) node id, and a missing schemaVersion.",
+      "claims": {"confirmed": 2, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/tests/test_capability_seam.py",
+      "lines": 33,
+      "verifiedPurpose": "Capability seam gate: asserts gen/capability_constants.py equals capability.json field-for-field and the ruling-2 table itself (depth tiers CT|S|G|P; resolved edges allowed only at CT).",
+      "claims": {"confirmed": 2, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/tests/id-mint.test.ts",
+      "lines": 67,
+      "verifiedPurpose": "TS id-mint gate: sha256 provider sanity, gen/ids.ts constants match schema.json idScheme, byte-equal replay of all node and edge vectors (incl. a placeholder dst), and idsFromManifest agreeing with graph-model's frozen goldens (verified present in graph-model tests/context.py).",
+      "claims": {"confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/tests/outline-policy.test.ts",
+      "lines": 62,
+      "verifiedPurpose": "TS outline-policy gate: gen/graph-schema.ts enums/version/revision match schema.json, the ruling-4 order and ruling-1 definition->blue table, rankWorstToken positional/-1 behavior, the shared VERDICT_CASES, and placeholder helpers.",
+      "claims": {"confirmed": 2, "overclaim": 0, "underclaim": 0, "stale": 0}
+    },
+    {
+      "path": "packages/schema/tests/pin-capability.test.ts",
+      "lines": 59,
+      "verifiedPurpose": "TS pin + capability gate: canonicalJson byte-matches Python's dump form, PIN file and gen/pin.ts consts agree with the recomputed schema hash, checkPin fails fast on version/hash drift, and gen/capability_constants.ts equals capability.json with ruling 2 recorded.",
+      "claims": {"confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0}
+    }
+  ],
+  "docFixes": [
+    {
+      "path": "packages/schema/README.md",
+      "what": "Fixed overclaim 'schema.json is the only hand-edited artifact' -> schema.json AND capability.json are the only hand-edited sources (the README's own regen section already said to edit both)."
+    },
+    {
+      "path": "packages/schema/README.md",
+      "what": "Layout: 'schemagen.py regenerates everything below' overclaimed (vectors.json sits below and is never regenerated) -> now says 'facade + CLI; regenerates gen/* + PIN (NOT vectors.json)'; added the missing schemagen_*.py split-modules row (underclaim after SUB200)."
+    }
+  ],
+  "codeFindings": [],
+  "suites": {
+    "codegen": "python schemagen.py --check -> 8 generated artifacts in sync (schemaHash 3f3123699c45...)",
+    "python": "python -m unittest discover -s tests -> Ran 23 tests, OK (also 23 OK via the test_schema_package.py facade entry point)",
+    "typescript": "node --test tests/*.test.ts -> 14 pass / 0 fail"
+  }
+}

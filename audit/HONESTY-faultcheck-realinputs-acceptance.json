@@ -1,0 +1,40 @@
+{
+  "slice": "vessels/REPORT-FAULTCHECK.md + REAL-INPUTS PROVENANCE pins + acceptance/ (ACCEPTANCE-REPORT vs analysis-*.json, TRACE-full.json, evidence/, faultcheck records)",
+  "date": "2026-08-03",
+  "claimsChecked": 133,
+  "verified": 119,
+  "corrected": [
+    {
+      "where": "acceptance/fixtures/real_lean/PROVENANCE.md (SizeOfLemmas bullet)",
+      "was": "src/SizeOfLemmas.lean (46 lines)",
+      "is": "src/SizeOfLemmas.lean (42 lines) [HONESTY-SWEEP correction noted in place] - measured 42 newlines on disk; sha256 pin unchanged and byte-identical to the toolchain original, so only the prose line count was wrong"
+    }
+  ],
+  "unverifiable": [
+    {
+      "where": "ACCEPTANCE-REPORT.md suite roll-up rows: editor-shell 96, byok-arena 103, schema (ts) 14, app 111+1 todo",
+      "why": "JS test-runner totals require running the suites (forbidden here - wave-3 closer owns clean-state totals); recorded consistently in both the 2026-08-02 17/18 and 2026-08-03 19/19 verbatim sweep tables"
+    },
+    {
+      "where": "ACCEPTANCE-REPORT.md section 7(g) squiggle: diagnostic bytes [235,244) and the pyright message text",
+      "why": "would need a live pyright rerun; recorded only in evidence/checks.json (which the report reproduces byte-identically)"
+    },
+    {
+      "where": "REPORT-FAULTCHECK.md section 4.1 verbatim fault-run quotes (n_b1a9ac7bf8258491, n_89a4b4877bbbbe37/n_89a4b4877bbbbe30, e_fb5e312c80e57d7b, n_af0446d0d9a8e917, index-BhK1Rh1e.js) - 5 quotes",
+      "why": "one-shot outputs from discarded scratch copies; cannot be regenerated cheaply. Corroborated in summary form by agentic-convos/remediation-round.md ([FAULT-INJECTION + CLEAN-STATE] entry: control 129 OK -> UnbackedGreenError errors=2, 8 passed -> file failed, 16 OK -> errors=1, 41 OK -> Ran 0/errors=1, 1 passed -> 1 failed) and by REMEDIATION-REPORT.md section 3 take 2 (6/6 CAUGHT). All quoted failure-class strings and target files verified present in the actual guard code."
+    },
+    {
+      "where": "REPORT-FAULTCHECK.md torn-snapshot dissection: fault (a) sweep CONTROL 'Ran 124 tests ... FAILED (errors=72)'",
+      "why": "historical one-shot output of a discarded scratch; the torn-snapshot event itself is corroborated by the transcript entry and REMEDIATION-REPORT"
+    },
+    {
+      "where": "REPORT-FAULTCHECK.md bound 2: cell 3 run_all.py --fast RED at report close (ImportError _uri_to_path)",
+      "why": "timestamped historical state (2026-08-02 mid-refactor); superseded by the 2026-08-03 19/19 clean-state record showing cell 3 green at 140"
+    },
+    {
+      "where": "ACCEPTANCE-REPORT.md 'canonical bytes == hub GET /analysis' for analysis-ceiling.json",
+      "why": "TRACE-full.json carries served-payload sha256 hops only for moat (verified equal, 51b376f0/11280B) and lean (verified equal, 1586a8a7); the ceiling file has no recorded served-bytes hop to compare without a rerun"
+    }
+  ],
+  "notes": "Highlights: all 9 PROVENANCE sha256 pins match disk AND ow_real_shared.py SHA_PINS AND the toolchain/site-packages originals; both TRACE idSha256 values recompute correctly from the id bytes; hub-served payload hashes in TRACE match the on-disk analysis JSONs byte-for-byte (moat+lean); 59 UI page-checks = 17+23+19 all pass in evidence; REPORT-FAULTCHECK sweep table sums to exactly 696.2s with 17/18 internally consistent; junction sizes 240M/107M re-measured exact; all 12 cited probe ids exist in the cells' catalogs; all 6 guard failure classes exist in the real guard code; Classical.lean '42 named decls' confirmed by the frozen pin in outerwall/test_real_inputs_lean.py."
+}

@@ -1,0 +1,71 @@
+{
+  "nodeId": "n_ccb26550281c06b8",
+  "name": "richpkg.core.alpha",
+  "idSha256": "188bf8368634b083ead61eec34ff86ab1a68c6329e57b7e44bde1216db49776e",
+  "idUtf8Bytes": [
+    110,
+    95,
+    99,
+    99,
+    98,
+    50,
+    54,
+    53,
+    53,
+    48,
+    50,
+    56,
+    49,
+    99,
+    48,
+    54,
+    98,
+    56
+  ],
+  "byteIdentical": true,
+  "provenance": "V4 system trace seed: one Node.id proven byte-identical at extraction → graph-model ingest → hub-served /graph → graph-view dump(). Phase 3 appends the editor-selection hop to hops[].",
+  "fixture": "packages/structure-extractor/fixtures/pyrich (richpkg; recorded pyright)",
+  "hops": {
+    "extractorPin": {
+      "cell": "structure-extractor",
+      "probeId": "extractor.t1.node.id",
+      "logicalClock": 179,
+      "id": "n_ccb26550281c06b8",
+      "preimage": {
+        "lang": "python",
+        "kind": "function",
+        "canonicalName": "richpkg.core.alpha",
+        "file": "richpkg/core.py",
+        "path": "richpkg.core::alpha",
+        "joined": "node:v0\\x1fpython\\x1ffunction\\x1frichpkg.core.alpha\\x1frichpkg/core.py\\x1frichpkg.core::alpha"
+      },
+      "via": "GET /pins/history (extractor wall stream)"
+    },
+    "modelPin": {
+      "cell": "graph-model",
+      "probeId": "graph-model.wall.ingest.accepted",
+      "logicalClock": 4,
+      "id": "n_ccb26550281c06b8",
+      "idInRootIds": true,
+      "pinSurfaceEndpoint": "/graph/truth (pins.dump()['wall']['ingested'])",
+      "truthPayloadSha256": "2244619a8a0d557bcefece5ab7f8c1a712679883986c517bbe67a877c899a0d5"
+    },
+    "servedEnvelope": {
+      "endpoint": "/graph",
+      "id": "n_ccb26550281c06b8",
+      "idByteOffsets": [
+        3715
+      ],
+      "payloadSha256": "2244619a8a0d557bcefece5ab7f8c1a712679883986c517bbe67a877c899a0d5",
+      "payloadBytes": 7099
+    },
+    "viewDump": {
+      "cell": "graph-view",
+      "probeId": "ingest.node",
+      "logicalClock": 8,
+      "id": "n_ccb26550281c06b8",
+      "rfNodePresent": true,
+      "wallVersion": "graph-view-wall/1.0.0"
+    }
+  }
+}

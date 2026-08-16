@@ -1,0 +1,20 @@
+[
+  {
+    "dst": "unresolved:Mathlib.Data.Nat.Basic",
+    "extractor": "lean-infotree",
+    "kind": "imports",
+    "resolved": false,
+    "resolver": "",
+    "src": "Basic",
+    "tier": "T2"
+  },
+  {
+    "dst": "unresolved:Basic.double",
+    "extractor": "lean-infotree",
+    "kind": "proof_uses",
+    "resolved": false,
+    "resolver": "",
+    "src": "Basic.double_eq",
+    "tier": "T2"
+  }
+]

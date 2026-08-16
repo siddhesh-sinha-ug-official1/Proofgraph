@@ -1,0 +1,5 @@
+let shared: Int = 7
+
+fn helper(a: Int) -> Int {
+  a
+}

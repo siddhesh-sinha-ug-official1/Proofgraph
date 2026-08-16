@@ -1,0 +1,51 @@
+{
+  "slug": "lean-driver-pins-catalogs",
+  "date": "2026-08-03",
+  "slice": "agentic-convos/remediation-round.md + vessels/REPORT-{LEAN-DRIVER-SPIKE,CAP-LEAN,ROOTFIX,LEANDOCK,GREENFLOW}.md: driver CLI/pin claims, catalog counts, golden paths, probe ids, run-sha resolution (TRACE-full.json greenTrace), fixture claims (unused_hyp.lean)",
+  "method": "every checkable claim treated as a hypothesis; verified by file reads, greps against catalogs/code, JSON content checks, and two live single-file driver runs (<5s each, no suite re-runs)",
+  "claimsChecked": 52,
+  "verified": 48,
+  "corrected": [],
+  "updatedNotes": [
+    {
+      "where": "vessels/REPORT-LEANDOCK.md — 'Probe catalog 137 -> 148'",
+      "was": "137 -> 148 (true at the LEANDOCK round)",
+      "is": "historical-then-updated: REAL-INPUTS grew it 148 -> 149 additively (extractor.t2.lean.decl.match); re-measured 2026-08-03 at 149 = 32+41+48+28 across the four probe/catalog_*.py section files; additive [updated:] note added in place (NOT a correction — claim was true when written)"
+    },
+    {
+      "where": "vessels/REPORT-GREENFLOW.md — bound 5 'hub Test05 census updated 137 -> 148'",
+      "was": "census 148 (true at the GREEN-FLOW round)",
+      "is": "historical-then-updated: census now 149, asserted in hub/test_hub_pins.py:47,51 (SUB200 split) with an in-code comment documenting both growth steps; additive [updated:] note added in place (NOT a correction)"
+    }
+  ],
+  "unverifiable": [
+    {
+      "where": "REPORT-LEAN-DRIVER-SPIKE.md — cold-start latency '75.9s once'",
+      "why": "one-time historical measurement; toolchain is now warm (live re-run today: 4.1s incl. shell overhead, consistent with the 2.5-3s warm claim), the cold number cannot be reproduced without evicting the OS file cache"
+    },
+    {
+      "where": "REPORT-LEAN-DRIVER-SPIKE.md 'Ran 104 tests' / REPORT-CAP-LEAN.md '131 passed' / REPORT-ROOTFIX.md suite table (104/31/44/10/16 etc.)",
+      "why": "historical full-suite totals; re-running long suites is explicitly out of scope for this sweep (wave-3 closer owns clean-state totals). The count CHAIN is internally consistent: 103 (Phase-1) +1 (ROOTFIX bare-dir test) = 104 (spike observation) +27 (LEANDOCK) = 131 +9 (REAL-INPUTS) = 140 (live per AUDIT-structure-extractor)"
+    },
+    {
+      "where": "REPORT-LEANDOCK.md — 'fixtures/golden/lean.edges.json ... diffed byte-identical to the pre-round bytes'",
+      "why": "the pre-round bytes are not preserved anywhere re-checkable; the golden exists on disk and is gate-tested, but byte-identity to a historical state cannot be re-measured"
+    },
+    {
+      "where": "REPORT-ROOTFIX.md — parent-root ids 'unused_fn n_94602d86cdf431c2, main n_6e177dcaaec5588a' still minted by run_shell_demo",
+      "why": "verifying would require a live extract run (pyright); the id strings match the assembly-era records (REPORT-appshell-hubfs.md, REPORT-P3-acceptance.md) verbatim, and the post-fix bare-dir id n_0b636277e755222b IS verified live in acceptance/analysis-moat.json (moatpkg.helpers.unused_fn)"
+    }
+  ],
+  "highlights": [
+    "STRONGEST CHECK: re-ran the pinned v4.31.0 driver live on acceptance/fixtures/unused_hyp.lean — stdout (3390 bytes) BYTE-IDENTICAL to the verbatim JSON in REPORT-LEAN-DRIVER-SPIKE.md; and sha256(stdout+LF)[:16] == cc8e617231a637c6, exactly the run= sha in TRACE-full.json greenTrace and REPORT-GREENFLOW — the run-sha evidence chain verifies cryptographically",
+    "driver lean-toolchain = leanprover/lean4:v4.31.0; cell-2 lean_repo lean-toolchain + LEAN_TOOLCHAIN constant (capability_config.py:22) = leanprover/lean4:v4.32.0 — the declared pin divergence is real in both directions; lean_ct.py's divergence payload matches REPORT-GREENFLOW's quoted JSON word-for-word",
+    "run_smoke.py contains exactly 31 check() invocations (12 common + 7 clean + 5 sorry + 1 unused + 6 acceptance) — the '31/31 assertions' claim verifies statically",
+    "catalog counts re-measured: capability 92 (89 register() calls in probes_catalog_{ae,fj}.py + 3 wall probes) matching '91->92'; extractor 149 (32+41+48+28) matching the 137->148->149 chain",
+    "LEANDOCK's '38 out-of-set constants probed X_CORE' re-derived live: driver on Verified.lean yields 37 out-of-set (decl,ref) pairs + 1 implicit Init import = 38; the 1 in-set ref is the resolved proof_uses uses_base->base_fact, frozen in fixtures/golden/lean_ct.edges.json (resolver lean-kernel)",
+    "all slice probe ids grep-hit their catalogs: extractor.backend.leanDriver.resp, extractor.t2.lean.{unusedHyp,unusedHyp.summary,driver.dead,driver.timing,toolchain.divergence,decl.match}, extractor.green.enforcement.violation, capability.wire.prepare, outerwall.root.staged (modes direct+staged), graph-model.wall.ingest.greenGuard, fake-green, editor.verdict.green.blocked, green-may-never-be-faked, capability.lean.measuredTierPin; unbacked-green registered in wall_support.FAILURE_CLASSES",
+    "fixture claims verified against bytes: unused_hyp.lean decls base_fact/uses_base/lonely at lines 4/6/8 with unused h (uses_base) and h2 (lonely, its h used); lean_ct/Verified.lean four verdict cases incl. sorry_case; honest_ceiling.typ exists; analysis-lean.json = 4 nodes / 1 proof_uses edge / 0 leads / 3 green fills / 3 green rings / module unknown; six GREENFLOW screenshots present in acceptance/browser/ (plus one unrelated dbglean-overview.png)",
+    "SUB200 facades preserve every path the reports cite: capability/{capability,probes,fixtures,spine}.py exist as import surfaces (pins/registrations now in capability_config.py/probes_catalog_fj.py/fixtures_profiles.py/spine_msgs.py); gate 17's '7 tests' = 6 in test_17_lean_profile.py + 1 in test_17b_lean_shutdown.py; lean_dock.py re-exports lean_verdict from lean_verdicts.py (error-free-file tightening confirmed in code)"
+  ],
+  "falseClaims": 0,
+  "notes": "Zero FALSE claims found in this slice. Two additive [updated:] notes placed (REPORT-LEANDOCK catalog line, REPORT-GREENFLOW bound 5) for historical-then-updated counts, per the sweep's convention distinguishing updates from corrections. No code, tests, fixtures, or goldens touched."
+}

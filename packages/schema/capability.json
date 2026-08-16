@@ -1,0 +1,13 @@
+{
+  "capabilityVersion": "v0",
+  "note": "Depth tiers (CT|S|G|P — how deep the TOOLING sees) are ORTHOGONAL to provenance tiers (T1|T2|T3 — what KIND of graph element). Seam owner: capability-layer. Assembly ruling: S-tier may NOT emit resolved edges.",
+  "depthTiers": ["CT", "S", "G", "P"],
+  "depthAllowsResolvedEdges": { "CT": true, "S": false, "G": false, "P": false },
+  "depthToMaxProvenance": { "CT": "T2", "S": "T2", "G": "T1", "P": "T1" },
+  "honestCeilings": {
+    "CT": "as deep as the compiler's type-checker sees (compiler-truth; green permitted from real verdicts only)",
+    "S": "structure only: real navigation, no type truth; green forbidden; edges are leads unless a gradual checker binds them",
+    "G": "grammar floor: T1 structure only ('this span IS a def/loop'); every edge resolved=false; fill at best unknown; green forbidden",
+    "P": "plaintext + links: text and a cross-reference graph; everything unresolved; green forbidden"
+  }
+}

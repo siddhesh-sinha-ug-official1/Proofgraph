@@ -1,0 +1,1486 @@
+{
+ "area": "editor-shell",
+ "auditedAt": "2026-08-03",
+ "auditor": "adversarial claim audit, stage A (four doc fixes from a crashed partial pass were found on disk, verified against code, and kept - never redone blind)",
+ "suiteAfterFixes": "npm test = build + import gate (54 files, externals monaco-editor only, PASS) + 96/96 node tests pass; typecheck:monaco clean; counts unchanged from baseline",
+ "exempt": [
+  "package-lock.json (lockfile)",
+  "test/fixtures/* (generated fixture data + byte-exact generated sources, authored by scripts/gen-fixture-nodes.mjs)",
+  "dist/ (build output)",
+  "agentic-convos/tree4-editor-shell.DONE.md (transcript)"
+ ],
+ "claimTotals": {
+  "confirmed": 653,
+  "overclaim": 2,
+  "underclaim": 16,
+  "stale": 7
+ },
+ "files": [
+  {
+   "path": "src/cell.ts",
+   "lines": 11,
+   "verifiedPurpose": "SUB200 facade at the historical public path: re-exports EditorShellCell/createEditorShellCell from cell/cell.ts and CellConfig from cell/config.ts; imported by tests, demo and the wall.",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/index.ts",
+   "lines": 29,
+   "verifiedPurpose": "Barrel exporting the cell's deliberately wide public surface (every stage module) plus the Phase-1 additions schema/pin.ts and wall.ts; the package's import surface for external consumers.",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/wall.ts",
+   "lines": 181,
+   "verifiedPurpose": "ASSEMBLY Phase-1 membrane: createEditorWall asserts WALL_SCHEMA_PIN via checkPin + SCHEMA_VERSION before any mount work, opens the cell (disposing the partial cell on failed open), and returns {wallVersion, bus, update, dispose, pins}; update() after dispose() probes accepted:false then throws failure-class=wall-disposed; pins delegate 1:1 to the cell quartet. Pinned by tests 22/22b.",
+   "claims": {
+    "confirmed": 12,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/schema/schema.ts",
+   "lines": 114,
+   "verifiedPurpose": "Verified-in-sync copy of packages/schema/gen/graph-schema.ts (pattern b): enum arrays, SchemaNode/SchemaEdge types, OUTLINE_WORST_ORDER (split spelling), WORST_TO_STATUS (definition->blue), rankWorstToken/worstOfVerdict (unrecognized ranks worst); byte-agreement enforced at runtime by test 21.",
+   "claims": {
+    "confirmed": 10,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/schema/pin.ts",
+   "lines": 48,
+   "verifiedPurpose": "Verified-in-sync copy of packages/schema/gen/pin.ts: PINNED_SCHEMA_VERSION/REVISION/HASH consts, canonicalJson (Python sort_keys-equivalent serializer), checkPin throwing failure-class=schema-pin-mismatch; sync enforced by test 22 against the real canonical module.",
+   "claims": {
+    "confirmed": 6,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/seams/bus.ts",
+   "lines": 35,
+   "verifiedPurpose": "Tree-5 seam types (BusEvent {node.select,nodeId,origin,clock}, SelectionBus) plus LocalSelectionBus: synchronous FIFO delivery with a public log array read by dump() and tests.",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/seams/capability.ts",
+   "lines": 45,
+   "verifiedPurpose": "Tree-2 seam types only (no runtime code): DepthTier, JsonRpcMessage, MessageTransports (send/onMessage/onClose/close/describe), LspHandle, Capability, CapabilityFn; the cell consumes, never constructs, a Capability.",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/util/encoding.ts",
+   "lines": 141,
+   "verifiedPurpose": "Pure encoding/EOL helpers for S1/S7: detectBom (utf-8/utf-16le/be), decodeBytes (BOM-declared utf-16 > strict utf-8 > true-ISO-8859-1 latin1 fallback that never remaps C1 bytes), detectEol (first-occurrence EOL + mixed flag), encodeUtf8, surrogate-aware utf8ByteLength, firstDivergence.",
+   "claims": {
+    "confirmed": 8,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/util/sha256.ts",
+   "lines": 71,
+   "verifiedPurpose": "Zero-dependency SHA-256 (hex) used by buffer-open/roundtrip/dump probes; correctness cross-checked indirectly because tests compare its output to fixture-meta sha256 values computed by node:crypto in the generator.",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 1,
+    "underclaim": 0,
+    "stale": 0
+   },
+   "notes": "Overclaim (header claimed FIPS 180-4 vectors 'in the self-tests' which never existed) was fixed in the crashed partial pass of this audit; verified accurate now."
+  },
+  {
+   "path": "src/mount/adapter.ts",
+   "lines": 116,
+   "verifiedPurpose": "The editor-agnostic EditorAdapter interface plus its coordinate conventions (1-based utf-16 positions, utf-16 rangeOffsets) and supporting types (ContentChange/CursorEvent/Decoration/MountInfo); implemented by StubEditorAdapter and MonacoEditorAdapter.",
+   "claims": {
+    "confirmed": 6,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/mount/mount.ts",
+   "lines": 110,
+   "verifiedPurpose": "S0 MountController: emits the mount lifecycle probes (config.input -> wrapper.init -> wrapper.ready -> font/theme/features/readonly probes, error, dispose) from adapter.mountInfo() truth; used by the cell's open sequence.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   },
+   "notes": "Code finding (low): private initWall is dead and wrapper.ready always emits msSinceInit:null - the elapsed-time measurement was never implemented; reported, not patched."
+  },
+  {
+   "path": "src/buffer/buffer-manager.ts",
+   "lines": 177,
+   "verifiedPurpose": "S1 facade class: open() decodes bytes, emits open probes, wires adapter change events to handleChangeCore, and runs the roundtrip check; exposes state()/text()/bomBytes()/encoding()/silentMutationCount()/noteUndoRedo/dispose; silentCount deliberately survives re-open (instance-lifetime, matching pre-split semantics).",
+   "claims": {
+    "confirmed": 8,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/buffer/buffer-state.ts",
+   "lines": 80,
+   "verifiedPurpose": "BufferState record + byte helpers: encodeLikeSource re-encodes model text in the source encoding with the original BOM bytes re-prepended; applyChanges applies utf-16-offset changes in descending order; stripWs/eolSignature/previewAt back the silent-mutation and roundtrip probes.",
+   "claims": {
+    "confirmed": 5,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/buffer/open-probes.ts",
+   "lines": 89,
+   "verifiedPurpose": "Open-time decision probes: encoding.decision (chosen + branches not taken), bom.detect (stripped from model text only), size.cap (SIZE_CAP_BYTES recorded bound - explicitly no degradation implemented, action always 'open'), then post-open eol.decision + open.model.",
+   "claims": {
+    "confirmed": 5,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/buffer/change-handler.ts",
+   "lines": 99,
+   "verifiedPurpose": "Change classification: origin user/programmatic/silent -> classify probe; silent increments silentCount and leaves expectedText lagging so roundtrip exposes it; non-silent path applies reported changes to prevAdapterText and cross-checks adapter text (hidden extra mutation -> second silent alarm); notifies listeners.",
+   "claims": {
+    "confirmed": 5,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/buffer/roundtrip.ts",
+   "lines": 65,
+   "verifiedPurpose": "The C1 fixpoint check: model bytes (re-encoded like source) compared to the RAW input bytes until the first legitimate edit, then to source-plus-edits; emits roundtrip.check with whitespace deltas and roundtrip.fail with the first divergence preview.",
+   "claims": {
+    "confirmed": 5,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/cell/cell.ts",
+   "lines": 182,
+   "verifiedPurpose": "Composition root wiring ProbeBus, adapter, bus, mount/buffer/pump/render/diagnostics at construction and connector/verdict/selection/index at open; delegates open/features/diagnostics/introspection to sibling modules; dispose() sends didClose+shutdown+exit only if the connector is open, then tears down selection/connector/buffer/mount/adapter.",
+   "claims": {
+    "confirmed": 6,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 1
+   },
+   "notes": "Stale 'No membrane this round' clause fixed - the Phase-1 wall exists at ../wall.ts, promoted over the pins."
+  },
+  {
+   "path": "src/cell/config.ts",
+   "lines": 41,
+   "verifiedPurpose": "CellConfig type (adapter, capability, bus, schemaNodes, file identity, optional mount/connector/wallClock), DEFAULT_MOUNT (JetBrains Mono / proofgraph-darcula / utf-8 request), and clockOfRef parsing '<probeId>@<clock>' refs.",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/cell/open.ts",
+   "lines": 189,
+   "verifiedPurpose": "The walking-skeleton open sequence (mount begin -> buffer.open -> index build -> capability -> connector+verdict -> connect -> didOpen -> onChange wiring -> selection bridge -> initial paint + viewport) and updateSchemaNodesCore, the wall's node-refresh path (refresh probe -> rebuildIndex -> repaintVerdicts -> emitViewport; pre-open it only replaces the node set). Buffer edits rebuild the index and arm pendingLatency BEFORE pump.notify(didChange) so synchronous diagnostics close the latency chain.",
+   "claims": {
+    "confirmed": 7,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/cell/features.ts",
+   "lines": 124,
+   "verifiedPurpose": "Per-feature LSP helpers (hover/definition/completion/foldingRange/semanticTokens/documentSymbol): capabilityGuard suppresses unadvertised methods with editor.lsp.capability.unsupported; documentSymbolCore flattens the symbol tree and emits the reconcile probe (matched / symbolsWithoutNode / nodesWithoutSymbol).",
+   "claims": {
+    "confirmed": 5,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/cell/diag-flow.ts",
+   "lines": 64,
+   "verifiedPurpose": "publishDiagnostics flow: uri guard (foreign batches dropped loudly), renderer onPublish (version guard inside), verdict repaint, and the keystroke-latency chain assembled from pendingLatency + didChange probe clocks.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/cell/introspection.ts",
+   "lines": 48,
+   "verifiedPurpose": "The introspection cores: probeCatalogCore/dumpCore/historyCore return real data AND emit their own cataloged probes (editor.probe.catalog/dump/history); dump aggregates modelState/spanIndex/connState/pump/lastDiagnostics/decorations/verdicts/busLog/mountInfo/silentMutations.",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/conn/connector.ts",
+   "lines": 184,
+   "verifiedPurpose": "S2 connector class: honors (never decides) the capability tier, opens the transport with scrubbed-URL/redacted-secret probes, runs the handshake, tracks ONE current transport (stale wires ignored; a close during a handshake belongs to its attempt), and triggers a single bounded reconnect loop; dispose closes the transport and detaches the pump.",
+   "claims": {
+    "confirmed": 8,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/conn/conn-types.ts",
+   "lines": 41,
+   "verifiedPurpose": "Connector state/option types: ServerCapabilitySummary (8 boolean providers), ConnState (phase/positionEncoding/serverInfo/reconnectAttempts), ConnectorOptions with DEFAULT (3 attempts, zero backoff, request utf-8).",
+   "claims": {
+    "confirmed": 2,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/conn/handshake.ts",
+   "lines": 176,
+   "verifiedPurpose": "The initialize handshake: sends initializeParams (utf-8 positionEncodings request), negotiates positionEncoding (absent = LSP-default utf-16), summarizes advertised capabilities, logs missing optional capabilities as a degrade, records serverInfo, sends initialized; plus emitConnectProbes (capability.input + tier.guard - liveGreenAllowed only at CT) and scrubUrl/describeSafely.",
+   "claims": {
+    "confirmed": 6,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/conn/reconnect.ts",
+   "lines": 55,
+   "verifiedPurpose": "Bounded reconnect attempts: per attempt emits editor.conn.reconnect {attempt, maxAttempts, backoffMs}, waits the backoff, stops cold if disposed, reopens via the host; on success calls notifyReopened (re-didOpen); cap exhaustion emits a final transport.state closed naming the cap.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/lsp/pump.ts",
+   "lines": 181,
+   "verifiedPurpose": "S3 JSON-RPC pump: request()/notify() with raw-frame firehose + method-specific probes, id correlation via the pending map, sendWhileDisconnected settled-error paths (request resolves an error response, notify never throws), inFlightCauseRef chaining synchronous inbound frames to the outbound send, detachAll failing all pending loudly.",
+   "claims": {
+    "confirmed": 8,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/lsp/incoming.ts",
+   "lines": 181,
+   "verifiedPurpose": "Inbound frame handling over a closure context: malformed frames probed, responses correlated (orphans probed), server-initiated workspace/configuration answered (others get MethodNotFound), notifications dispatched (publishDiagnostics -> diagnostics handler, $/progress, log/showMessage, generic); failAllPending settles orphaned requests with error -32001.",
+   "claims": {
+    "confirmed": 6,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/lsp/feature-payloads.ts",
+   "lines": 121,
+   "verifiedPurpose": "Per-feature probe payload builders: emitFeatureRequestProbe (hover/definition/documentSymbol/completion request probes), emitNotifySpecificProbe (didOpen/didChange/didClose/initialized), featureResponsePayload shaping response probes per method.",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/lsp/lsp-types.ts",
+   "lines": 51,
+   "verifiedPurpose": "Pump types (PendingRequest, LspDiagnostic, PublishDiagnosticsParams) and the REQUEST_PROBE/RESPONSE_PROBE method->probeId tables.",
+   "claims": {
+    "confirmed": 2,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 1
+   },
+   "notes": "The single doc comment said 'Response probes' but sat over the REQUEST table; fixed, and each table is now labeled."
+  },
+  {
+   "path": "src/diagnostics/diagnostics.ts",
+   "lines": 125,
+   "verifiedPurpose": "S4 renderer: onPublish emits diag.input, applies the version guard (stale batches dropped loudly, returns null), clears before apply, maps each diagnostic via mapOneDiagnostic, paints the marker set; exposes current()/forNode() (S5's live input)/lastAppliedVersion()/snapshot().",
+   "claims": {
+    "confirmed": 6,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/diagnostics/map-diagnostic.ts",
+   "lines": 170,
+   "verifiedPurpose": "Per-diagnostic mapping: LSP range -> byte span (reversed ranges normalized AND probed malformed) -> editor range, back-conversion self-check (map.mismatch), severity map with fill contribution, innermost node attach or orphan probe, related/tag/codeAction probes, marker.set, and the DiagnosticRecord + Decoration outputs.",
+   "claims": {
+    "confirmed": 6,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/map/span-index.ts",
+   "lines": 195,
+   "verifiedPurpose": "S7 SpanIndex facade: builds TextGeometry + binds nodes at construction (build.input/build.index probes), then byteToPos (firehose + mismatch self-check), posToByte, lspPositionToByte, posToLsp, spanToRange, getById/allNodes, nodeAtByte (innermost), nodeAtPosition, snapshot.",
+   "claims": {
+    "confirmed": 6,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/map/geometry.ts",
+   "lines": 194,
+   "verifiedPurpose": "Pure byte/line/column math under the D4 conventions: encoding-aware byteLen/byteLenOfCodePoint (latin1=1/unit, utf-16=2/unit, utf-8 variable), buildLineIndex, byteToPosCore (+ mid-codepoint and round-trip desync evidence), posToByteInternal, lspPositionToByteCore (utf-8 byte-walk and utf-16 both clamped to line length), posToLspCore.",
+   "claims": {
+    "confirmed": 8,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/map/build-nodes.ts",
+   "lines": 198,
+   "verifiedPurpose": "Index build: partitions foreign-file nodes (multifile probe), detects identical-span conflicts (deterministic lexicographically-smallest winner, probed), clamps out-of-file spans loudly, binds spans to ranges via spanToRangeCore (skips the firehose, keeps the desync self-check), and innermostAtByte with the overlap.ambiguous decision.",
+   "claims": {
+    "confirmed": 6,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/verdict/verdict.ts",
+   "lines": 199,
+   "verifiedPurpose": "S5 engine: decideFill delegates to decideFillCore and records decision+ref per node; decideOutline computes worst-case-wins via canonical worstOfVerdict (null outline -> not-yet-computed, unrecognized -> unknown); paintAll paints gutter+outline in deterministic byteStart/id order chaining each paint to its decision; hoverTooltip + legend delegate; WORST_TO_STATUS re-exported from the schema seam.",
+   "claims": {
+    "confirmed": 8,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/verdict/fill-decision.ts",
+   "lines": 196,
+   "verifiedPurpose": "The pure per-node FILL decision: green requires status green + non-empty source + provenance present + resolved:true + tier CT (guard probed with the failing reason; blocks probed green.blocked, downgrade blue for given origin else unknown); live diagnostics win only strictly downward (FILL_RANK); origin treatment given->blue / assumed->amber never hides live red; decision probe chains gutter paint -> decision -> guard -> input.",
+   "claims": {
+    "confirmed": 8,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/verdict/tooltip.ts",
+   "lines": 74,
+   "verifiedPurpose": "Provenance tooltip: reports the last DECIDED status (an undecided green claim reports unknown with an explanatory note - never raw schema green) plus source/tier/serverName/provenance, probed as gutter.hover; emitLegendProbe emits the six-entry legend naming 'unknown != green' and green-only-from-a-real-verdict.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/verdict/verdict-types.ts",
+   "lines": 48,
+   "verifiedPurpose": "VerdictDecision/OutlineDecision types, ORDER_STRING (the fused 'none/green' spelling kept ONLY as historical prose, pinned by test 05), and FILL_RANK - the cell-local fill-severity table for the downward-only conflict rule (deliberately not canonical).",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/selection/selection.ts",
+   "lines": 191,
+   "verifiedPurpose": "S6 SelectionBridge: cursor -> innermost node -> BusEvent with the byte-identical schema id (miss/multi/debounce-policy probed); bus recv -> lookup -> reveal+highlight (foreign ids logged recv.miss); echo guard suppresses re-emits both for recv-caused cursor moves and reflected editor-origin events; timing probed both directions.",
+   "claims": {
+    "confirmed": 7,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/render/render.ts",
+   "lines": 158,
+   "verifiedPurpose": "S8 RenderTracker: paint() computes add/remove/keep deltas per decoration kind, applies full sets to the adapter, logs z-order collisions per line, counts paints since open/edit, emits frame probes; frameOnly, emitViewport (sorted ids in view), emitKeystrokeLatency (logical-clock chain).",
+   "claims": {
+    "confirmed": 5,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/probe/probe-bus.ts",
+   "lines": 168,
+   "verifiedPurpose": "S8b ProbeBus: emit() throws on uncataloged probeIds, stamps monotonic logicalClock (the only ordering key) and wallNanos only on timing kinds, delivers to per-id and '*' taps, keeps full history; ref() builds causeIds; query helpers byId/byKind/byStage/causeChain; redactSecret shows presence+last-4 only for secrets longer than 8 chars.",
+   "claims": {
+    "confirmed": 9,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/probe/catalog.ts",
+   "lines": 49,
+   "verifiedPurpose": "Assembles PROBE_CATALOG (128 entries) by splicing the twelve stage-group arrays from the five catalog section modules in the original stage order and derives FIREHOSE_IDS (10) from the firehose flags; pinned by tests 19/19b/22b.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   },
+   "refuterNote": "Corrected 'six section modules' to five: the entries come from mount-buffer/conn-lsp/diag-verdict/select-map/render-gate-wall (12 exported arrays); spec.ts is types + the p() helper, no entries. Recounted 128 entries and 10 firehose flags across those 5 files — both audit counts verified."
+  },
+  {
+   "path": "src/probe/catalog/spec.ts",
+   "lines": 39,
+   "verifiedPurpose": "ProbeKind union (11 contract kinds), the ProbeSpec shape, and the p() section-entry helper.",
+   "claims": {
+    "confirmed": 2,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/probe/catalog/mount-buffer.ts",
+   "lines": 72,
+   "verifiedPurpose": "Catalog data: the 10 S0 mount + 13 S1 buffer lead specs (ids, kinds, payloadTypes, descriptions, buffer.change firehose).",
+   "claims": {
+    "confirmed": 19,
+    "overclaim": 0,
+    "underclaim": 4,
+    "stale": 0
+   },
+   "notes": "4 payloadType underclaims fixed this audit: wrapper.init +adapterKind, open.input +eolMixed, bom.detect +bomKind, mutation.silent +note?. size.cap action 'degrade' stays a declared future bound - the probe payload itself records that no degradation is implemented."
+  },
+  {
+   "path": "src/probe/catalog/conn-lsp.ts",
+   "lines": 104,
+   "verifiedPurpose": "Catalog data: the 12 S2 conn + 28 S3 lsp lead specs including the 6 lsp firehose leads.",
+   "claims": {
+    "confirmed": 38,
+    "overclaim": 1,
+    "underclaim": 1,
+    "stale": 0
+   },
+   "notes": "Overclaim fixed this run: error.protocol declared kind 'versionMismatch' which no code path emits (version staleness fires editor.diag.version.guard instead). capabilities.server field-list underclaim was fixed in the crashed partial pass; verified."
+  },
+  {
+   "path": "src/probe/catalog/diag-verdict.ts",
+   "lines": 86,
+   "verifiedPurpose": "Catalog data: the 13 S4 diag + 13 S5 verdict lead specs.",
+   "claims": {
+    "confirmed": 22,
+    "overclaim": 0,
+    "underclaim": 4,
+    "stale": 0
+   },
+   "notes": "4 underclaims fixed this audit: fill.decision +tier,greenAllowed; outline.decision +displayedStatus,statusMapping,unrecognizedVocab,schemaStatus,recomputedMatchesSchema; gutter.hover tooltip +decided,note; green.blocked description rescoped to all four guard-refusal causes (it fires at CT too, pinned by test 20)."
+  },
+  {
+   "path": "src/probe/catalog/select-map.ts",
+   "lines": 74,
+   "verifiedPurpose": "Catalog data: the 12 S6 select + 11 S7 map lead specs including the 2 map firehose leads.",
+   "claims": {
+    "confirmed": 21,
+    "overclaim": 0,
+    "underclaim": 2,
+    "stale": 0
+   },
+   "notes": "2 underclaims fixed: emit.multi +reason, map.build.input +encoding. emit.multi policy 'all' is a declared policy domain never yet produced (only 'primary-caret' is emitted) - left as domain, recorded as a code finding."
+  },
+  {
+   "path": "src/probe/catalog/render-gate-wall.ts",
+   "lines": 67,
+   "verifiedPurpose": "Catalog data: the 6 S8 render + 3 S8b probe + 3 S9 gate + 4 wall lead specs including the render.frame firehose lead.",
+   "claims": {
+    "confirmed": 11,
+    "overclaim": 0,
+    "underclaim": 5,
+    "stale": 0
+   },
+   "notes": "Underclaims fixed: render.frame +kind, zorder +line, probe.history +eventCount, import.scan +fileCount (this run); probe.dump full snapshot field list (crashed partial pass, verified). mount.wrapper.ready msSinceInit is always null - see the mount.ts code finding."
+  },
+  {
+   "path": "src/gate/import-gate.ts",
+   "lines": 133,
+   "verifiedPurpose": "S9 gate logic: DECLARED_DEPS allow-list + MONACO_ONLY_PACKAGES; runImportGate checks externals against the allow-list and Monaco packages against src/mount/monaco/, emitting scan/violation/leak probes; extractImports pulls static/dynamic/re-export/require specifiers via regex. Pure - fed synthetic files by tests, the real tree by scripts/import-gate.mjs.",
+   "claims": {
+    "confirmed": 6,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/mount/monaco/monaco-adapter.ts",
+   "lines": 192,
+   "verifiedPurpose": "The real-Monaco EditorAdapter: creates model+editor with the darcula theme, wires content/cursor events (programmatic edits flagged via the executeEdits window), maps decorations (markers via setModelMarkers, others via deltaDecorations), reports mountInfo with honest semanticHighlighting:false and document.fonts-checked font resolution.",
+   "claims": {
+    "confirmed": 6,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/mount/monaco/darcula-theme.ts",
+   "lines": 39,
+   "verifiedPurpose": "PROOFGRAPH_DARCULA token-color theme data (vs-dark base, 9 rules, Darcula palette) and the SEVERITY name->MarkerSeverity table.",
+   "claims": {
+    "confirmed": 2,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/mount/monaco/decorations.ts",
+   "lines": 37,
+   "verifiedPurpose": "Decoration -> Monaco IModelDeltaDecoration mapping per kind: gutter -> glyphMarginClassName(+hover), outline -> linesDecorationsClassName, highlight -> className.",
+   "claims": {
+    "confirmed": 2,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "src/mount/monaco/monaco-events.ts",
+   "lines": 51,
+   "verifiedPurpose": "Monaco -> adapter event mapping: content changes labeled programmatic only inside the cell's executeEdits window (everything else = user; true silent rewrites are caught by S1's divergence cross-check), cursor selections mapped to CursorEvent.",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/00-smoke.test.ts",
+   "lines": 76,
+   "verifiedPurpose": "One walking-skeleton test over type-error.py: mount ready, byte-exact open, utf-8 negotiated, error span byte-exact, live-red-over-stale-green + honest CT green, brushing both directions with byte-identical ids, catalog completeness for fired leads, dump sha check, didClose on dispose.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/01-buffer.test.ts",
+   "lines": 136,
+   "verifiedPurpose": "3 silent-rewrite tests on whitespace.py (part 1): byte-exact open with BOM/CRLF/mixed-EOL payload checks, encoding/BOM/EOL/size-cap decision probes, and a user edit classified 'user' with roundtrip equal vs source-plus-edit.",
+   "claims": {
+    "confirmed": 5,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/01b-buffer-mutations.test.ts",
+   "lines": 111,
+   "verifiedPurpose": "3 silent-rewrite tests (part 2): programmatic edits classified with API cause, an unattributed mutation firing classify silent + mutation.silent + roundtrip.fail at the BOM-adjusted divergence offset, and undo/redo byte-consistency (forced user changes, never silent).",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/02-diagnostics-span.test.ts",
+   "lines": 133,
+   "verifiedPurpose": "1 cheap-connector test: error+warning on type-error.py map byte-exactly (independent literal line/column checks), zero mismatch probes, markers match the map and round-trip to exact bytes, severity/tag/related/quickfix probes verified.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/02b-diagnostics-multibyte.test.ts",
+   "lines": 124,
+   "verifiedPurpose": "3 cheap-connector tests: multibyte.py error span byte-exact past 4/3/2-byte characters at utf-8 AND forced utf-16 (wire characters genuinely differ: 22 vs 17), and fixing the error clears diagnostics + empties the marker set.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/03-brushing.test.ts",
+   "lines": 164,
+   "verifiedPurpose": "4 id-drift tests (part 1): emit puts the schema id on the bus string-identical, recv reveals the exact indexed span, reflected own events are echo-guard suppressed with zero re-emits, foreign-file ids log recv.miss/multifile and never reveal.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/03b-brushing-edges.test.ts",
+   "lines": 137,
+   "verifiedPurpose": "4 id-drift tests (part 2): nested spans resolve innermost with the ambiguity logged, span gaps emit miss and nothing crosses the bus, multi-cursor emits only the primary caret's id under a logged policy, timing probes fire both directions with null for the absent direction.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/04-green-guard.test.ts",
+   "lines": 116,
+   "verifiedPurpose": "3 faked-verdict tests (part 1): tier-G schema-claimed green paints unknown with guard+blocked probes, unknown renders as unknown never up-shaded, and a real CT verdict IS permitted green (blocked branch silent, tier guard allows).",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/04b-green-guard-tiers.test.ts",
+   "lines": 74,
+   "verifiedPurpose": "4 faked-verdict tests (part 2): each non-CT tier (G/S/P) blocks schema-claimed green with tier guard + green guard + blocked probes and an unknown paint; plus the guard probes present in firedProbeIds.",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/05-outline.test.ts",
+   "lines": 179,
+   "verifiedPurpose": "2 trust-base-leak tests: every outline-fixture case through decideOutline (worst-case-wins in the frozen order, null -> not-yet-computed with no decision probe), then end-to-end on clean.py (double rings red, null outline rings grey not-yet-computed, recomputedMatchesSchema for every fixture node).",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/06-version-guard.test.ts",
+   "lines": 103,
+   "verifiedPurpose": "1 stale-squiggle test: staleOnNextChange makes the stub replay old-snapshot diagnostics; the guard log reads apply/drop/apply, the dropped batch maps/clears/paints nothing, and post-drop markers are exactly the fresh v2 batch.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/07-latency.test.ts",
+   "lines": 155,
+   "verifiedPurpose": "2 latency tests: a single edit closes the keystroke->didChange->diagIn->rendered chain within the declared 400-tick budget; rapid edits converge on the final model version with an empty final batch, cleared markers, recomputed (not stale) FILL, and well-formed chains throughout.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 1
+   },
+   "notes": "A stale comment was rewritten in the crashed partial pass to pin the FIX in src/cell/open.ts (pendingLatency armed before notify); verified accurate against the code this run."
+  },
+  {
+   "path": "test/08-lsp-messages.test.ts",
+   "lines": 142,
+   "verifiedPurpose": "5 wrong-document/lost-field tests (part 1): didOpen identity fields exact, didChange.version tied to its causing buffer.change via causeChain + full-text sync, negotiated encoding used downstream at utf-8 AND utf-16, raw firehose covers both directions with initialize timed.",
+   "claims": {
+    "confirmed": 5,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/08b-lsp-inbound.test.ts",
+   "lines": 115,
+   "verifiedPurpose": "5 inbound-frame tests (part 2): orphan response probed, malformed frame probed via a bare pump+transport pair, unknown server request answered MethodNotFound with an unhandled probe, $/progress+logMessage probed, workspace/configuration probed and answered item-for-item.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/09-import-gate.test.ts",
+   "lines": 198,
+   "verifiedPurpose": "5 hidden-coupling tests: the real src/ tree passes the gate (allow-list verbatim, monaco-editor present so the pass is not vacuous), synthetic violation and monaco-leak cases fire probes chained to the scan, mount/monaco is sanctioned, and extractImports catches all syntactic forms.",
+   "claims": {
+    "confirmed": 5,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/10-determinism.test.ts",
+   "lines": 89,
+   "verifiedPurpose": "3 determinism tests: one fixed scenario run twice yields identical normalized histories, logicalClock is gapless from 1, and every causeId resolves to an earlier existing event (>50 checked).",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/11-symbol-reconcile.test.ts",
+   "lines": 136,
+   "verifiedPurpose": "2 reconciliation tests: nested.py symbols match node ids span-exactly with the planted __str__ orphan logged; clean.py logs the module node in nodesWithoutSymbol while the foreign-file node is excluded via the probed multifile branch, not miscounted.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/12-hover.test.ts",
+   "lines": 150,
+   "verifiedPurpose": "4 wrong-span-feature tests: hover ranges convert back to the exact definition byte spans at utf-8 and forced utf-16, including past multibyte characters; unadvertised hover returns null with capability.unsupported and zero outbound hover requests.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/13-index-stability.test.ts",
+   "lines": 185,
+   "verifiedPurpose": "2 stale-coordinate tests: find/replace + multi-cursor edits fire map.stale {rebuild} and rebuild at each version before any caret resolve; after offsets shift the same visual caret maps through post-edit byte math to the right node (a discriminating caret would bind wrong on a stale table).",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/14-origin.test.ts",
+   "lines": 139,
+   "verifiedPurpose": "2 debt-shown-as-verified tests: given->blue, assumed->amber even with a tempting green fill, checked->verdict color; and an assumed node with live errors still paints red (origin styling never hides errors).",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/15-provenance.test.ts",
+   "lines": 138,
+   "verifiedPurpose": "2 unattributed-verdict tests: every painted node's tooltip names non-empty source/tier/serverName (matching conn.serverInfo)/full provenance and agrees with the painted status; the legend fires exactly once with 'unknown != green' and green-never-faked entries.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/16-reconnect.test.ts",
+   "lines": 132,
+   "verifiedPurpose": "2 silent-give-up tests: a dropped transport reconnects loudly (cap visible, second connect call, re-didOpen, diagnostics resume, single didClose on dispose); cap exhaustion fires exactly maxAttempts probed attempts + probed handshake failures + a final closed state naming the cap.",
+   "claims": {
+    "confirmed": 5,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/17-same-span.test.ts",
+   "lines": 138,
+   "verifiedPurpose": "3 silent-coalesce tests: identical-span nodes fire build.conflict naming both ids with the deterministic lexicographically-smallest winner, lookups bind to the winner (tie logged), and BOTH ids stay individually addressable via getById and recv reveal.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/18-editor-agnostic.test.ts",
+   "lines": 195,
+   "verifiedPurpose": "3 hidden-Monaco-coupling tests: the whole pipeline runs headless on the stub adapter, no file outside src/mount/monaco/ imports a Monaco-surface package (direct scan + gate probes), and probeCatalog/dump/history/tap return real data with a working unsubscribe.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/19-catalog.test.ts",
+   "lines": 197,
+   "verifiedPurpose": "1 WIDE-scenario test across four cells + the gate bus: drives misbehavior switches, brushing, features, edits, silent rewrite, undo/redo, reconnect and introspection, unions every fired probeId (>=70) and asserts each is documented in PROBE_CATALOG.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/19b-catalog-invariants.test.ts",
+   "lines": 54,
+   "verifiedPurpose": "2 catalog-invariant tests: unique ids, all kinds within the 11 contract kinds, the firehose set exactly the 10 contract leads, >=120 entries; and ProbeBus throws on an uncataloged emit leaving no trace in the stream.",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/20-review-regressions.test.ts",
+   "lines": 122,
+   "verifiedPurpose": "5 review-regression pins (honesty lens): warning never softens schema red, undecided green tooltip reports unknown, unrecognized outline vocab ranks worst and is named, provenance.resolved:false blocks green at CT, and a green paint's causeChain reaches the guard.",
+   "claims": {
+    "confirmed": 5,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/20b-review-spanmath.test.ts",
+   "lines": 128,
+   "verifiedPurpose": "5 review-regression pins (span-math/buffer lens): latin1 C1 bytes round-trip exactly, latin1 index math is 1-byte-per-char, utf-8 LSP characters clamp per spec, past-EOF spans clamp loudly, and an honest undo after a silent rewrite raises no false second alarm.",
+   "claims": {
+    "confirmed": 5,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/20c-review-protocol.test.ts",
+   "lines": 90,
+   "verifiedPurpose": "4 review-regression pins (protocol/redaction lens): cross-URI diagnostics dropped by the uri guard, reversed ranges normalized + probed malformed, dead-wire requests settle immediately with a probe (and flow again post-reconnect), redactSecret never leaks last-4 of short secrets.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/21-schema-sync.test.ts",
+   "lines": 132,
+   "verifiedPurpose": "4 Phase-0 sync-gate tests: local schema constants deep-equal canonical gen/graph-schema.ts, rank/worstOf/placeholder helpers agree behaviorally case-for-case (fused token banned), checkPin passes against the independently recomputed canonical hash (drift throws the named class), and every fixture node id re-mints byte-identically via canonical gen/ids.ts.",
+   "claims": {
+    "confirmed": 5,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/22-wall-conformance.test.ts",
+   "lines": 191,
+   "verifiedPurpose": "3 wall-conformance tests (items 1-3): the wall pin equals the verified-in-sync copies AND canonical schema.json (both serializers, node:crypto), bus events equal the pins' busLog byte-for-byte both directions, and update(nodes) repaints exactly the delivered verdicts under the published policy (fabricated green blocked, index rebuilt, viewport re-emitted).",
+   "claims": {
+    "confirmed": 5,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/22b-wall-teardown.test.ts",
+   "lines": 129,
+   "verifiedPurpose": "3 wall-conformance tests (items 4-6): honest ceiling through the wall (unknown/null-outline/tier-G never green), wall-disposed named + probed with idempotent clean teardown, and pins delegation verbatim (catalog deepEqual, additive wall leads, live tap with working unsubscribe, same history stream).",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/helpers/buffer-payloads.ts",
+   "lines": 20,
+   "verifiedPurpose": "Shared fixture name (whitespace.py) + RoundtripPayload/ClassifyPayload shapes for the 01/01b buffer tests.",
+   "claims": {
+    "confirmed": 2,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/helpers/catalog-consts.ts",
+   "lines": 25,
+   "verifiedPurpose": "CONTRACT_KINDS (the 11 probe kinds) and EXPECTED_FIREHOSE (the 10 contract firehose lead ids) for the 19/19b catalog tests.",
+   "claims": {
+    "confirmed": 2,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/helpers/diag-payloads.ts",
+   "lines": 31,
+   "verifiedPurpose": "LspRange/MonacoRange/MapSpanPayload/MarkerSetPayload shapes for the 02/02b diagnostics tests.",
+   "claims": {
+    "confirmed": 2,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/helpers/green-guard.ts",
+   "lines": 46,
+   "verifiedPurpose": "Green-guard payload shapes + paintsFor (asserting gutter paints exist for a node) for the 04/04b tests.",
+   "claims": {
+    "confirmed": 2,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/helpers/select-payloads.ts",
+   "lines": 32,
+   "verifiedPurpose": "Brushing probe payload shapes for the 03/03b tests.",
+   "claims": {
+    "confirmed": 2,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/helpers/server-behaviors.ts",
+   "lines": 18,
+   "verifiedPurpose": "behaviors() builds a full StubServerConfig behaviors object from a partial (the config type is not deep-partial).",
+   "claims": {
+    "confirmed": 2,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/helpers/synthetic-node.ts",
+   "lines": 21,
+   "verifiedPurpose": "syntheticNode factory: a complete SchemaNode with overridable fields for regression tests.",
+   "claims": {
+    "confirmed": 2,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/helpers/wall-harness.ts",
+   "lines": 90,
+   "verifiedPurpose": "Wall-conformance harness: mountWall builds a fully wired wall over the stub tier, pin readers (eventsOf/payloadsOf/lastPayload through wall.pins ONLY), importCanonical for the real packages/schema, lastGutterByNode.",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/stub/assert-probes.ts",
+   "lines": 68,
+   "verifiedPurpose": "Probe assertion helpers: eventsOf/payloadsOf/lastPayload/assertFired/assertNeverFired/assertOrdered and normalizeHistory (drops wallNanos only).",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/stub/harness.ts",
+   "lines": 134,
+   "verifiedPurpose": "createTestCell/openTestCell: loads fixture bytes+meta+nodes, wires StubLanguageServer + stub capability + StubEditorAdapter + LocalSelectionBus + StubGraphPane into a cell with wallClock -> null (deterministic); loadFixture/loadOutlineFixture/nodeByName.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/stub/stub-adapter.ts",
+   "lines": 194,
+   "verifiedPurpose": "Full in-memory EditorAdapter with simulation hooks: user/programmatic/silent edits, find/replace as a user batch, undo/redo as forced user changes, cursor moves, viewport, recorded decorations/reveals/selections; readOnly rejects user+programmatic edits (silent rewrites deliberately pass through - the forbidden case stays testable).",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/stub/stub-adapter-defaults.ts",
+   "lines": 24,
+   "verifiedPurpose": "DEFAULT_MOUNT_INFO reported by the stub adapter (JetBrains Mono resolved, proofgraph-darcula, all features on).",
+   "claims": {
+    "confirmed": 2,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/stub/stub-capability.ts",
+   "lines": 48,
+   "verifiedPurpose": "Tree-2 stand-in: capability(lang) -> {tier, handle} whose connect() attaches the stub server over an in-memory transport pair; failConnectTimes rejects the first N connects; connectCalls counted.",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/stub/stub-graph-pane.ts",
+   "lines": 36,
+   "verifiedPurpose": "Tree-5 stand-in: records every bus event (heard/heardFromEditor), select() emits a graph-origin event, reflect() re-broadcasts a heard event for the echo scenario.",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/stub/stub-transport.ts",
+   "lines": 86,
+   "verifiedPurpose": "Synchronous in-memory MessageTransports pair: FIFO delivery, JSON deep-copy over the wire, close() on either side fires onClose on both, sent/received recorded.",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/stub/stub-server.ts",
+   "lines": 197,
+   "verifiedPurpose": "The scripted JSON-RPC stub language server facade: dispatches initialize/features to sibling modules, tracks one document, recomputes pattern-rule diagnostics on didOpen/didChange (stale replay switch), answers shutdown, logs every sent frame, byteSpanToRange/wordAtParams in the negotiated encoding, dropTransport for reconnect tests.",
+   "claims": {
+    "confirmed": 5,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/stub/stub-server-config.ts",
+   "lines": 94,
+   "verifiedPurpose": "Stub-server config surface: DocState/DiagnosticRule/SymbolMeta/fixture-meta types, capability-advertising and misbehavior switches, DEFAULT config (stub-pyright, accept-utf8, callHierarchy/typeHierarchy deliberately absent).",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/stub/stub-server-init.ts",
+   "lines": 57,
+   "verifiedPurpose": "Initialize handling: scripted failures, positionEncoding modes (accept-utf8/force-utf16/omit), capability advertising from switches, optional orphan response after init.",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/stub/stub-server-text.ts",
+   "lines": 186,
+   "verifiedPurpose": "The server's INDEPENDENT position math (a second implementation on purpose): textOffsetToPosition, byteSpanToLspRange, wordAt, utf16IndexToPosition, buildDiagnostics from pattern rules (severity/tags/quickfix/relatedInformation), collectNames.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/stub/stub-server-features.ts",
+   "lines": 71,
+   "verifiedPurpose": "Feature-request handlers: hover (word-based), definition (fixture map), documentSymbol (nested tree from meta), completion (symbol names), foldingRange, semanticTokens (empty data); returns whether the method was handled.",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "scripts/run-tests.mjs",
+   "lines": 26,
+   "verifiedPurpose": "Deterministic runner: walks dist/test for .test.js files (optional substring filter), sorts, hands them to node --test, exits with its status.",
+   "claims": {
+    "confirmed": 2,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "scripts/import-gate.mjs",
+   "lines": 45,
+   "verifiedPurpose": "S9 gate runner: walks the real src/ tree, extracts imports, runs the compiled runImportGate over a null-wallClock ProbeBus, prints scan/violation/leak probes, exits 1 on failure.",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "scripts/gen-fixture-nodes.mjs",
+   "lines": 67,
+   "verifiedPurpose": "Fixture-generator entry (Tree-1 stand-in): runs the six per-fixture sections in the original order, then writes schema-nodes.json / fixture-meta.json / outline-fixture.json and prints a summary; ids come from the canonical mint (ruling 5).",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "scripts/fixture-gen/helpers.mjs",
+   "lines": 63,
+   "verifiedPurpose": "Generator helpers: sha256/utf8len, moduleNameOf, mintId via canonical computeNodeIdentity from packages/schema/gen/ids.ts, makeNode (provenance tier T1/resolved:true), blockSpan/tokenSpan/utf8ByteOffset span math.",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "scripts/fixture-gen/fixtures-basic.mjs",
+   "lines": 164,
+   "verifiedPurpose": "Authors clean.py (module/add/double/unused_helper + a foreign-file node) and type-error.py (stale-green broken + error/warning diagnostic rules with related/quickfix/tags) byte-exactly, recording nodes, meta, symbols, definitions and expected offsets.",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "scripts/fixture-gen/fixtures-edge.mjs",
+   "lines": 175,
+   "verifiedPurpose": "Authors the edge fixtures byte-exactly: multibyte.py (multibyte prefix before the error token + independent utf-16 expectations), whitespace.py (BOM+CRLF+tabs+trailing ws; spans include the BOM), nested.py (class/methods + a planted no-node __str__ symbol), tier-g.tex (schema-claims-green-without-compiler).",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "scripts/fixture-gen/outline-cases.mjs",
+   "lines": 15,
+   "verifiedPurpose": "The 8 outline-fixture.json worst-case-wins cases (including empty worstOf -> none and null -> not-yet-computed).",
+   "claims": {
+    "confirmed": 2,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "demo/demo-cell.ts",
+   "lines": 84,
+   "verifiedPurpose": "Demo wiring: builds the stub server + CT stub capability + MonacoEditorAdapter cell over the type-error.py fixture; outlineDisplay uses the shared canonical worstOfVerdict (the old inverted demo-local mirror is deleted - ruling 4); shortPayload/exposeForSpike helpers.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "demo/main.tsx",
+   "lines": 157,
+   "verifiedPurpose": "The React demo shell: editor pane + sibling graph-pane stand-in chips (bus-only communication) + a live probe console tapping '*'; chips mirror S5 decisions probe-free; buttons dump()/probeCatalog()/history() to the console.",
+   "claims": {
+    "confirmed": 4,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "demo/index.html",
+   "lines": 12,
+   "verifiedPurpose": "Vite entry page: #root + a module script loading main.tsx.",
+   "claims": {
+    "confirmed": 1,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "demo/styles.css",
+   "lines": 78,
+   "verifiedPurpose": "Demo styling: panes/chips/probe console plus the pg-fill-*/pg-outline-*/pg-brush-highlight decoration classes the cell paints (grey dashed = not-yet-computed).",
+   "claims": {
+    "confirmed": 2,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "README.md",
+   "lines": 101,
+   "verifiedPurpose": "Package README: the two invariants (green never faked; no silent rewrite), the S0-S9 layout map, run commands, the three seam tables, the introspection contract, and licensing; catalog 128 and suite 96 verified against the live tree.",
+   "claims": {
+    "confirmed": 12,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 2
+   },
+   "notes": "2 stale fixes: 'the minimal production membrane is a later round' predated the Phase-1 wall (src/wall.ts exists, promoted over the pins); the layout line said 'catalog()' for the method actually named probeCatalog()."
+  },
+  {
+   "path": "MEMBRANE-SPEC.md",
+   "lines": 58,
+   "verifiedPurpose": "The wall's one-page membrane spec: face signatures, pin surface (128-lead catalog, dump/history/tap), honest-ceiling rules, failure classes (schema-pin-mismatch, wall-disposed), versioning policy, and the 6-item conformance contract mapped to tests 22/22b - all verified against wall.ts and the conformance suites.",
+   "claims": {
+    "confirmed": 14,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "ASSEMBLY-CHANGES.md",
+   "lines": 143,
+   "verifiedPurpose": "The cell's assembly ledger: Phase-0 canonical-schema swap (patterns per artifact, 90/90), Phase-1 wall carve (96/96, catalog 123->128, wall decisions), and the SUB200 restructure table (facades, catalog identity, 54-file gate census) - counts re-verified against the live suite/gate this audit.",
+   "claims": {
+    "confirmed": 15,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "test/AGENT-GUIDE.md",
+   "lines": 140,
+   "verifiedPurpose": "Historical build-round guide for the six §9 test agents: harness API, fixture table, behavioral facts, output contract; harness facts verified still accurate against test/stub/.",
+   "claims": {
+    "confirmed": 12,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 2
+   },
+   "notes": "Stale bits (original build home A:/24lean-push, catalog '121+') marked with a dated historical-note header instead of rewriting the historical document; current suite/catalog values stated in the note."
+  },
+  {
+   "path": "package.json",
+   "lines": 32,
+   "verifiedPurpose": "Package manifest: scripts (build/gate/gen:fixtures/test/typecheck:monaco/demo), deps monaco-editor+react(+dom)+@fontsource/jetbrains-mono, MIT.",
+   "claims": {
+    "confirmed": 3,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "tsconfig.json",
+   "lines": 19,
+   "verifiedPurpose": "Node-tier compile: NodeNext, rootDir '.', outDir dist, src+test included, mount/monaco and demo excluded (they compile in the monaco census).",
+   "claims": {
+    "confirmed": 2,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "tsconfig.monaco.json",
+   "lines": 24,
+   "verifiedPurpose": "Browser-tier typecheck census (noEmit): src + demo + test/stub, bundler resolution, react-jsx; harness/assert-probes excluded (node:fs/node:assert).",
+   "claims": {
+    "confirmed": 2,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  },
+  {
+   "path": "vite.config.ts",
+   "lines": 15,
+   "verifiedPurpose": "Demo vite config: root demo/, port 5183 strictPort, demo-dist build with the §7.8.3 chunk-size spike note.",
+   "claims": {
+    "confirmed": 2,
+    "overclaim": 0,
+    "underclaim": 0,
+    "stale": 0
+   }
+  }
+ ],
+ "docFixes": [
+  {
+   "path": "src/probe/catalog/mount-buffer.ts",
+   "what": "payloadType underclaims fixed: wrapper.init +adapterKind, buffer.open.input +eolMixed, bom.detect +bomKind, mutation.silent +note?; header notes the refresh"
+  },
+  {
+   "path": "src/probe/catalog/diag-verdict.ts",
+   "what": "payloadType underclaims fixed: fill.decision +tier,greenAllowed; outline.decision +displayedStatus,statusMapping,unrecognizedVocab,schemaStatus,recomputedMatchesSchema; gutter.hover tooltip +decided,note; green.blocked description rescoped from 'tier isn't compiler-truth' to all four guard-refusal causes (empty source / missing provenance / resolved:false block at CT too - pinned by test 20)"
+  },
+  {
+   "path": "src/probe/catalog/select-map.ts",
+   "what": "payloadType underclaims fixed: emit.multi +reason, map.build.input +encoding"
+  },
+  {
+   "path": "src/probe/catalog/render-gate-wall.ts",
+   "what": "payloadType underclaims fixed: render.frame +kind, decoration.zorder +line, probe.history +eventCount, gate.import.scan +fileCount"
+  },
+  {
+   "path": "src/probe/catalog/conn-lsp.ts",
+   "what": "overclaim fixed: error.protocol kind union dropped 'versionMismatch' (never emitted by any code path; version staleness fires editor.diag.version.guard) and the description's 'an unexpected version' clause removed"
+  },
+  {
+   "path": "src/probe/catalog.ts",
+   "what": "header reworded: payloadType refreshes now cover all drifted field lists, not 'two'"
+  },
+  {
+   "path": "src/lsp/lsp-types.ts",
+   "what": "mislabeled comment fixed: 'Response probes' sat over the REQUEST_PROBE table; each table now correctly labeled"
+  },
+  {
+   "path": "README.md",
+   "what": "stale 'the minimal production membrane is a later round' replaced (the Phase-1 wall exists as src/wall.ts, promoted over the pins); 'catalog()' corrected to probeCatalog()"
+  },
+  {
+   "path": "src/cell/cell.ts",
+   "what": "stale 'No membrane this round - everything is exposed' replaced: the surface stays wide, the membrane exists as ../wall.ts since ASSEMBLY Phase 1"
+  },
+  {
+   "path": "test/AGENT-GUIDE.md",
+   "what": "dated historical-note header added: original build home A:/24lean-push, catalog since grown 121->128, suite 96 tests / 31 files; harness facts below unchanged"
+  },
+  {
+   "path": "src/util/sha256.ts",
+   "what": "[crashed partial pass, verified this run] overclaim removed: header claimed FIPS 180-4 vectors 'in the self-tests' - no vector test exists; now describes the real indirect cross-check against generator-computed node:crypto shas"
+  },
+  {
+   "path": "src/probe/catalog/conn-lsp.ts",
+   "what": "[crashed partial pass, verified this run] capabilities.server payloadType refreshed to the 8 emitted provider fields"
+  },
+  {
+   "path": "src/probe/catalog/render-gate-wall.ts",
+   "what": "[crashed partial pass, verified this run] probe.dump payloadType refreshed to the full dump() snapshot field list"
+  },
+  {
+   "path": "test/07-latency.test.ts",
+   "what": "[crashed partial pass, verified this run] stale comment rewritten: the single-edit latency assertion pins the FIX (src/cell/open.ts arms pendingLatency before pump.notify), it does not document a live bug"
+  }
+ ],
+ "codeFindings": [
+  {
+   "path": "src/mount/mount.ts",
+   "claim": "Catalog payloadType for editor.mount.wrapper.ready includes msSinceInit (ms since wrapper.init)",
+   "reality": "MountController declares a private initWall field that is never written and always emits msSinceInit:null - the elapsed-time measurement was never implemented; the field is dead code",
+   "severity": "low"
+  },
+  {
+   "path": "src/probe/catalog/select-map.ts",
+   "claim": "emit.multi payloadType declares policy:'primary-caret'|'all'",
+   "reality": "Only 'primary-caret' is ever emitted (selection.ts hardcodes it); 'all' is a declared policy domain with no implementation - left as domain since it documents the decision space, recorded here",
+   "severity": "low"
+  },
+  {
+   "path": "src/buffer/open-probes.ts",
+   "claim": "size.cap payloadType declares action:'open'|'degrade'",
+   "reality": "No degradation path exists; action is always 'open'. The probe payload itself says so honestly ('no degradation is implemented this round'), so this is a declared future bound, not a lie - recorded for completeness",
+   "severity": "info"
+  }
+ ]
+}

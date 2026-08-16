@@ -1,0 +1,123 @@
+{
+  "title": "Cross-language golden ID vectors (frozen; generated ONCE from ids.py)",
+  "generatedBy": "ids.py (canonical mint) — scratchpad/gen_vectors.py, 2026-07-20",
+  "note": "Both test suites assert these byte-equal: tests/test_schema_package.py (ids.py) and tests/schema-package.test.ts (gen/ids.ts). Preimage delimiter is US=\\u001f.",
+  "vectors": [
+    {
+      "type": "node",
+      "input": {
+        "lang": "python",
+        "kind": "module",
+        "moduleName": "sample",
+        "rawName": "sample",
+        "file": "fixtures/sample.py"
+      },
+      "expected": {
+        "canonicalName": "sample",
+        "path": "sample",
+        "preimage": "node:v0\u001fpython\u001fmodule\u001fsample\u001ffixtures/sample.py\u001fsample",
+        "id": "n_baeb074b4cfa2016"
+      }
+    },
+    {
+      "type": "node",
+      "input": {
+        "lang": "python",
+        "kind": "function",
+        "moduleName": "sample",
+        "rawName": "A",
+        "file": "fixtures/sample.py"
+      },
+      "expected": {
+        "canonicalName": "sample.A",
+        "path": "sample::A",
+        "preimage": "node:v0\u001fpython\u001ffunction\u001fsample.A\u001ffixtures/sample.py\u001fsample::A",
+        "id": "n_76287cc71e90c629"
+      }
+    },
+    {
+      "type": "node",
+      "input": {
+        "lang": "go",
+        "kind": "class",
+        "moduleName": "pkg/geo",
+        "rawName": "Shape",
+        "file": "pkg/geo/shape.go"
+      },
+      "expected": {
+        "canonicalName": "pkg/geo.Shape",
+        "path": "pkg/geo::Shape",
+        "preimage": "node:v0\u001fgo\u001fclass\u001fpkg/geo.Shape\u001fpkg/geo/shape.go\u001fpkg/geo::Shape",
+        "id": "n_0bb44171ad9cea58"
+      }
+    },
+    {
+      "type": "node",
+      "input": {
+        "lang": "lean",
+        "kind": "theorem",
+        "moduleName": "Analysis.Θ",
+        "rawName": "σ_add_μ",
+        "file": "Analysis/Theta.lean"
+      },
+      "expected": {
+        "canonicalName": "Analysis.Θ.σ_add_μ",
+        "path": "Analysis.Θ::σ_add_μ",
+        "preimage": "node:v0\u001flean\u001ftheorem\u001fAnalysis.Θ.σ_add_μ\u001fAnalysis/Theta.lean\u001fAnalysis.Θ::σ_add_μ",
+        "id": "n_228787ccb9839e9b"
+      }
+    },
+    {
+      "type": "node",
+      "input": {
+        "lang": "typst",
+        "kind": "decl",
+        "moduleName": "paper",
+        "rawName": "fig:κ-bound",
+        "file": "paper.typst"
+      },
+      "expected": {
+        "canonicalName": "paper.fig:κ-bound",
+        "path": "paper::fig:κ-bound",
+        "preimage": "node:v0\u001ftypst\u001fdecl\u001fpaper.fig:κ-bound\u001fpaper.typst\u001fpaper::fig:κ-bound",
+        "id": "n_c294fa6b7fe8b39b"
+      }
+    },
+    {
+      "type": "edge",
+      "input": {
+        "kind": "calls",
+        "srcId": "n_76287cc71e90c629",
+        "dstId": "n_0bb44171ad9cea58"
+      },
+      "expected": {
+        "preimage": "edge:v0\u001fcalls\u001fn_76287cc71e90c629\u001fn_0bb44171ad9cea58",
+        "id": "e_bedab5521f0d5cc1"
+      }
+    },
+    {
+      "type": "edge",
+      "input": {
+        "kind": "proof_uses",
+        "srcId": "n_228787ccb9839e9b",
+        "dstId": "unresolved:η_helper"
+      },
+      "expected": {
+        "preimage": "edge:v0\u001fproof_uses\u001fn_228787ccb9839e9b\u001funresolved:η_helper",
+        "id": "e_b9d23efcbdbc0485"
+      }
+    },
+    {
+      "type": "edge",
+      "input": {
+        "kind": "imports",
+        "srcId": "n_baeb074b4cfa2016",
+        "dstId": "n_c294fa6b7fe8b39b"
+      },
+      "expected": {
+        "preimage": "edge:v0\u001fimports\u001fn_baeb074b4cfa2016\u001fn_c294fa6b7fe8b39b",
+        "id": "e_83275e79a466cc3c"
+      }
+    }
+  ]
+}

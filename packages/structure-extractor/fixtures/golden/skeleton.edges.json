@@ -1,0 +1,11 @@
+[
+  {
+    "dst": "pkg.b",
+    "extractor": "grimp",
+    "kind": "imports",
+    "resolved": true,
+    "resolver": "grimp",
+    "src": "pkg.a",
+    "tier": "T2"
+  }
+]

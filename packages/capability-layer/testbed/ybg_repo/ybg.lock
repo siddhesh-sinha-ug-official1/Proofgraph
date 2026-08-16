@@ -1,0 +1,3 @@
+# ybpm lockfile (fixture)
+lib 1.0.0 sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+util (workspace)

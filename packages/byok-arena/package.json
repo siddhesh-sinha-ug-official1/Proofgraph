@@ -1,0 +1,14 @@
+{
+  "name": "byok-arena",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Tree 6 - BYOK Multi-Model Arena: the AI outlet cell (ModelAdapter x3, per-user key vault, cost meter, arena round-trip gate), maximally probe-able. Zero runtime dependencies: platform fetch + node:crypto only.",
+  "scripts": {
+    "test": "node --test \"tests/*.test.ts\""
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0"
+}

@@ -1,0 +1,11 @@
+import util
+import lib
+
+let x: Int = 1
+let y = 2
+let greeting: String = "hello"
+
+fn main() -> Int {
+  helper(x)
+  lib.parse("src")
+}

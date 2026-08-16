@@ -1,0 +1,25 @@
+{
+  "module": {
+    "name": "unresolved_ref",
+    "file": "fixtures/unresolved_ref.py",
+    "lang": "python"
+  },
+  "decls": [
+    {
+      "ordinal": 1,
+      "kind": "function",
+      "name": "D",
+      "byteStart": 0,
+      "byteEnd": 24
+    }
+  ],
+  "trivia": [],
+  "refs": [
+    {
+      "fromDecl": "unresolved_ref.D",
+      "refName": "Z",
+      "kind": "calls",
+      "atByte": 20
+    }
+  ]
+}

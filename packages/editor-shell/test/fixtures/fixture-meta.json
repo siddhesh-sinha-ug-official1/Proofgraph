@@ -1,0 +1,201 @@
+{
+  "clean.py": {
+    "uri": "file:///fixtures/clean.py",
+    "languageId": "python",
+    "lang": "python",
+    "bomBytes": 0,
+    "eol": "LF",
+    "byteLength": 111,
+    "sha256": "0056c34019175f375ac27f612e05927295be8ceb3364eb3a85545025b5931fe2",
+    "diagnosticRules": [],
+    "symbols": [
+      {
+        "name": "add",
+        "kind": 12,
+        "byteStart": 0,
+        "byteEnd": 32
+      },
+      {
+        "name": "double",
+        "kind": 12,
+        "byteStart": 34,
+        "byteEnd": 70
+      },
+      {
+        "name": "unused_helper",
+        "kind": 12,
+        "byteStart": 72,
+        "byteEnd": 111
+      }
+    ],
+    "definitions": {
+      "add": {
+        "byteStart": 4,
+        "byteEnd": 7
+      }
+    },
+    "expected": {}
+  },
+  "type-error.py": {
+    "uri": "file:///fixtures/type-error.py",
+    "languageId": "python",
+    "lang": "python",
+    "bomBytes": 0,
+    "eol": "LF",
+    "byteLength": 136,
+    "sha256": "0c1711d81206e2b2603da2048232ab018e55ef2c09112a3d826027fe4e04c8a7",
+    "diagnosticRules": [
+      {
+        "pattern": "undefined_name",
+        "severity": 1,
+        "message": "\"undefined_name\" is not defined",
+        "source": "stub-pyright",
+        "code": "reportUndefinedVariable",
+        "quickfix": true,
+        "relatedPattern": "def broken",
+        "relatedMessage": "in function broken"
+      },
+      {
+        "pattern": "unused_var",
+        "severity": 2,
+        "message": "\"unused_var\" is assigned but never used",
+        "source": "stub-pyright",
+        "code": "reportUnusedVariable",
+        "tags": [
+          1
+        ]
+      }
+    ],
+    "symbols": [
+      {
+        "name": "add",
+        "kind": 12,
+        "byteStart": 0,
+        "byteEnd": 32
+      },
+      {
+        "name": "double",
+        "kind": 12,
+        "byteStart": 34,
+        "byteEnd": 70
+      },
+      {
+        "name": "broken",
+        "kind": 12,
+        "byteStart": 72,
+        "byteEnd": 136
+      }
+    ],
+    "definitions": {
+      "add": {
+        "byteStart": 4,
+        "byteEnd": 7
+      }
+    },
+    "expected": {
+      "errorByteStart": 121,
+      "errorByteEnd": 135,
+      "warnByteStart": 91,
+      "warnByteEnd": 101
+    }
+  },
+  "multibyte.py": {
+    "uri": "file:///fixtures/multibyte.py",
+    "languageId": "python",
+    "lang": "python",
+    "bomBytes": 0,
+    "eol": "LF",
+    "byteLength": 85,
+    "sha256": "6dee49658d31e687c092a2ee5ecd2f3c31af0115a8412f83036d97fff26066a0",
+    "diagnosticRules": [
+      {
+        "pattern": "undefined_name",
+        "severity": 1,
+        "message": "\"undefined_name\" is not defined",
+        "source": "stub-pyright",
+        "code": "reportUndefinedVariable"
+      }
+    ],
+    "symbols": [
+      {
+        "name": "rocket",
+        "kind": 12,
+        "byteStart": 21,
+        "byteEnd": 85
+      }
+    ],
+    "definitions": {},
+    "expected": {
+      "errorByteStart": 57,
+      "errorByteEnd": 71,
+      "errorLine0": 2,
+      "errorCharUtf16": 17
+    }
+  },
+  "whitespace.py": {
+    "uri": "file:///fixtures/whitespace.py",
+    "languageId": "python",
+    "lang": "python",
+    "bomBytes": 3,
+    "eol": "LF",
+    "byteLength": 65,
+    "sha256": "9488cfa8a1cbfddb19ff07f806210c8cdf965764efd8e5144adb3d0494e6e1f8",
+    "diagnosticRules": [],
+    "symbols": [],
+    "definitions": {},
+    "expected": {}
+  },
+  "nested.py": {
+    "uri": "file:///fixtures/nested.py",
+    "languageId": "python",
+    "lang": "python",
+    "bomBytes": 0,
+    "eol": "LF",
+    "byteLength": 94,
+    "sha256": "41c38308bae1a4e78d1751d07df9a61adae1a1a6e2ce3484a604b3d383a4b8a5",
+    "diagnosticRules": [],
+    "symbols": [
+      {
+        "name": "Shape",
+        "kind": 5,
+        "byteStart": 0,
+        "byteEnd": 94,
+        "children": [
+          {
+            "name": "area",
+            "kind": 6,
+            "byteStart": 13,
+            "byteEnd": 50
+          },
+          {
+            "name": "name",
+            "kind": 6,
+            "byteStart": 51,
+            "byteEnd": 94
+          },
+          {
+            "name": "__str__",
+            "kind": 6,
+            "byteStart": 79,
+            "byteEnd": 93
+          }
+        ]
+      }
+    ],
+    "definitions": {},
+    "expected": {}
+  },
+  "tier-g.tex": {
+    "uri": "file:///fixtures/tier-g.tex",
+    "languageId": "latex",
+    "lang": "latex",
+    "bomBytes": 0,
+    "eol": "LF",
+    "byteLength": 67,
+    "sha256": "b03dd9282a15e6828401f82eedbf9e81b74149d5df3d5e139c1b07c313107fb0",
+    "diagnosticRules": [],
+    "symbols": [],
+    "definitions": {},
+    "expected": {}
+  }
+}

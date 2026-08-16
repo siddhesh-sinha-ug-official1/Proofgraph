@@ -1,0 +1,7 @@
+fn parse(s: String) -> Ast {
+  s
+}
+
+fn render(a: Ast) -> String {
+  a
+}

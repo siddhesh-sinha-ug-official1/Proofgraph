@@ -1,0 +1,67 @@
+{
+  "slice": "agentic-convos/master-assembly.md + app-shell-round.md + ui-1c-round.md — every cited path, count, probe id, suite number, catalog size vs today's tree",
+  "sweepDate": "2026-08-03",
+  "claimsChecked": 157,
+  "verified": 142,
+  "falseFound": 0,
+  "corrected": [],
+  "updated": [
+    {
+      "where": "master-assembly.md [PHASE 1 CLOSED] catalog totals 116/91/137/128/93/168",
+      "was": "capability-layer 91, structure-extractor 137",
+      "is": "capability-layer 92 (+capability.wire.prepare, CAP-LEAN round), structure-extractor 149 (later lean/green rounds); graph-model 116, editor-shell 128, graph-view 93, byok-arena 168 re-measured EXACT today (byok 168 test-asserted at packages/byok-arena/tests/wall-conformance.test.ts:98). [updated] note added in place."
+    },
+    {
+      "where": "master-assembly.md [PHASE 3 CLOSED] acceptance ids + 9 PASS",
+      "was": "unused == n_94602d86cdf431c2; TRACE n_6e177dcaaec5588a; run_demo 9 PASS / 0 FAIL",
+      "is": "assembly-era mints, true at close; ROOTFIX made ids ingest-root-relative: unused_fn -> n_0b636277e755222b, main -> n_808f977d47f6c28f (today's TRACE-full.json + ACCEPTANCE-REPORT.md, regenerated 2026-08-03, now 11 PASS / 0 FAIL with later-added i-green-trace, j-unbacked-green, ui-acceptance). [updated] note added in place; corroborated by vessels/REPORT-ROOTFIX.md lines 55-65."
+    },
+    {
+      "where": "master-assembly.md [post-DONE addendum] brushing both n_6e177dcaaec5588a",
+      "was": "n_6e177dcaaec5588a (moatpkg.core.main)",
+      "is": "same node re-mints as n_808f977d47f6c28f post-ROOTFIX under bare-dir roots. [updated] note added in place."
+    },
+    {
+      "where": "ui-1c-round.md Final sweep '108 passed + 1 todo'",
+      "was": "final sweep reads as the round's last word at 108+1, contradicting the polish section's 111+1",
+      "is": "108+1 was the pre-polish baseline (the polish section says so); post-polish = 111+1 (+3 shell1c.skin), which matches today's on-disk static count exactly (27+16+28+9+3+8+9+10+1todo+1). [updated] note added in place."
+    }
+  ],
+  "unverifiable": [
+    {
+      "where": "master-assembly.md historical per-cell suite run numbers (79/84/68/86/100/89 baseline; 87/95/85/90/116/89 post-swap; 113/118/103/96/133/103 phase-1; hub 32/34/36; outerwall 30/30; V2 4/4; V4 17/17; app 28+1todo)",
+      "why": "clean-state suite totals are owned by the concurrent wave-3 closer; re-running full suites forbidden for this sweep. Arithmetic of all three totals (506/562/666) re-checked and correct; today's counts where statically countable are documented growth (hub 44, outerwall 62, V1 11)."
+    },
+    {
+      "where": "master-assembly.md phase 0.3 '631 files' marked read-only",
+      "why": "no file-count record in INTEGRATION-MANIFEST.json; re-counting six origin trees with the era's exclusion set is not cheaply reproducible. Read-only attribute itself SAMPLED and confirmed on three cells across origin folders."
+    },
+    {
+      "where": "master-assembly.md live-run ephemera (34s runtime, zero orphans, browser screenshot timeouts, live brushing click evidence) and pyright drive-letter-lowercasing root cause",
+      "why": "one-shot live-stack observations; not reproducible without running the stack. The lowercasing fix is visible in code (cell 2 canonicalizes URIs) but the root-cause claim needs a live LSP."
+    },
+    {
+      "where": "app-shell-round.md live ephemera (~202k subagent tokens, spot-check sha 8a783dcc, 26s/20s runtimes, ports-verified-freed)",
+      "why": "session-usage and ephemeral-process observations, unrecoverable from disk. The committed-fixture sha claim's mechanism (fixture-untouched check) verified present in run_shell_demo."
+    },
+    {
+      "where": "ui-1c-round.md live spot checks (ephemeral stack render facts, diff-loop computed-style probes, theme flip-and-restore)",
+      "why": "ephemeral browser-session evidence; the per-element diff table exists (vessels/REPORT-UI-1C-POLISH.md) but the live computed styles cannot be re-observed without a stack."
+    }
+  ],
+  "highlights": {
+    "exactMatchesToday": [
+      "packages/schema/PIN schemaHash 3f3123699c45a8d906db0fe00f0830e0a9f25b9ce30586cfbf30337db6043d9c",
+      "Tree-1 baseline 004b9d00 present in A:/2lean-push/graph-model",
+      "schema tests 23 py + 14 ts; 8 golden id vectors (vectors.json)",
+      "hub probe catalog exactly 40 (claim 32->40); hub tests exactly 44 (claim 36->44); path-escape matrix exactly 14 shapes; WinError-1314 symlink skip present",
+      "run_shell_demo: all 11 named checks present verbatim",
+      "app test groups all exact: shell.units 27 / shell.face 16 / shell1c.layout2 28 / shell1c.face 9 / shell1c.skin 3 / v4.serve 8 / v5.bus 9 / p3.face 10+1 / gate 1",
+      "layout2 constants all exact (gutter 10, margin 6, clamps 220-540/240-640/140-460, zones 70/70/80, z 44/70/76/90/95, float min 280x170, tear 4px); search bounds 40/200/12/150; accent #7C6FD4",
+      "zero canonical verdict hexes in app/src (skin claim replicated by grep)",
+      "env audit 100%: node v24.18.0, npm 11.16.0, py 3.12.10, websockets 16.0, rustworkx 0.18.0, networkx 3.6.1, grimp 3.15, pytest 9.1.1, tree_sitter 0.26.0, typst/elan paths, jsonschema+lsprotocol+pygls still missing, pyright not on PATH",
+      "DEPTH_ALLOWS_RESOLVED_EDGES {CT:true,S:false,G:false,P:false}, definition->blue, unresolved: prefix, outlinePolicy, schemaRevision v0.1 all encoded in packages/schema",
+      "all six origins exist, INTEGRATION-MANIFEST origins match the registry, originals sampled ReadOnly"
+    ]
+  }
+}

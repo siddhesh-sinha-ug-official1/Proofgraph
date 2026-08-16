@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "v0",
+  "nodes": [
+    { "id":"X", "kind":"function","lang":"python","name":"caller","signature":"def caller()",
+      "span":{"file":"m.py","byteStart":0,"byteEnd":20},"fill":{"status":"green","source":"pyright"},
+      "outline":null,"origin":"checked","provenance":{"tier":"T1","extractor":"py","resolved":true} },
+    { "id":"Y", "kind":"function","lang":"python","name":"dep_one","signature":"def dep_one()",
+      "span":{"file":"m.py","byteStart":21,"byteEnd":40},"fill":{"status":"green","source":"pyright"},
+      "outline":null,"origin":"checked","provenance":{"tier":"T1","extractor":"py","resolved":true} },
+    { "id":"Z", "kind":"function","lang":"python","name":"dep_two","signature":"def dep_two()",
+      "span":{"file":"m.py","byteStart":41,"byteEnd":60},"fill":{"status":"green","source":"pyright"},
+      "outline":null,"origin":"checked","provenance":{"tier":"T1","extractor":"py","resolved":true} }
+  ],
+  "edges": [
+    { "id":"e-XY","kind":"calls","srcId":"X","dstId":"Y","resolved":true,"resolver":"py","provenance":{"tier":"T2","extractor":"py"} },
+    { "id":"e-XZ","kind":"calls","srcId":"X","dstId":"Z","resolved":true,"resolver":"py","provenance":{"tier":"T2","extractor":"py"} }
+  ]
+}

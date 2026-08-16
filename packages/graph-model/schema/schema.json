@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://proofgraph/schema/v0/schema.json",
+  "title": "ProofGraph Frozen Schema",
+  "schemaVersion": "v0",
+  "schemaRevision": "v0.1",
+  "outlineWorstOrder": ["red", "amber", "blue", "definition", "lemma", "none", "green"],
+  "outlinePolicy": {
+    "unrecognizedToken": "rank WORST and report the offending token",
+    "bannedTokens": ["none/green"]
+  },
+  "worstTokenToStatus": {
+    "red": "red",
+    "amber": "amber",
+    "blue": "blue",
+    "definition": "blue",
+    "lemma": "green",
+    "none": "green",
+    "green": "green"
+  },
+  "unresolvedPlaceholder": { "prefix": "unresolved:", "form": "prefix + rawRefName" },
+  "idScheme": {
+    "hash": "sha256",
+    "encoding": "hex",
+    "hashLength": 16,
+    "delimiter": "\u001f",
+    "delimiterNote": "US, the unit separator 0x1f; spelled \\x1f in probe payloads",
+    "form": "id = prefix + sha256(preimage)[:hashLength] hex; preimage = domainTag and fields joined by the delimiter",
+    "node": {
+      "prefix": "n_",
+      "domainTag": "node:v0",
+      "preimageFields": ["lang", "kind", "canonicalName", "file", "path"]
+    },
+    "edge": {
+      "prefix": "e_",
+      "domainTag": "edge:v0",
+      "preimageFields": ["kind", "srcId", "dstId"]
+    },
+    "normalizedSpan": "the reformatting-invariant structural locator {file, path} — NOT byte offsets, NOT content bytes"
+  },
+  "$defs": {
+    "Node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id","kind","lang","name","signature","span","fill","outline","origin","provenance"],
+      "properties": {
+        "id":        { "type": "string", "pattern": "^n_[0-9a-f]{16}$" },
+        "kind":      { "enum": ["module","function","class","theorem","section","label","figure","decl"] },
+        "lang":      { "enum": ["python","go","c","cpp","lean","latex","typst"] },
+        "name":      { "type": "string" },
+        "signature": { "type": ["string","null"] },
+        "span":      { "type": "object", "additionalProperties": false,
+                       "required": ["file","byteStart","byteEnd"],
+                       "properties": { "file": {"type":"string"},
+                                       "byteStart": {"type":"integer","minimum":0},
+                                       "byteEnd": {"type":"integer","minimum":0} } },
+        "fill":      { "type": "object", "additionalProperties": false,
+                       "required": ["status","source"],
+                       "properties": { "status": {"enum":["green","amber","red","blue","unknown"]},
+                                       "source": {"type":"string"} } },
+        "outline":   { "type": ["object","null"], "additionalProperties": false,
+                       "required": ["status","worstOf"],
+                       "properties": { "status": {"enum":["green","amber","red","blue","unknown"]},
+                                       "worstOf": {"type":"array","items":{"type":"string"}} } },
+        "origin":    { "enum": ["given","assumed","checked"] },
+        "provenance":{ "type": "object", "additionalProperties": false,
+                       "required": ["tier","extractor","resolved"],
+                       "properties": { "tier": {"enum":["T1","T2","T3"]},
+                                       "extractor": {"type":"string"},
+                                       "resolved": {"type":"boolean",
+                                                    "description":"the extractor successfully bound this element's identity; true for every well-formed structural node"} } }
+      }
+    },
+    "Edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id","kind","srcId","dstId","resolved","resolver","provenance"],
+      "properties": {
+        "id":       { "type": "string", "pattern": "^e_[0-9a-f]{16}$" },
+        "kind":     { "enum": ["calls","imports","includes","inherits","references","cites","proof_uses"] },
+        "srcId":    { "type": "string" },
+        "dstId":    { "type": "string" },
+        "resolved": { "type": "boolean" },
+        "resolver": { "type": "string" },
+        "provenance":{ "type": "object", "additionalProperties": false,
+                       "required": ["tier","extractor"],
+                       "properties": { "tier": {"enum":["T1","T2","T3"]},
+                                       "extractor": {"type":"string"} } }
+      }
+    },
+    "Graph": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion","nodes","edges"],
+      "properties": {
+        "schemaVersion": { "const": "v0" },
+        "nodes": { "type": "array", "items": { "$ref": "#/$defs/Node" } },
+        "edges": { "type": "array", "items": { "$ref": "#/$defs/Edge" } },
+        "leads": { "type": "array", "items": { "$ref": "#/$defs/Edge" },
+                   "description": "resolved=false edges are carried HERE, never in `edges` — a lead is not an edge" }
+      }
+    }
+  }
+}

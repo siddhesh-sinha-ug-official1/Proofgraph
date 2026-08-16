@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": ["vitest/globals", "node"],
+    "baseUrl": ".",
+    "paths": {
+      "@editor-shell/*": ["../packages/editor-shell/*"],
+      "@graph-view/*": ["../packages/graph-view/*"],
+      "@schema/*": ["../packages/schema/*"]
+    }
+  },
+  "include": ["src", "test", "vitest.config.ts"]
+}

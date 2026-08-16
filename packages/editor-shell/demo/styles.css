@@ -1,0 +1,78 @@
+/* Demo shell: editor pane + sibling "graph pane" stand-in + probe console.
+   The graph is a SIBLING pane, never inside Monaco (§7.3). */
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body {
+  font-family: "JetBrains Mono", monospace;
+  background: #1e1f22;
+  color: #a9b7c6;
+  font-size: 13px;
+}
+.app { display: flex; flex-direction: column; height: 100%; }
+.panes { display: flex; flex: 1; min-height: 0; }
+.editor-pane { flex: 2.2; min-width: 0; border-right: 1px solid #393b40; }
+.graph-pane { flex: 1; overflow: auto; padding: 10px; background: #26282e; }
+.graph-pane h2 { font-size: 13px; margin: 4px 0 10px; color: #dfe1e5; }
+.graph-pane .hint { color: #6f737a; font-size: 11px; margin-bottom: 10px; }
+
+.node-chip {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 9px; margin-bottom: 6px; cursor: pointer;
+  background: #2b2d30; border: 1px solid #393b40; border-radius: 6px;
+}
+.node-chip:hover { border-color: #4e5157; }
+.node-chip.selected { border-color: #3574f0; background: #25324d; }
+.node-chip .kind { color: #6f737a; font-size: 10px; }
+.node-chip .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.fill-dot { width: 12px; height: 12px; border-radius: 50%; flex: none; border: 2px solid transparent; }
+/* FILL colors — green ONLY from a real CT verdict (the cell enforces it). */
+.fill-green { background: #4caf50; }
+.fill-amber { background: #e0a83a; }
+.fill-red { background: #e05555; }
+.fill-blue { background: #4a9bd5; }
+.fill-unknown { background: #6f737a; }
+/* OUTLINE ring = the border around the dot; grey dashed = not yet computed. */
+.ring-green { border-color: #2e7d32; }
+.ring-amber { border-color: #a97b19; }
+.ring-red { border-color: #a33; }
+.ring-blue { border-color: #2c6e9e; }
+.ring-not-yet-computed { border-color: #6f737a; border-style: dashed; }
+
+.probe-console {
+  height: 200px; border-top: 1px solid #393b40; display: flex; flex-direction: column;
+  background: #1b1c1f;
+}
+.probe-toolbar { display: flex; gap: 12px; padding: 5px 10px; align-items: center; border-bottom: 1px solid #2b2d30; }
+.probe-toolbar .stat { color: #6f737a; font-size: 11px; }
+.probe-toolbar .stat b { color: #dfe1e5; }
+.probe-toolbar button {
+  background: #2b2d30; color: #a9b7c6; border: 1px solid #393b40; border-radius: 4px;
+  font: inherit; font-size: 11px; padding: 2px 8px; cursor: pointer;
+}
+.probe-log { flex: 1; overflow: auto; padding: 4px 10px; font-size: 11px; line-height: 1.5; }
+.probe-log .ev { white-space: nowrap; }
+.probe-log .clock { color: #6f737a; }
+.probe-log .stage-mount { color: #c586c0; } .probe-log .stage-buffer { color: #9cdcfe; }
+.probe-log .stage-conn { color: #4ec9b0; } .probe-log .stage-lsp { color: #dcdcaa; }
+.probe-log .stage-diag { color: #e05555; } .probe-log .stage-verdict { color: #4caf50; }
+.probe-log .stage-select { color: #3574f0; } .probe-log .stage-map { color: #d19a66; }
+.probe-log .stage-render { color: #808080; } .probe-log .stage-probe { color: #dfe1e5; }
+
+/* ── Monaco decoration classes the cell paints (S5/S6) ── */
+.pg-fill-green, .pg-fill-amber, .pg-fill-red, .pg-fill-blue, .pg-fill-unknown {
+  border-radius: 50%; margin-left: 4px;
+}
+.pg-fill-green { background: #4caf50 !important; width: 10px !important; height: 10px !important; margin-top: 4px; }
+.pg-fill-amber { background: #e0a83a !important; width: 10px !important; height: 10px !important; margin-top: 4px; }
+.pg-fill-red { background: #e05555 !important; width: 10px !important; height: 10px !important; margin-top: 4px; }
+.pg-fill-blue { background: #4a9bd5 !important; width: 10px !important; height: 10px !important; margin-top: 4px; }
+.pg-fill-unknown { background: #6f737a !important; width: 10px !important; height: 10px !important; margin-top: 4px; }
+.pg-outline-green { border-left: 3px solid #2e7d32; }
+.pg-outline-amber { border-left: 3px solid #a97b19; }
+.pg-outline-red { border-left: 3px solid #a33; }
+.pg-outline-blue { border-left: 3px solid #2c6e9e; }
+.pg-outline-unknown { border-left: 3px solid #6f737a; }
+.pg-outline-not-yet-computed { border-left: 3px dashed #6f737a; }
+.pg-brush-highlight { background: rgba(53, 116, 240, 0.22); }

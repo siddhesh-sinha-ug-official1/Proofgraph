@@ -1,0 +1,35 @@
+{
+  "name": "proofgraph-editor-shell",
+  "version": "0.0.1",
+  "private": true,
+  "description": "ProofGraph Tree 4 — Editor Shell cell: text projection at IDE quality, maximally probe-able.",
+  "type": "module",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "gate": "node scripts/import-gate.mjs",
+    "gen:fixtures": "node scripts/gen-fixture-nodes.mjs",
+    "test": "npm run build && npm run gate && node scripts/run-tests.mjs",
+    "test:only": "node scripts/run-tests.mjs",
+    "typecheck:monaco": "tsc -p tsconfig.monaco.json",
+    "demo": "vite",
+    "demo:build": "vite build"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.6.0",
+    "vite": "^6.3.5"
+  },
+  "dependencies": {
+    "@fontsource/jetbrains-mono": "^5.2.8",
+    "monaco-editor": "^0.52.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

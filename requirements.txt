@@ -1,0 +1,17 @@
+# ProofGraph — Python runtime + test dependencies (Python 3.12).
+#
+# Install:  pip install -r requirements.txt
+#
+# Versions are pinned to the environment the 19/19 suite baseline was measured
+# on (2026-08). Only third-party packages that the tree actually imports are
+# listed; everything else is stdlib. Node/TS deps live in each package's
+# package.json (restored with `npm ci`, NOT pip). The Lean path additionally
+# needs elan + lake on PATH (see README "Install").
+
+rustworkx==0.18.0                 # cell 1 + cell 3 T3: reachability / SCCs / condensation
+networkx==3.6.1                   # cell 1 rustworkx-vs-networkx reachability cross-check
+grimp==3.15                       # cell 3 Python dock: module import graph (grimp sub-path)
+tree-sitter==0.26.0               # cell 3 T1: syntax nodes
+tree-sitter-language-pack==1.12.5 # cell 3 T1: the 7-language grammar set
+websockets==16.0                  # hub /lsp WebSocket bridge (server_core.py)
+pytest==9.1.1                     # cell 2 suite runner (python -m pytest capability/tests)

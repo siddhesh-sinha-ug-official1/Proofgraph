@@ -1,0 +1,268 @@
+{
+  "area": "app-tests",
+  "areaRoot": "proofgraph/app",
+  "auditedAt": "2026-08-03",
+  "files": [
+    {
+      "path": "test/helpers/p3fixture.ts",
+      "lines": 99,
+      "verifiedPurpose": "Exports the 6-node/1-edge/1-lead moatpkg fixture envelope, ruling-8 analysis verdicts, a contract-shaped /analysis payload and an httpGetOf route-table transport; imported by p3.face.test.tsx and p3.face.honesty.test.tsx.",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "Ruling-8 comment verified against packages/schema/gen worstOfVerdict: []->green(none), [lemma,blue]->blue, [red,lemma]->red, [amber,definition]->amber, [green]->green; 'none' IS a recognized token in OUTLINE_WORST_ORDER; the claimed paints-suite drift-gate exists (p3.face.test.tsx fixture self-gate)."
+    },
+    {
+      "path": "test/helpers/reactFlowShims.ts",
+      "lines": 41,
+      "verifiedPurpose": "installReactFlowShims() installs jsdom mocks (ResizeObserver, DOMMatrixReadOnly, offsetWidth/Height getters, SVG getBBox) so React Flow can measure; called via beforeAll by every app component suite except shell1c.skin (which keeps its own verbatim copy).",
+      "claims": { "confirmed": 2, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "Credited pattern source packages/graph-view/src/render.dom.test.tsx exists."
+    },
+    {
+      "path": "test/helpers/shellFaceFixture.tsx",
+      "lines": 141,
+      "verifiedPurpose": "Mock hub (APP-SHELL-CONTRACT route shapes, PUT override hook, call recorder) + renderShell/ensureMenubar/openMenu/menuItem helpers for the shell.face.* suites; SCHEMA_HASH equals the real pinned schema hash.",
+      "claims": { "confirmed": 5, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "SELECTOR ADAPTED comment's design-spec quote ('hamburger toggles full menubar inline') verified verbatim in shell-design/README.md."
+    },
+    {
+      "path": "test/helpers/shell1cFixture.tsx",
+      "lines": 120,
+      "verifiedPurpose": "Mock hub + renderShell/menu helpers for the shell1c.face.* suites; same contract shapes as shellFaceFixture but no PUT override hook and an empty /pins/history; kept separate because the two rounds' recorded routes differ.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "test/helpers/shellProbe.ts",
+      "lines": 16,
+      "verifiedPurpose": "resetShellState() clears localStorage + the shell probe log; probes(id) filters shellLogHistory by probeId; the shared beforeEach of every shell.* / shell1c.* suite.",
+      "claims": { "confirmed": 2, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "test/helpers/v4hub.ts",
+      "lines": 145,
+      "verifiedPurpose": "setupV4Hub() registers beforeAll/afterAll that spawn vessels/serve_hub_v4.py on ephemeral ports, read its info line, poll /health, run the healthy-path fetchGraphVerified + graph-view wall mount, and tear down via stdin EOF with a loud orphaned-python guard; also exports the node:http transport.",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "serve_hub_v4.py exists and its own docstring confirms ephemeral ports; stdin-EOF -> exit 0 asserted in afterAll."
+    },
+    {
+      "path": "test/helpers/v4pins.ts",
+      "lines": 94,
+      "verifiedPurpose": "Pin/bus/dump helpers for the v4.serve.* suites: select-only localBus, of/last pin filters, pinsHistory with truncation asserted false at limit=100000, rfPartition ghost/real split, setEq and UTF-8 byteIdentical asserts.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "Claimed hub default tail bound 2000 verified: hub/server_core.py PINS_STREAM_LIMIT_DEFAULT = 2000."
+    },
+    {
+      "path": "test/helpers/v5joint.ts",
+      "lines": 127,
+      "verifiedPurpose": "Loads the editor-shell clean.py fixtures (two independent parses so === proves content identity), builds the shared-universe envelope minus `double`, exports caret positions, mountJoint (editor wall on sanctioned stubs + graph wall on one joined bus) and the per-test teardown registrar for the v5.bus.* suites.",
+      "claims": { "confirmed": 5, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "Caret byte-math verified against clean.py bytes: add [0,32) line 1, double [34,70) line 5, pure ASCII/LF confirmed by octal dump."
+    },
+    {
+      "path": "test/p3.build.gate.test.ts",
+      "lines": 80,
+      "verifiedPurpose": "Runs `npx vite build` and byte-scans every dist file (latin1 read) for five key-shaped patterns — ai/server.ts's live-extracted default masterSecret and FAKE api key, cell 6's dev masterSecret literal, and the sk-ant-api03 / sk-fake prefix families — failing on any hit.",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "AI_SERVER_DEFAULT_MASTER_SECRET and FAKE_TRANSPORT_API_KEY exist in ai/server.ts; byok-arena-dev-master-secret-CHANGE-ME exists in packages/byok-arena/src."
+    },
+    {
+      "path": "test/p3.face.test.tsx",
+      "lines": 145,
+      "verifiedPurpose": "3 tests: overlaid /analysis verdicts render paints equal to the canonical schema/gen worstOfVerdict derivation (pin-verified, worstOfCheck consistency incl. the ruling-8 lead-capped node), served nulls stay grey not-yet-computed, and an unrecognized worstOf token ranks worst and renders unknown.",
+      "claims": { "confirmed": 5, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "test/p3.face.honesty.test.tsx",
+      "lines": 171,
+      "verifiedPurpose": "7 tests + 1 declared todo: overlay id-safety (byte-identical ids, foreign-snapshot verdicts refused as analysis-graph-mismatch), fetchAnalysis honesty (typed pending refusals verbatim, analysis-shape-mismatch on drifted 200, hub-unreachable on transport death), and App-level error surfaces (named banner, pending analysis honesty); the live GET /analysis integration stays test.todo for run_demo.py.",
+      "claims": { "confirmed": 6, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "test/shell.face.test.tsx",
+      "lines": 143,
+      "verifiedPurpose": "6 tests on menubar semantics through the real App over the mocked hub: disabled-with-reason items, Re-analyze POST /analyze with the landed hub vocabulary, headless edit-menu reasons, arrow/Esc keyboard nav with focus return, probed blocked clicks, and the View menu's tool-window toggle + theme flip persisted under pgshell.layout.v2 / prefs.",
+      "claims": { "confirmed": 6, "overclaim": 0, "underclaim": 1, "stale": 0 },
+      "notes": "UNDERCLAIM FIXED: header listed only menubar semantics; the View-menu tool-window toggle + theme flip test was unmentioned — header extended."
+    },
+    {
+      "path": "test/shell.face.tabs.test.tsx",
+      "lines": 93,
+      "verifiedPurpose": "3 tests: explorer tree lazy /fs/list loads (child fetch on first expand only, cached after), tab-switch dispose-before-mount ordering probed, and the dirty-close confirm guard keeping the tab on refusal.",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "test/shell.face.save.test.tsx",
+      "lines": 92,
+      "verifiedPurpose": "4 tests: Ctrl+S PUTs the buffer and clears dirty on the hub ack (probed), a path-escape refusal surfaces its named class and keeps dirty, Ctrl+, prefs font-size change persists under pgshell.prefs.v1 (probed, paged Settings), and status-bar facts come from served /health + envelope + the joined bus.",
+      "claims": { "confirmed": 5, "overclaim": 1, "underclaim": 0, "stale": 0 },
+      "notes": "OVERCLAIM FIXED: header claimed 'theme flips data-theme' is proven here; that assertion lives in shell.face.test.tsx's View-menu test — header now points there."
+    },
+    {
+      "path": "test/shell.face.dialogs.test.tsx",
+      "lines": 62,
+      "verifiedPurpose": "3 tests: Help>About carries OUT_OF_SCOPE_VERBATIM + the stub-floor tier statement, the root picker declares roots via POST /analyze{roots} (probed), and the gap report is disabled with the pending reason while /analysis is uncomputed.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "test/shell.units.test.ts",
+      "lines": 123,
+      "verifiedPurpose": "13 tests on pure chrome machinery: clampSplit min-size math (incl. degenerate container), prefs versioned persistence with probed changes and loud corrupt-blob resets, font-size clamp on load, recents dedupe/bound, and layout v1 save/load/reset with floored minimums.",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "test/shell.units.tabs.test.ts",
+      "lines": 88,
+      "verifiedPurpose": "6 tests on TabsStore: probed activate (dispose+mount note), no duplicate tabs on re-open, dirty tracking against savedContent, markSaved sha recording, the probed unsaved-close guard, and clean-close neighbor activation.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "test/shell.units.fs.test.ts",
+      "lines": 111,
+      "verifiedPurpose": "8 tests: fsSource passes hub typed refusals through verbatim (path-escape, workspace-not-open, fs-io-error), names fs-shape-mismatch on off-contract 200s across all five fetchers, names hub-unreachable on transport death, parses happy shapes whole; plus fileIcon, spanFileMatches segment-suffix bound, pyright-canonical uri, languageIdFor.",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "test/shell1c.face.test.tsx",
+      "lines": 111,
+      "verifiedPurpose": "3 tests: Close project returns to the welcome screen (probed, recents rendered, New-empty honest-disabled, Open-sample re-enters the hub flow with a probed refresh), Search Everywhere merges a bounded probed /fs/list walk with served graph nodes and selects over the V5 bus, and pure searchHits bounds rows at SEARCH_MAX_ROWS.",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "test/shell1c.face.windows.test.tsx",
+      "lines": 147,
+      "verifiedPurpose": "6 tests: accent hex pref drives --acc only (probed, invalid drafts never persist), gear-menu view-mode transitions probed + persisted with the Window row honest-disabled by the verbatim README string, MOVE TO docks pinned, rail toggles mirror the View menu, Reset restores spec defaults, and breadcrumbs/hub-chip read served data.",
+      "claims": { "confirmed": 6, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "WINDOW_MODE_DISABLED_REASON verified verbatim against shell-design/README.md line 110."
+    },
+    {
+      "path": "test/shell1c.layout2.test.ts",
+      "lines": 166,
+      "verifiedPurpose": "15 tests on pure layout2 geometry: spec defaults (windows + 296/340/204 edge sizes), even edge-stack splits with 10px gutters/6px margins, float clamps, undock overlay rects at z 44, z-band ordering, drop-zone hit bands (70/70/80 with corner precedence) + highlight rects, and dock insets by open docked edges.",
+      "claims": { "confirmed": 5, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "Referenced shell-design/README.md section '1c windowing spec' exists."
+    },
+    {
+      "path": "test/shell1c.layout2.machine.test.ts",
+      "lines": 93,
+      "verifiedPurpose": "6 tests on the WinState machine: every mode transition probed with from/to, MOVE TO docks pinned, monotonic float z-counter with no-op fronting, probed toggle/hide, auto-hide of exactly the open unpinned/undocked transients, and per-edge size clamps.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "test/shell1c.layout2.persist.test.ts",
+      "lines": 96,
+      "verifiedPurpose": "7 tests on layout2 persistence: v2-key round-trip (probed), loud corrupt-blob reset, load-time size clamps, loud probed v1->v2 migration keeping v1 for rollback with no re-migration, loud reset on an unparseable v1 blob, probed key removal on reset, and the five-window WIN_IDS contract.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "test/shell1c.skin.test.tsx",
+      "lines": 199,
+      "verifiedPurpose": "3 tests guarding the cell-5 DOM skin: app/src restates none of the five canonical verdict hexes, node fill/ring computed+inline paints are identical with the real stylesheet enabled vs disabled (sheet liveness proven via the skin-only box-sizing property) while inline paints match COLORS[data-fill-status], and no !important rides paint-bearing properties in styles.css.",
+      "claims": { "confirmed": 3, "overclaim": 1, "underclaim": 0, "stale": 0 },
+      "notes": "OVERCLAIM FIXED: header claimed the 9px border-radius is proven applied here; the body defers pixel geometry to the live-browser diff loop (jsdom cannot model !important-over-inline) and proves liveness via box-sizing — header corrected."
+    },
+    {
+      "path": "test/v4.serve.test.tsx",
+      "lines": 143,
+      "verifiedPurpose": "2 tests against its own spawned real python hub: /health schema-pin equality across hub, graphSource and view wall (plus catalog presence and the honestly-absent capability stream), and the three-way id-set/byte equality of served /graph, the model wall's pin-surface truth, and the view dump — with cross-boundary pin-vs-pin count reconciliation; file name kept because faultcheck fault (b) invokes it by name.",
+      "claims": { "confirmed": 7, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "faultcheck/faultlib/catalog.py confirmed: fault (b) runs `npx vitest run --no-cache test/v4.serve.test.tsx` expecting serializer-edge-drop; richpkg 13/8/3 counts asserted at runtime."
+    },
+    {
+      "path": "test/v4.serve.verdicts.test.tsx",
+      "lines": 98,
+      "verifiedPurpose": "2 tests on its own spawned hub: unknown fills/null outlines cross extractor->model->hub->view uninvented (hatched grey, never the green hex, unknownGuard once per node), and leads render only as dashed leadEdge with hover degradation declared on link.hover.unsupported.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "test/v4.serve.guards.test.tsx",
+      "lines": 138,
+      "verifiedPurpose": "3 tests on its own spawned hub: the doctored edge+lead drop is caught by name (serializer-edge-drop) with pins proving which ids vanished and clean re-verification after, unknown-endpoint refusals pass through verbatim with the hub's own refusal pin, and both membranes independently refuse drifted/missing envelope pins with pins attached.",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "test/v4.serve.trace.test.tsx",
+      "lines": 111,
+      "verifiedPurpose": "1 test on its own spawned hub: proves one Node.id UTF-8 byte-identical at extractor pin -> model-wall ingest -> served /graph bytes -> view dump, then writes and read-back-verifies vessels/TRACE-node.json for the Phase-3 trace.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "vessels/TRACE-node.json present on disk."
+    },
+    {
+      "path": "test/v5.bus.test.tsx",
+      "lines": 140,
+      "verifiedPurpose": "3 tests: both walls mount on one joined bus with identical carried schema pins (select-only subscription, hover-unbridged declared), editor caret select crosses byte-equal to the graph wall with honest headless centered:false, and a graph click reaches the editor's recv/reveal path with echo guards probed on both sides.",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "test/v5.bus.bounds.test.tsx",
+      "lines": 125,
+      "verifiedPurpose": "3 tests: one select each direction produces exact bounded event counts on the bus and both pin streams (no echo storm), an unknown editor-side id probes link.select.unknownId with the join staying live, and the skeleton-envelope mount proves mutual-unknown no-crash in both directions.",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "test/v5.bus.guards.test.tsx",
+      "lines": 105,
+      "verifiedPurpose": "3 tests: hover degrades probed (link.hover.unsupported, nothing reaches the editor), wrong-origin injections at either port are dropped and named bus-origin-spoof in the adapter log with each cell's own guard probing locally, and post-dispose clicks cross nothing with a second dispose idempotent.",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "test-acceptance/acceptance.headless.test.tsx",
+      "lines": 193,
+      "verifiedPurpose": "1 test (original path kept) driving §7(d)+(f)+(b): a real-analysis joint mount round-trips one select each direction with byte-equal ids and exact bounded counts, records the two browser-tier trace hops, asserts filled-outline unknown rings on every moat node, and writes the 'brushing' evidence part for run_demo.py.",
+      "claims": { "confirmed": 5, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "test-acceptance/acceptance.ceiling.test.tsx",
+      "lines": 106,
+      "verifiedPurpose": "1 test for §7(h): the typst ceiling analysis (5 nodes, 0 edges, 2 leads on disk) renders unknown everywhere on the view wall's own paints — zero green, one leadGuard per lead, ghost placeholders accounted and never green — and writes the 'ceiling' evidence part.",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "analysis-ceiling.json verified on disk: 0 edges / 2 leads / 5 nodes."
+    },
+    {
+      "path": "test-acceptance/acceptance.greenflow.test.tsx",
+      "lines": 146,
+      "verifiedPurpose": "1 test for §7(i): the lean CT analysis paints its kernel-verified decls the canonical #2E7D32 on the view wall's paints (module stays unknown/hatched), the resolved edge renders real (zero leadGuards), the editor mounted at the measured CT tier lets the green through its guard and paints the pg-fill-green gutter glyph; writes the 'greenflow' evidence part.",
+      "claims": { "confirmed": 5, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "COLORS.green === #2E7D32 verified; analysis-lean.json measuredTier === CT verified on disk."
+    },
+    {
+      "path": "test-acceptance/acceptance.doctored.test.tsx",
+      "lines": 75,
+      "verifiedPurpose": "1 test for §7(j): a doctored green (checker evidence stripped to source:'') on the same lean node is blocked by the editor wall's guard (editor.verdict.green.blocked, reason green-may-never-be-faked) with zero green gutter glyphs; writes the 'doctored' evidence part.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "test-acceptance/helpers/analyses.ts",
+      "lines": 142,
+      "verifiedPurpose": "Loads the three real run_demo-written analyses with a loud acceptance-evidence-missing refusal (never minting its own), double-parses each so === proves content identity, derives ids/URIs/envelope builders/caret math and the editor-vocabulary node mappers, and reads LEAN_MEASURED_TIER from the analysis provenance.",
+      "claims": { "confirmed": 6, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "Claim that the moat analysis now mints bare 'core.py' span files (staging workaround retired) verified against analysis-moat.json on disk: span files are exactly core.py / helpers.py."
+    },
+    {
+      "path": "test-acceptance/helpers/mounts.ts",
+      "lines": 96,
+      "verifiedPurpose": "mountJoint (moat editor wall at honest stub tier G + graph wall on one joined bus) and mountLeanEditor (lean doc at the measured tier) on cell 4's sanctioned stubs, plus the teardown registrar and of/lastPayload/utf8 pin helpers for the acceptance suites.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "test-acceptance/helpers/evidence.ts",
+      "lines": 29,
+      "verifiedPurpose": "registerEvidencePart registers an afterAll writing one suite's accumulated evidence record to evidence/headless-parts/<name>.json — the per-file half of the split-evidence seam merged by globalSetup.ts.",
+      "claims": { "confirmed": 2, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "test-acceptance/helpers/globalSetup.ts",
+      "lines": 41,
+      "verifiedPurpose": "Vitest globalSetup (wired in vitest.acceptance.config.ts): setup deletes headless.json + all parts so stale evidence never masquerades; teardown merges whatever parts exist with the base fields into the same headless.json shape run_demo.py reads.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "Config wiring verified in vitest.acceptance.config.ts globalSetup entry."
+    }
+  ],
+  "docFixes": [
+    { "path": "app/test/shell1c.skin.test.tsx", "what": "header overclaim: said the 9px border-radius application is proven here; the test proves sheet liveness via the skin-only box-sizing property and defers pixel geometry to the live-browser loop — header now says so (kept <=200 lines)" },
+    { "path": "app/test/shell.face.save.test.tsx", "what": "header overclaim: 'theme flips data-theme' listed as proven here but the assertion lives in shell.face.test.tsx's View-menu test — header now points there" },
+    { "path": "app/test/shell.face.test.tsx", "what": "header underclaim: the View-menu tool-window toggle (pgshell.layout.v2) + theme-flip test was unmentioned — added to the Proven-HERE list" },
+    { "path": "app/README.md", "what": "Tests section: stale total '108 + 1 todo' (predates the 3 shell1c.skin tests) corrected to 111 + 1 todo with shell1c.skin added to the breakdown and a note that families span the wave-2 split files; stale todo location 'p3.face.test.tsx' corrected to p3.face.honesty.test.tsx" },
+    { "path": "vessels/REPORT-SUB200-app-tests.md", "what": "two off-by-one per-file test counts in the split table (p3.face family is 10+1 todo with honesty carrying 7, not 9+1/6; layout2 geometry carries 15 and persist 7, not 14/8) — corrected with a dated CLAIM-AUDIT note; family totals and the 111+1 grand total were already right" }
+  ],
+  "codeFindings": [],
+  "suiteAfterFixes": "MEASURED after doc fixes: app npx vitest run = 111 passed + 1 todo (23 files, 56.65s) — identical baseline; npx tsc --noEmit clean (exit 0). test-acceptance files untouched by fixes, run_demo not re-run."
+}

@@ -1,0 +1,369 @@
+{
+  "clean.py": [
+    {
+      "id": "n_d2a0f151127fe6e4",
+      "kind": "module",
+      "lang": "python",
+      "name": "clean",
+      "signature": null,
+      "span": {
+        "file": "file:///fixtures/clean.py",
+        "byteStart": 0,
+        "byteEnd": 111
+      },
+      "fill": {
+        "status": "blue",
+        "source": "external: module trusted as given"
+      },
+      "outline": null,
+      "origin": "given",
+      "provenance": {
+        "tier": "T1",
+        "extractor": "tree1-stub-generator",
+        "resolved": true
+      }
+    },
+    {
+      "id": "n_261ce2dc5be812a9",
+      "kind": "function",
+      "lang": "python",
+      "name": "add",
+      "signature": "def add(a, b)",
+      "span": {
+        "file": "file:///fixtures/clean.py",
+        "byteStart": 0,
+        "byteEnd": 32
+      },
+      "fill": {
+        "status": "green",
+        "source": "stub-pyright@1.1 typecheck verdict"
+      },
+      "outline": {
+        "status": "green",
+        "worstOf": [
+          "green"
+        ]
+      },
+      "origin": "checked",
+      "provenance": {
+        "tier": "T1",
+        "extractor": "tree1-stub-generator",
+        "resolved": true
+      }
+    },
+    {
+      "id": "n_d66a8adf93338554",
+      "kind": "function",
+      "lang": "python",
+      "name": "double",
+      "signature": "def double(x)",
+      "span": {
+        "file": "file:///fixtures/clean.py",
+        "byteStart": 34,
+        "byteEnd": 70
+      },
+      "fill": {
+        "status": "green",
+        "source": "stub-pyright@1.1 typecheck verdict"
+      },
+      "outline": {
+        "status": "red",
+        "worstOf": [
+          "green",
+          "amber",
+          "red"
+        ]
+      },
+      "origin": "assumed",
+      "provenance": {
+        "tier": "T1",
+        "extractor": "tree1-stub-generator",
+        "resolved": true
+      }
+    },
+    {
+      "id": "n_94a95c4fa9c9c85c",
+      "kind": "function",
+      "lang": "python",
+      "name": "unused_helper",
+      "signature": "def unused_helper(y)",
+      "span": {
+        "file": "file:///fixtures/clean.py",
+        "byteStart": 72,
+        "byteEnd": 111
+      },
+      "fill": {
+        "status": "unknown",
+        "source": ""
+      },
+      "outline": null,
+      "origin": "checked",
+      "provenance": {
+        "tier": "T1",
+        "extractor": "tree1-stub-generator",
+        "resolved": true
+      }
+    },
+    {
+      "id": "n_ebafff8963b3ecc4",
+      "kind": "function",
+      "lang": "python",
+      "name": "foreign_fn",
+      "signature": null,
+      "span": {
+        "file": "file:///fixtures/other.py",
+        "byteStart": 0,
+        "byteEnd": 40
+      },
+      "fill": {
+        "status": "unknown",
+        "source": ""
+      },
+      "outline": null,
+      "origin": "checked",
+      "provenance": {
+        "tier": "T1",
+        "extractor": "tree1-stub-generator",
+        "resolved": true
+      }
+    }
+  ],
+  "type-error.py": [
+    {
+      "id": "n_3449722c1ef258e8",
+      "kind": "function",
+      "lang": "python",
+      "name": "add",
+      "signature": null,
+      "span": {
+        "file": "file:///fixtures/type-error.py",
+        "byteStart": 0,
+        "byteEnd": 32
+      },
+      "fill": {
+        "status": "green",
+        "source": "stub-pyright@1.1 typecheck verdict"
+      },
+      "outline": {
+        "status": "green",
+        "worstOf": [
+          "green"
+        ]
+      },
+      "origin": "checked",
+      "provenance": {
+        "tier": "T1",
+        "extractor": "tree1-stub-generator",
+        "resolved": true
+      }
+    },
+    {
+      "id": "n_1b1c7fce112c7a54",
+      "kind": "function",
+      "lang": "python",
+      "name": "double",
+      "signature": null,
+      "span": {
+        "file": "file:///fixtures/type-error.py",
+        "byteStart": 34,
+        "byteEnd": 70
+      },
+      "fill": {
+        "status": "green",
+        "source": "stub-pyright@1.1 typecheck verdict"
+      },
+      "outline": null,
+      "origin": "checked",
+      "provenance": {
+        "tier": "T1",
+        "extractor": "tree1-stub-generator",
+        "resolved": true
+      }
+    },
+    {
+      "id": "n_dac01f6b85af3ba4",
+      "kind": "function",
+      "lang": "python",
+      "name": "broken",
+      "signature": null,
+      "span": {
+        "file": "file:///fixtures/type-error.py",
+        "byteStart": 72,
+        "byteEnd": 136
+      },
+      "fill": {
+        "status": "green",
+        "source": "stub-pyright@1.1 typecheck verdict (stale)"
+      },
+      "outline": null,
+      "origin": "checked",
+      "provenance": {
+        "tier": "T1",
+        "extractor": "tree1-stub-generator",
+        "resolved": true
+      }
+    }
+  ],
+  "multibyte.py": [
+    {
+      "id": "n_bd477c2f27f39fe6",
+      "kind": "function",
+      "lang": "python",
+      "name": "rocket",
+      "signature": null,
+      "span": {
+        "file": "file:///fixtures/multibyte.py",
+        "byteStart": 21,
+        "byteEnd": 85
+      },
+      "fill": {
+        "status": "green",
+        "source": "stub-pyright@1.1 typecheck verdict (stale)"
+      },
+      "outline": {
+        "status": "green",
+        "worstOf": [
+          "green"
+        ]
+      },
+      "origin": "checked",
+      "provenance": {
+        "tier": "T1",
+        "extractor": "tree1-stub-generator",
+        "resolved": true
+      }
+    }
+  ],
+  "whitespace.py": [
+    {
+      "id": "n_ad1da42040c5d1f4",
+      "kind": "function",
+      "lang": "python",
+      "name": "spaced",
+      "signature": null,
+      "span": {
+        "file": "file:///fixtures/whitespace.py",
+        "byteStart": 3,
+        "byteEnd": 35
+      },
+      "fill": {
+        "status": "unknown",
+        "source": ""
+      },
+      "outline": null,
+      "origin": "checked",
+      "provenance": {
+        "tier": "T1",
+        "extractor": "tree1-stub-generator",
+        "resolved": true
+      }
+    }
+  ],
+  "nested.py": [
+    {
+      "id": "n_db66614d9f684499",
+      "kind": "class",
+      "lang": "python",
+      "name": "Shape",
+      "signature": null,
+      "span": {
+        "file": "file:///fixtures/nested.py",
+        "byteStart": 0,
+        "byteEnd": 94
+      },
+      "fill": {
+        "status": "green",
+        "source": "stub-pyright@1.1 typecheck verdict"
+      },
+      "outline": {
+        "status": "amber",
+        "worstOf": [
+          "green",
+          "amber"
+        ]
+      },
+      "origin": "checked",
+      "provenance": {
+        "tier": "T1",
+        "extractor": "tree1-stub-generator",
+        "resolved": true
+      }
+    },
+    {
+      "id": "n_3a5a58855628276a",
+      "kind": "function",
+      "lang": "python",
+      "name": "Shape.area",
+      "signature": null,
+      "span": {
+        "file": "file:///fixtures/nested.py",
+        "byteStart": 13,
+        "byteEnd": 50
+      },
+      "fill": {
+        "status": "green",
+        "source": "stub-pyright@1.1 typecheck verdict"
+      },
+      "outline": {
+        "status": "green",
+        "worstOf": [
+          "green"
+        ]
+      },
+      "origin": "checked",
+      "provenance": {
+        "tier": "T1",
+        "extractor": "tree1-stub-generator",
+        "resolved": true
+      }
+    },
+    {
+      "id": "n_940536737fbd62dc",
+      "kind": "function",
+      "lang": "python",
+      "name": "Shape.name",
+      "signature": null,
+      "span": {
+        "file": "file:///fixtures/nested.py",
+        "byteStart": 51,
+        "byteEnd": 94
+      },
+      "fill": {
+        "status": "unknown",
+        "source": ""
+      },
+      "outline": null,
+      "origin": "checked",
+      "provenance": {
+        "tier": "T1",
+        "extractor": "tree1-stub-generator",
+        "resolved": true
+      }
+    }
+  ],
+  "tier-g.tex": [
+    {
+      "id": "n_634abe302ba52824",
+      "kind": "section",
+      "lang": "latex",
+      "name": "Grammar floor fixture",
+      "signature": null,
+      "span": {
+        "file": "file:///fixtures/tier-g.tex",
+        "byteStart": 0,
+        "byteEnd": 67
+      },
+      "fill": {
+        "status": "green",
+        "source": "schema-claims-green-without-compiler"
+      },
+      "outline": null,
+      "origin": "checked",
+      "provenance": {
+        "tier": "T1",
+        "extractor": "tree1-stub-generator",
+        "resolved": true
+      }
+    }
+  ]
+}

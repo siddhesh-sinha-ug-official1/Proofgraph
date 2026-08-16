@@ -1,0 +1,17 @@
+# byok-arena/src
+
+The cell source. `interface.ts` carries the neutral cross-provider types and the ModelAdapter contract; `index.ts` is the createCell composition root; `wall.ts` the Phase-1 wall facade. The single-file directories `arena/` (two-adapter comparison harness), `cost/` (snapshot pricing) and `vault/` (AES-256-GCM key vault) are folded into the table below; adapters, probe machinery, testkit and the wall internals have their own READMEs.
+
+## Files (verified)
+
+Line counts and verified-purpose lines below are copied verbatim from the adversarial claim audit (`proofgraph/audit/AUDIT-byok-arena.json`); each purpose line was written from the code itself and checked against the file's tests. Paths are relative to this directory.
+
+| File | Lines | Verified purpose |
+|---|---:|---|
+| `interface.ts` | 103 | Defines the neutral cross-provider types (Provider, Msg, ToolDef, ToolCall, Usage, ChatResult), the six-member AdapterErrorKind taxonomy with the AdapterFailure throw-carrier, and the ModelAdapter interface; imported by every adapter, the arena, the cost meter, and the wall types. |
+| `index.ts` | 96 | createCell() constructs ProbeBus(buildCatalog()), KeyVault (dev-default masterSecret if none injected), the three adapters over a shared injectable runtime, and returns them with probeCatalog/dump/tap/history plus runArena/runSecretLeakScan/estimateCost; re-exports the cell's public modules; called by demo.ts, tests, and wall/construct.ts. |
+| `vault/vault.ts` | 154 | KeyVault encrypts each pasted key with AES-256-GCM under a per-user HKDF(masterSecret, salt=userId) data key, holds ciphertext in a Map, enforces authUserId===userId on retrieve AND revoke (throws on violation/miss/decrypt failure), emits the §6.A probe set with redaction at the boundary, and dumpState() exposes ciphertext refs only; constructed by createCell. |
+| `cost/pricing.ts` | 137 | estimateCostForModel prices a neutral Usage from the snapshot PRICE_TABLE: resolves the claude-sonnet-5 date cliff (SONNET5_STANDARD_FROM_UTC) and the gemini-2.5-pro 200k prompt cliff to concrete table keys, returns an explicit 0 with the unpricedModel decision + log for absent rows (gpt-4.1 deliberately unpriced), adds reasoning tokens to billed output only for gemini, carves cached tokens out of billable input only for openai, and emits the full §6.H probe chain incl. snapshotWarn on every estimate; called by every adapter's estimateCost and cell.estimateCost. |
+| `arena/arena.ts` | 155 | runArena dispatches the identical task sequentially to two adapters (deterministic logicalClock), executes the tool locally and submits results on each side, then runs six comparisons — same tool name, args-are-objects (TRAP 1), args-equal, id echo read from the submit.idEcho probe stream (TRAP 2), provider-correct continuation shape validated from submit.request probe bodies (TRAP 3), usage mapped, cost priced — and emits the verdict, task-scoped honestCeiling, and timing; re-exports the compare.ts types. |
+| `arena/compare.ts` | 69 | ArenaSide/ArenaConfig/ArenaReport types plus the comparison helpers runArena uses: deepEqual (JSON.stringify equality), isPlainObject, and validateResultShape asserting the provider-correct continuation body shape per provider. |
+| `wall.ts` | 37 | Facade for the Phase-1 wall: re-exports WALL_VERSION, INSECURE_DEV_MASTER_SECRET, WallRefusal and every face type from wall/types.ts plus createByokWall from wall/construct.ts; the import path the hub ai/ outlet and the conformance tests use. |

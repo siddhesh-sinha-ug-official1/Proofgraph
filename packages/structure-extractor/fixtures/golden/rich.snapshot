@@ -1,0 +1,83 @@
+==== richpkg/core.py ====
+from richpkg import helpers
+# definition module richpkg.core
+# reference imports -> richpkg.helpers (grimp)
+
+
+class Base:
+# definition class richpkg.core.Base
+    def greet(self):
+        return "base"
+
+
+def beta():
+# definition function richpkg.core.beta
+    return len("beta")
+# rejected calls -> len [builtin (len/print/…) | Pyright bound to typeshed/builtins]
+
+
+def fact(n):
+# definition function richpkg.core.fact
+    return 1 if n <= 1 else n * fact(n - 1)
+# rejected calls -> fact [self-recursion collapsed]
+
+
+def alpha():
+# definition function richpkg.core.alpha
+    beta()
+# reference calls -> richpkg.core.beta (pyright)
+    helpers.gamma()
+# reference calls -> richpkg.helpers.gamma (pyright)
+    print("done")
+# rejected calls -> print [builtin (len/print/…) | Pyright bound to typeshed/builtins]
+    obj = Base()
+# reference calls -> richpkg.core.Base (pyright)
+    getattr(obj, "greet")()
+# lead calls -> <dynamic> [dynamic dispatch (getattr/setattr)]
+# rejected calls -> getattr [builtin (len/print/…) | Pyright bound to typeshed/builtins]
+    return obj
+
+==== richpkg/dyn.py ====
+import importlib
+# definition module richpkg.dyn
+# rejected imports -> importlib [target outside project root | external package importlib]
+
+
+def load_plugin():
+# definition function richpkg.dyn.load_plugin
+    return importlib.import_module("richpkg.plugin")
+# lead imports -> <dynamic-import> [dynamic import (__import__/importlib)]
+
+==== richpkg/helpers.py ====
+from richpkg import core
+# definition module richpkg.helpers
+# reference imports -> richpkg.core (grimp)
+
+
+def gamma():
+# definition function richpkg.helpers.gamma
+    return core.beta()
+# reference calls -> richpkg.core.beta (pyright)
+
+==== richpkg/models.py ====
+import os
+# definition module richpkg.models
+# reference imports -> richpkg.core (grimp)
+# rejected imports -> os [target outside project root | external package os]
+
+from richpkg import core
+
+
+class Child(core.Base):
+# definition class richpkg.models.Child
+# reference inherits -> richpkg.core.Base (pyright)
+    def child_method(self):
+        return os.path.join("a", "b")
+# lead calls -> os.path.join [target outside ingested set | external: ntpath.pyi]
+
+==== richpkg/plugin.py ====
+def plugin_entry():
+# definition function richpkg.plugin.plugin_entry
+# definition module richpkg.plugin
+    return "plugin"
+

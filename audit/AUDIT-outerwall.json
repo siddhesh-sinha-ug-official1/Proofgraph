@@ -1,0 +1,211 @@
+{
+  "area": "outerwall",
+  "auditDate": "2026-08-03",
+  "suiteResult": "python outerwall/test_outerwall.py — Ran 41 tests, OK (87.4s after first fix batch; 86.8s after final batch) · python outerwall/test_real_inputs.py — Ran 21 tests, OK (101.3s) — counts unchanged by all doc fixes",
+  "files": [
+    {
+      "path": "outerwall/__init__.py",
+      "lines": 67,
+      "verifiedPurpose": "Package facade: re-exports the frozen OUTERWALL-CONTRACT face (analyze / analyze_session / system_pins) plus every constant, error class, probe catalog and loader the sibling modules pull via `from . import`, ordered so the package initializes bottom-up without cycles; imported by hub/server_analyze.py, acceptance runners and both suites.",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "All six named failure classes verified catalogued in ARCHITECTURE-PHASE2.md (lines 81-102); __all__ matches the re-exports; bottom-up ordering verified against sibling import lists."
+    },
+    {
+      "path": "outerwall/wallconst.py",
+      "lines": 21,
+      "verifiedPurpose": "Holds the outer wall's version/cellId strings, the five assembly directory Paths derived from its own location, and the hard-coded schema pin (v0 + sha256 of the canonical schema JSON); imported by every other outerwall module via the facade.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "SCHEMA_PIN_HASH byte-matches packages/schema/PIN and gen/pin.ts (pin is over canonical JSON, not raw schema.json bytes — consistent with packages/schema/README). 'WALL-CONVENTIONS rule 4' reference verified: rule 4 is the versioned-wall/schema-pin rule."
+    },
+    {
+      "path": "outerwall/errors.py",
+      "lines": 46,
+      "verifiedPurpose": "Defines OuterwallError (RuntimeError carrying .failure_class and a formatted message) and its five named subclasses; raised by outline.py, provenance.py, analyze_roots.py and analyze_run.py; the failure_class strings are asserted by the suite.",
+      "claims": { "confirmed": 6, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "UnknownRootDeclared's docstring matches the module-NAME path exactly; the module-ID path has an unguarded empty-members case — recorded as the area's one code finding (in analyze_roots.py)."
+    },
+    {
+      "path": "outerwall/probelog.py",
+      "lines": 96,
+      "verifiedPurpose": "Defines the 25-entry OUTERWALL_PROBE_CATALOG (one dict object, re-exported by the facade) and OuterLog, a lock-guarded append-only event log whose emit() rejects uncatalogued probe ids and whose tap() returns an untap callable; instantiated per analyze_session and read by SystemPins.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 1 },
+      "notes": "STALE FIXED: docstring said 'same discipline as hub/pipeline.HubLog, plus tap()' — HubLog has had tap() (returning untap) since the streams round (hub/pipeline_log.py:130), so 'plus' was wrong; rephrased. Taps verified called outside the lock as commented."
+    },
+    {
+      "path": "outerwall/loaders.py",
+      "lines": 63,
+      "verifiedPurpose": "Loads packages/schema artifacts (schema_constants namespace, validate_graph against schema.json) by exec-ing the files into module-global memoized namespaces, plus ensure_assembly_paths (idempotent sys.path insert of vessels/ and hub/) and json_scrub (round-trip through json with default=str); used by outline, analyze_run and analyze_capability.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "outerwall/analyze.py",
+      "lines": 67,
+      "verifiedPurpose": "Import facade keeping the frozen module path `outerwall.analyze` (hub/server_analyze.py:44 and hub/test_hub_fs_loop.py:111 import it) and carrying the full analyze() contract docstring; all implementation re-exported from analyze_roots / analyze_capability / analyze_run.",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "Docstring's staging/root/composition spec verified line-by-line against analyze_roots.py and analyze_run.py; the declared bare-dir consequence (span.file without package prefix) is asserted by Test01Moat."
+    },
+    {
+      "path": "outerwall/analyze_roots.py",
+      "lines": 153,
+      "verifiedPurpose": "Normalizes the source root (single file -> sha256-pinned scratch staging; python package dir -> direct extraction with the fixed package-root-uri-mismatch bound recorded; both logged on outerwall.root.staged) and resolves declared roots from the outer vocabulary (node id / unique decl name / module name expanded to direct decl members), raising UnknownRootDeclared rather than guessing; called only by analyze_run.",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "Code finding recorded (see codeFindings): module-ID root with zero decl members expands silently to nothing, unlike the module-NAME path which raises."
+    },
+    {
+      "path": "outerwall/analyze_capability.py",
+      "lines": 69,
+      "verifiedPurpose": "Resolves config['capability'] to the real V1CapabilityFeed ('v1', default), the extractor's own stub ('stub', provenance marked extractor-stub/diagnostic) or a typed error; snapshots cell 2's per-lang pin streams (called by analyze_run before feed.shutdown per the V1 bound-4 rule) and assembles the capability provenance/bounds/refusals triple, logging mode and provenance probes.",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "V1 feed attribute claims (_walls, provenance, bounds, refusals, capability_fn, shutdown) verified against vessels/v1_feed.py."
+    },
+    {
+      "path": "outerwall/analyze_run.py",
+      "lines": 159,
+      "verifiedPurpose": "analyze_session(): runs the hub pipeline with the V1 capability feed (feed.shutdown() in a finally block, snapshot taken first), resolves declared roots, fills ruling-8 outlines and RE-INGESTs the filled graph through the model wall, validates against the canonical schema, builds gap + provenance (assert_no_holes build-failing), and returns the 11-key session dict; analyze() returns its 'analysis' member. The only module that sequences the whole composition.",
+      "claims": { "confirmed": 5, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "Docstring's 11 session keys match the return dict exactly; probe order verified against the module body."
+    },
+    {
+      "path": "outerwall/outline.py",
+      "lines": 185,
+      "verifiedPurpose": "Implements ruling 8: reflexive-transitive bases over resolved edges computed with rustworkx and crosschecked node-by-node against networkx (disagreement raises OutlineClosureDisagreement); per-node worstOf from the frozen 7-token OUTLINE_WORST_ORDER (green -> lemma/definition by kind, unknown acts on status only, empty -> none); leads out of a base cap status at unknown and populate incompleteBases; non-vocabulary tokens raise the build-failing OutlineVocabularyLeak. Called once per analyze_session.",
+      "claims": { "confirmed": 6, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "FILL_SEVERITY_ORDER matches the contract's red<amber<blue<unknown<green verbatim; 7-token vocabulary verified against packages/schema/gen/schema_constants.py:20. Nit (not a lie): closure_info['resolvedEdges'] uses len(edges) while _closure_bases logs the endpoint-filtered pair count — equal in practice because the wall-verified ingested state guarantees endpoints exist."
+    },
+    {
+      "path": "outerwall/gap.py",
+      "lines": 150,
+      "verifiedPurpose": "Assembles gapAnalysis exclusively from the two walls: unused/unreferenced/reachable/sccs/condensation via model_wall.query() (roots undeclared -> the wall's typed refusal captured as the answer with [] + undeclared marker), the unreferenced->unused alias mirroring hub QUERY_KIND_ALIASES, module-level cycles surfaced verbatim from cell 3's t3 dump under the logged decl-universe bound, and blindSpots/soundnessNote copied verbatim from cell pins. Called only by analyze_run.",
+      "claims": { "confirmed": 5, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "Alias claim verified: hub/server_http_get.py:23 QUERY_KIND_ALIASES = {'unreferenced': 'unused'}, re-exported through server.py."
+    },
+    {
+      "path": "outerwall/provenance.py",
+      "lines": 147,
+      "verifiedPurpose": "Builds the provenance surface (per-node and per-edge/lead {cell, tier, extractor, resolved, ...} rows, capability records, honest ceilings, typed refusals, bounds, staging record), derives unknown-language refusals for files the extractor saw but no sourceset claimed, and enforces assert_no_holes: any missing/None required field raises the build-failing ProvenanceHole. faultcheck fault (d) anchors on this file's build() text — anchor untouched.",
+      "claims": { "confirmed": 4, "overclaim": 1, "underclaim": 0, "stale": 0 },
+      "notes": "OVERCLAIM FIXED: docstring enumerated measuredBy as capability-layer|local-stub|refused (correct for the V1 feed path, verified against vessels/v1_feed.py) but omitted that stub-config diagnostic runs mint 'extractor-stub' — parenthetical added. Fault-d code anchor ('tier': p.get('tier') block) verified intact against faultcheck/faultlib/catalog.py:85-87."
+    },
+    {
+      "path": "outerwall/system_pins.py",
+      "lines": 133,
+      "verifiedPurpose": "SystemPins (StreamsMixin + TraceMixin) and the system_pins() factory: the outermost diagnostic surface over one session — probeCatalog() aggregates the five source catalogs under the system.outerwall header (422 entries measured on MOAT), tap() routes a probe id to its owning stream, and the default tail/payload bounds live here; consumed by the suites, acceptance and hub diagnostics.",
+      "claims": { "confirmed": 5, "overclaim": 0, "underclaim": 2, "stale": 0 },
+      "notes": "UNDERCLAIMS FIXED: (1) bounds docstring said only history() applies the tail bound — dump() also tail-bounds the history streams it embeds, and the payload bound applies to each whole embedded cell dump, not just per event; rewritten to match StreamsMixin. (2) tap() docstring said only outerwall/hub return an untap — graph-model's wall tap also returns an unsubscribe callable (packages/graph-model/src/probe/bus.py:94); only structure-extractor's returns None; rewritten."
+    },
+    {
+      "path": "outerwall/pins_streams.py",
+      "lines": 115,
+      "verifiedPurpose": "StreamsMixin: bounded dump() and history() for SystemPins — per-stream tail bound and per-payload canonical-json byte bound, every truncation replaced by {truncated, sha256, byteLen} and logged via outerwall.bound.logged; also the module-level _canon canonical-json helper reused by pins_trace.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "outerwall/pins_trace.py",
+      "lines": 128,
+      "verifiedPurpose": "TraceMixin.trace(): collects every byte-identical appearance of one node id across four hops (extractor mint pin, model-wall ingested surface, the analysis graph's canonical bytes with byte offsets, hub log payloads), verifies the recorded vessels/TRACE-node.json seed when the asked id matches, and emits outerwall.system.trace with the byteIdenticalEverywhere verdict.",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "TRACE_SEED_PATH existence verified; seed verification asserted by Test02Rich against the recorded preimage."
+    },
+    {
+      "path": "outerwall/ow_test_shared.py",
+      "lines": 96,
+      "verifiedPurpose": "Shared fixture layer for the 41-test suite: sys.path bootstrap, the six lazily-built memoized analyze_session worlds (MOAT/RICH/LEAN/LEANCT/CEILING/XYZ) with their frozen configs, the TRACE seed, and the names_of/id_of/all_statuses helpers; imported by every test_outerwall_* module.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "outerwall/test_outerwall.py",
+      "lines": 71,
+      "verifiedPurpose": "Discovering aggregator for the outer-wall suite: load_tests imports the seven split modules in the original Test01..Test08 order and `python outerwall/test_outerwall.py` runs the same 41 tests (verified: 11+5+4+4+7+5+5) — the exact path run_all_suites, run_demo --full and faultcheck fault (d) invoke.",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 },
+      "notes": "Header's world descriptions match ow_test_shared's builders; 41 re-measured green twice this audit."
+    },
+    {
+      "path": "outerwall/test_outerwall_moat.py",
+      "lines": 178,
+      "verifiedPurpose": "Test01Moat (11 tests) on the MOAT world: exact unused set, module-root expansion logged, honest all-unknown outlines, schema conformance, face==pins verdicts, measured-CT capability provenance with logged bounds and shutdown pins, provenance-hole tamper check, the direct bare-package-dir extraction with its declared span consequence, and the surviving single-file staging leg (LEAN world).",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "outerwall/test_outerwall_rich.py",
+      "lines": 105,
+      "verifiedPurpose": "Test02Rich (5 tests) on the RICH recorded-pyright world: module-level cycle visible verbatim from cell 3's t3 under the logged decl-universe bound, the importlib blind spot declared in unused+blindSpots, lead-capped incompleteBases, the two-library closure log, and the V4 trace seed reconstructed and extended byte-identically.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "outerwall/test_outerwall_lean.py",
+      "lines": 125,
+      "verifiedPurpose": "Test03LeanVerdictArrival (4 tests) on the LEAN world: kernel-clean decls green only with the full attestation chain (origin checked, lean-kernel source, measured CT, greenGuard pins), the resolved proof_uses edge with zero leads, honestly-empty incompleteBases, and the kept undeclared-roots refusal; each rewrite from the pre-LEAN-DOCK expectations carries its reason in the test docstring.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "outerwall/test_outerwall_lean_rings.py",
+      "lines": 114,
+      "verifiedPurpose": "Test03bLeanRingsAndGuards (4 tests): sorry decl rings amber (LEANCT fixture) while file-mates stay green, ruling-8 green rings on real kernel greens with face==pins and schema conformance, the 9 driver limits + toolchain pin divergence riding the output, and a doctored unattested green rejected at the model wall (fake-green) with committed state surviving.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "outerwall/test_outerwall_ceiling.py",
+      "lines": 97,
+      "verifiedPurpose": "Test04TypstHonestCeiling (6 tests) + Test05UnknownLanguage (1 test): the surviving all-unknown honest ceiling on the typst fixture (nodes + unresolved leads only, literally zero green, populated incompleteBases, recorded local-stub fallback, sha-pinned single-file staging) and the .xyz unknown-language typed refusal with empty graph and no crash.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "outerwall/test_outerwall_ruling8.py",
+      "lines": 106,
+      "verifiedPurpose": "Test06Ruling8AndFailureClasses (5 tests) on synthetic states: token derivation and status composition per ruling 8 (incl. blue-beats-unknown and the lead cap), the green-over-amber-base amber ring, build-failing vocabulary leaks (banned fused token, alien token, alien fill status), the worse_fill severity order, and UnknownRootDeclared on a nonexistent root through a real session.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "outerwall/test_outerwall_pins.py",
+      "lines": 138,
+      "verifiedPurpose": "Test07SystemPins (4 tests) + Test08HubAnalysisEndpoint (1 test): catalog aggregation under the outermost header (>300 entries; 422 measured), tail/payload bounds logged with checkable truncations, cross-stream tap routing with untap, moat-node trace byte-identity with honest seed=None, and the live hub round-trip: 503 typed refusal before attach, then GET /analysis byte-equal to the canonical analysis and /graph serving filled outlines.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 1 },
+      "notes": "STALE FIXED: the entryCount comment read '25+29+137+116+91' — catalogs grew additively across rounds; re-measured live on MOAT as 25 outerwall + 40 hub + 149 extractor + 116 model + 92 capability = 422. Assertion (floor 300) untouched."
+    },
+    {
+      "path": "outerwall/ow_real_shared.py",
+      "lines": 111,
+      "verifiedPurpose": "Shared fixture layer for the 21-test REAL-INPUTS suite: the nine sha256 pins for the vendored colorama/lean bytes (verified mirrored in both fixtures' PROVENANCE.md), lazily-memoized PY/LEAN sessions plus the second fully independent runs kept only as canonical bytes for the byte-compare tests, and the canonical-bytes/names helpers.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "outerwall/test_real_inputs.py",
+      "lines": 81,
+      "verifiedPurpose": "Discovering aggregator for the REAL-INPUTS regression suite: load_tests imports the three split modules in the original order and `python outerwall/test_real_inputs.py` runs the same 21 tests (verified: 9+5+7); the header carries the frozen guarantees list and the run budget (101s measured warm this audit, inside the stated 2-4 min).",
+      "claims": { "confirmed": 4, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "outerwall/test_real_inputs_py.py",
+      "lines": 139,
+      "verifiedPurpose": "Test00VendoredBytesPinned (2 tests) + Test01RealPyColorama (7 tests): every vendored byte matches its PROVENANCE.md pin with license texts present; colorama through the real stack is two-run byte-identical, schema-conformant, frozen at 28 nodes / 27 edges / 26 leads, zero green (pyright resolves, never verifies), module-root expanded with the 11-name frozen unused set, measured-CT capability, direct staging, and hole-free provenance.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "outerwall/test_real_inputs_lean.py",
+      "lines": 110,
+      "verifiedPurpose": "Test02RealLeanToolchainSource (5 tests): the three vendored lean4 v4.31.0 source files are two-run byte-identical (kernel determinism incl. run-shas), schema-conformant, frozen at 61 nodes (58 greens by file: 42/9/7; 3 unknown modules) with 45 resolved proof_uses and zero leads; every green's decl= names the node's own written identifier and every run= resolves to one of the three probed driver invocations.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    },
+    {
+      "path": "outerwall/test_real_inputs_lean_semantics.py",
+      "lines": 154,
+      "verifiedPurpose": "Test03RealLeanSemantics (7 tests): the Classical.choose/Exists.choose collision regression stays inverted (own attestations, no crossed edges, probed decl.match assignments), ruling 8 over the real DAG (em rings blue over the definition base, apply_ite rings green, modules unknown/none, face==pins), greenGuard admitted every green with zero rejections, the 9 driver limits + pin divergence + zero flagged hypotheses ride the output, undeclared roots refuse, and provenance is hole-free.",
+      "claims": { "confirmed": 3, "overclaim": 0, "underclaim": 0, "stale": 0 }
+    }
+  ],
+  "docFixes": [
+    { "path": "outerwall/test_outerwall_pins.py", "what": "Stale probe-catalog breakdown comment on the entryCount assertion (25+29+137+116+91) replaced with the live-measured 25+40+149+116+92 = 422 and a reason note; the assertGreater(300) assertion itself untouched." },
+    { "path": "outerwall/system_pins.py", "what": "Bounds docstring corrected: the tail bound also applies to the history streams dump() embeds, and the payload byte bound applies per history-event payload AND per whole embedded cell dump (previously read as history-only tail + per-event-only payload)." },
+    { "path": "outerwall/system_pins.py", "what": "tap() docstring corrected: graph-model's wall tap also returns an unsubscribe callable; only structure-extractor's tap contract returns None (previously claimed untap comes only from outerwall and hub)." },
+    { "path": "outerwall/provenance.py", "what": "Module docstring's measuredBy enumeration extended with the stub-config diagnostic case ('extractor-stub', minted by analyze_capability.capability_provenance when no V1 feed stands up)." },
+    { "path": "outerwall/probelog.py", "what": "OuterLog docstring's 'same discipline as hub/pipeline.HubLog, plus tap()' corrected — HubLog itself has tap() returning an untap (hub/pipeline_log.py:130), so tap is shared discipline, not an addition." }
+  ],
+  "codeFindings": [
+    {
+      "path": "outerwall/analyze_roots.py",
+      "claim": "Roots are declared, never inferred, and 'the outer wall never guesses' — a declared root that resolves to nothing raises unknown-root (module-NAME roots with zero decl members raise root-vocabulary-mismatch/V3).",
+      "reality": "_resolve_roots' module-ID branch (a declared n_<16hex> id whose node kind is 'module') expands to the module's decl members but does NOT raise when that member list is empty — it records 'module-id-expanded' with members [] and contributes nothing. An all-module-id root set therefore yields declared=[] and analyze_session proceeds as if roots were UNDECLARED (gapAnalysis.undeclared=true) even though roots were declared, while the equivalent module-NAME spelling raises UnknownRootDeclared. Untested path; no suite fixture declares roots by module id.",
+      "severity": "low"
+    }
+  ]
+}

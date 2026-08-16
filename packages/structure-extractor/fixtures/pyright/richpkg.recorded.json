@@ -1,0 +1,145 @@
+{
+  "files": {
+    "richpkg/core.py": "49076be472f82b00",
+    "richpkg/dyn.py": "24cb50e998c166a5",
+    "richpkg/helpers.py": "e05e1a049b6762a8",
+    "richpkg/models.py": "dd190a867cee9b61",
+    "richpkg/plugin.py": "f4b6988bfe1ceb96"
+  },
+  "responses": {
+    "richpkg/core.py:13:32": [
+      {
+        "character": 4,
+        "external": false,
+        "file": "richpkg/core.py",
+        "line": 12
+      }
+    ],
+    "richpkg/core.py:17:4": [
+      {
+        "character": 4,
+        "external": false,
+        "file": "richpkg/core.py",
+        "line": 8
+      }
+    ],
+    "richpkg/core.py:18:12": [
+      {
+        "character": 4,
+        "external": false,
+        "file": "richpkg/helpers.py",
+        "line": 3
+      }
+    ],
+    "richpkg/core.py:19:4": [
+      {
+        "character": 4,
+        "external": true,
+        "file": "c:\\Users\\user\\AppData\\Local\\npm-cache\\_npx\\110e52990071af13\\node_modules\\pyright\\dist\\typeshed-fallback\\stdlib\\builtins.pyi",
+        "line": 2075
+      },
+      {
+        "character": 4,
+        "external": true,
+        "file": "c:\\Users\\user\\AppData\\Local\\npm-cache\\_npx\\110e52990071af13\\node_modules\\pyright\\dist\\typeshed-fallback\\stdlib\\builtins.pyi",
+        "line": 2083
+      }
+    ],
+    "richpkg/core.py:20:10": [
+      {
+        "character": 6,
+        "external": false,
+        "file": "richpkg/core.py",
+        "line": 3
+      }
+    ],
+    "richpkg/core.py:21:4": [
+      {
+        "character": 4,
+        "external": true,
+        "file": "c:\\Users\\user\\AppData\\Local\\npm-cache\\_npx\\110e52990071af13\\node_modules\\pyright\\dist\\typeshed-fallback\\stdlib\\builtins.pyi",
+        "line": 1778
+      },
+      {
+        "character": 4,
+        "external": true,
+        "file": "c:\\Users\\user\\AppData\\Local\\npm-cache\\_npx\\110e52990071af13\\node_modules\\pyright\\dist\\typeshed-fallback\\stdlib\\builtins.pyi",
+        "line": 1784
+      },
+      {
+        "character": 4,
+        "external": true,
+        "file": "c:\\Users\\user\\AppData\\Local\\npm-cache\\_npx\\110e52990071af13\\node_modules\\pyright\\dist\\typeshed-fallback\\stdlib\\builtins.pyi",
+        "line": 1786
+      },
+      {
+        "character": 4,
+        "external": true,
+        "file": "c:\\Users\\user\\AppData\\Local\\npm-cache\\_npx\\110e52990071af13\\node_modules\\pyright\\dist\\typeshed-fallback\\stdlib\\builtins.pyi",
+        "line": 1788
+      },
+      {
+        "character": 4,
+        "external": true,
+        "file": "c:\\Users\\user\\AppData\\Local\\npm-cache\\_npx\\110e52990071af13\\node_modules\\pyright\\dist\\typeshed-fallback\\stdlib\\builtins.pyi",
+        "line": 1790
+      },
+      {
+        "character": 4,
+        "external": true,
+        "file": "c:\\Users\\user\\AppData\\Local\\npm-cache\\_npx\\110e52990071af13\\node_modules\\pyright\\dist\\typeshed-fallback\\stdlib\\builtins.pyi",
+        "line": 1792
+      }
+    ],
+    "richpkg/core.py:9:11": [
+      {
+        "character": 4,
+        "external": true,
+        "file": "c:\\Users\\user\\AppData\\Local\\npm-cache\\_npx\\110e52990071af13\\node_modules\\pyright\\dist\\typeshed-fallback\\stdlib\\builtins.pyi",
+        "line": 1826
+      }
+    ],
+    "richpkg/helpers.py:4:16": [
+      {
+        "character": 4,
+        "external": false,
+        "file": "richpkg/core.py",
+        "line": 8
+      }
+    ],
+    "richpkg/models.py:5:17": [
+      {
+        "character": 6,
+        "external": false,
+        "file": "richpkg/core.py",
+        "line": 3
+      }
+    ],
+    "richpkg/models.py:7:23": [
+      {
+        "character": 4,
+        "external": true,
+        "file": "c:\\Users\\user\\AppData\\Local\\npm-cache\\_npx\\110e52990071af13\\node_modules\\pyright\\dist\\typeshed-fallback\\stdlib\\ntpath.pyi",
+        "line": 114
+      },
+      {
+        "character": 4,
+        "external": true,
+        "file": "c:\\Users\\user\\AppData\\Local\\npm-cache\\_npx\\110e52990071af13\\node_modules\\pyright\\dist\\typeshed-fallback\\stdlib\\ntpath.pyi",
+        "line": 110
+      },
+      {
+        "character": 4,
+        "external": true,
+        "file": "c:\\Users\\user\\AppData\\Local\\npm-cache\\_npx\\110e52990071af13\\node_modules\\pyright\\dist\\typeshed-fallback\\stdlib\\ntpath.pyi",
+        "line": 112
+      },
+      {
+        "character": 4,
+        "external": true,
+        "file": "d:\\Program Files\\Python312\\Lib\\ntpath.py",
+        "line": 106
+      }
+    ]
+  }
+}

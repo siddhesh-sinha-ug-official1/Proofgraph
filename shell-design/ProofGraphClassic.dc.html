@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+html,body{height:100%;margin:0}
+a{color:#7C9BD4;text-decoration:none}a:hover{color:#9DB6E4;text-decoration:underline}
+[data-pg1a]{--acc:#7C6FD4;--ui:"Segoe UI",system-ui,-apple-system,sans-serif;--mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+--chrome:#3C3F41;--edbg:#2B2B2B;--gut:#313335;--bd:#323232;--bd2:#515355;--tx:#BBBBBB;--txd:#808387;--hov:#4C5052;--sel:rgba(124,111,212,.30);--pop:#46494B;--popbd:#5B5E60;--hdr:#3F4345;--tabact:#4E5254;--lnhl:rgba(124,111,212,.16);--edge:#5F6367;--gdot:rgba(255,255,255,.05);
+--syK:#CF8E6D;--syS:#6AAB73;--syC:#7A7E85;--syF:#56A8F5;--syD:#2AACB8;--syA:#B3AE60;--syP:#C77DBB;--syX:#BCBEC4;
+--bnE:#4E3737;--bnEb:#7A4343;--bnW:#4D4534;--bnWb:#8A7A44;--bnI:#354455;--bnIb:#4A6A8A}
+[data-pg1a][data-theme="light"]{--chrome:#F2F2F2;--edbg:#FFFFFF;--gut:#F7F7F7;--bd:#D4D4D4;--bd2:#BEBEBE;--tx:#1F1F1F;--txd:#7A7A7A;--hov:#E4E4E6;--sel:rgba(124,111,212,.22);--pop:#FFFFFF;--popbd:#C9C9C9;--hdr:#ECECEC;--tabact:#FFFFFF;--lnhl:rgba(124,111,212,.13);--edge:#B4B8BC;--gdot:rgba(0,0,0,.07);
+--syK:#0033B3;--syS:#067D17;--syC:#8C8C8C;--syF:#00627A;--syD:#1750EB;--syA:#9E880D;--syP:#94558D;--syX:#080808;
+--bnE:#FFE9E9;--bnEb:#E1A0A0;--bnW:#FFF6DE;--bnWb:#D8C078;--bnI:#E8F1FB;--bnIb:#A9C6E8}
+[data-pg1a] ::-webkit-scrollbar{width:10px;height:10px}
+[data-pg1a] ::-webkit-scrollbar-thumb{background:var(--bd2);border:2px solid transparent;background-clip:content-box;border-radius:6px}
+[data-pg1a] ::-webkit-scrollbar-track{background:transparent}
+</style>
+<script src="proofdata.js"></script>
+</helmet>
+<div data-pg1a="1" data-screen-label="1a Classic shell" data-theme="{{ theme }}" style="--acc:{{ ac }};position:relative;display:grid;grid-template-rows:auto auto auto minmax(0,1fr) auto auto;width:100%;height:100%;min-height:640px;background:var(--chrome);color:var(--tx);font:12px var(--ui);overflow:hidden;user-select:none">
+
+  <div style="display:flex;align-items:stretch;height:30px;border-bottom:1px solid var(--bd);padding:0 4px">
+    <div style="display:flex;align-items:center;gap:7px;padding:0 8px">
+      <svg width="16" height="16" viewBox="0 0 16 16"><circle cx="4" cy="3.5" r="2.1" fill="var(--acc)"></circle><circle cx="12" cy="6" r="2.1" fill="#2E7D32"></circle><circle cx="6.5" cy="12.5" r="2.1" fill="#C62828"></circle><path d="M5.5 5L10.5 5.8M5 5.5L6.2 10.6M11 7.8L7.6 11.2" stroke="var(--txd)" stroke-width="1.1" fill="none"></path></svg>
+      <span style="font-weight:600;letter-spacing:.2px">ProofGraph</span>
+      <span style="color:var(--txd);font-size:11px">moatpkg</span>
+    </div>
+    <sc-for list="{{ menus }}" as="m" hint-placeholder-count="5">
+      <div style="position:relative;display:flex;align-items:stretch">
+        <button onClick="{{ m.tg }}" onMouseEnter="{{ m.hv }}" style="border:none;cursor:pointer;padding:0 10px;background:{{ m.bg }};color:var(--tx);font:12px var(--ui)" style-hover="background:var(--hov)">{{ m.label }}</button>
+        <sc-if value="{{ m.open }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;top:100%;left:0;z-index:70;min-width:288px;background:var(--pop);border:1px solid var(--popbd);box-shadow:0 10px 28px rgba(0,0,0,.45);padding:5px 0">
+            <sc-for list="{{ m.items }}" as="it">
+              <sc-if value="{{ it.sep }}" hint-placeholder-val="{{ false }}"><div style="height:1px;background:var(--bd2);opacity:.5;margin:4px 10px"></div></sc-if>
+              <div onClick="{{ it.act }}" title="{{ it.tip }}" style="display:flex;gap:8px;align-items:center;height:24px;padding:0 14px 0 10px;cursor:{{ it.cur }};color:{{ it.col }}" style-hover="background:{{ it.hbg }}">
+                <span style="width:13px;color:var(--acc);font-weight:700">{{ it.chk }}</span>
+                <span style="flex:1;white-space:nowrap">{{ it.label }}</span>
+                <span style="color:var(--txd);font:11px var(--ui)">{{ it.short }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{ notWelcome }}" hint-placeholder-val="{{ true }}">
+  <div style="display:flex;align-items:center;gap:2px;height:34px;border-bottom:1px solid var(--bd);padding:0 8px">
+    <button onClick="{{ reAct }}" title="POST /analyze, then refresh /graph + /analysis + explorer + status" style="display:flex;align-items:center;gap:6px;height:26px;padding:0 9px;border:none;border-radius:3px;background:transparent;color:var(--tx);cursor:pointer;font:12px var(--ui)" style-hover="background:var(--hov)">
+      <svg width="15" height="15" viewBox="0 0 16 16"><path d="M13.3 8A5.3 5.3 0 1 1 11.6 4.1" fill="none" stroke="var(--acc)" stroke-width="1.6"></path><path d="M12 1.6l.2 3-3-.4" fill="none" stroke="var(--acc)" stroke-width="1.6"></path></svg>
+      re-analyze</button>
+    <button onClick="{{ saveAct }}" title="{{ saveTip }}" style="display:flex;align-items:center;gap:6px;height:26px;padding:0 9px;border:none;border-radius:3px;background:transparent;color:{{ saveCol }};cursor:{{ saveCur }};font:12px var(--ui)" style-hover="background:var(--hov)">
+      <svg width="14" height="14" viewBox="0 0 16 16"><path d="M2.5 2.5h9l2 2v9h-11z" fill="none" stroke="currentColor" stroke-width="1.4"></path><path d="M5 2.5v3.5h5V2.5M4.5 13.5V9h7v4.5" fill="none" stroke="currentColor" stroke-width="1.4"></path></svg>
+      save</button>
+    <button onClick="{{ rootsAct }}" title="choose DECLARED roots (never inferred)" style="display:flex;align-items:center;gap:6px;height:26px;padding:0 9px;border:none;border-radius:3px;background:transparent;color:var(--tx);cursor:pointer;font:12px var(--ui)" style-hover="background:var(--hov)">
+      <svg width="15" height="15" viewBox="0 0 16 16"><path d="M2 3.5h4l1.4 1.5H14v8H2z" fill="none" stroke="currentColor" stroke-width="1.4"></path></svg>
+      roots…</button>
+    <span style="width:1px;height:18px;background:var(--bd2);margin:0 6px"></span>
+    <span style="color:var(--txd);font-size:11px">{{ tbHint }}</span>
+    <span style="flex:1"></span>
+    <span title="measured tier — capability.wall.construct pin verbatim" style="border:1px solid var(--bd2);border-radius:3px;padding:1px 7px;font:11px var(--mono);color:var(--txd)">tier {{ tierTxt }}</span>
+    <span title="editor transport (honest: the stub floor names itself)" style="border:1px solid var(--bd2);border-radius:3px;padding:1px 7px;font:11px var(--mono);color:var(--txd);margin-left:4px">{{ transTxt }}</span>
+    <button onClick="{{ themeAct }}" title="toggle light / dark (View menu · Settings for more)" style="display:flex;align-items:center;height:26px;padding:0 7px;border:none;border-radius:3px;background:transparent;color:var(--tx);cursor:pointer;margin-left:6px" style-hover="background:var(--hov)">
+      <svg width="15" height="15" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.2" fill="none" stroke="currentColor" stroke-width="1.4"></circle><path d="M8 2.8a5.2 5.2 0 0 1 0 10.4z" fill="currentColor"></path></svg></button>
+    <button onClick="{{ setAct }}" title="Settings (Ctrl+,)" style="display:flex;align-items:center;height:26px;padding:0 7px;border:none;border-radius:3px;background:transparent;color:var(--tx);cursor:pointer" style-hover="background:var(--hov)">
+      <svg width="15" height="15" viewBox="0 0 16 16"><path d="M2 4.5h12M2 8h12M2 11.5h12" stroke="currentColor" stroke-width="1.4"></path><circle cx="6" cy="4.5" r="1.7" fill="var(--chrome)" stroke="currentColor" stroke-width="1.4"></circle><circle cx="11" cy="8" r="1.7" fill="var(--chrome)" stroke="currentColor" stroke-width="1.4"></circle><circle cx="4.5" cy="11.5" r="1.7" fill="var(--chrome)" stroke="currentColor" stroke-width="1.4"></circle></svg></button>
+  </div>
+  </sc-if>
+  <sc-if value="{{ welcome }}" hint-placeholder-val="{{ false }}"><div></div></sc-if>
+
+  <div style="display:flex;flex-direction:column">
+    <sc-for list="{{ banners }}" as="b" hint-placeholder-count="0">
+      <div style="display:flex;gap:8px;align-items:baseline;padding:5px 12px;background:{{ b.bg }};border-bottom:1px solid {{ b.bd }};font-size:12px">
+        <b style="font-family:var(--mono);font-size:11.5px">{{ b.fc }}</b><span style="flex:1;color:var(--tx)">{{ b.d }}</span>
+        <button onClick="{{ b.dis }}" style="border:none;background:none;color:var(--txd);cursor:pointer;font-size:12px">✕</button>
+      </div>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{ welcome }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;align-items:center;justify-content:center;background:var(--edbg);min-height:0">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;width:460px">
+        <svg width="64" height="64" viewBox="0 0 16 16"><circle cx="4" cy="3.5" r="2.1" fill="var(--acc)"></circle><circle cx="12" cy="6" r="2.1" fill="#2E7D32"></circle><circle cx="6.5" cy="12.5" r="2.1" fill="#C62828"></circle><path d="M5.5 5L10.5 5.8M5 5.5L6.2 10.6M11 7.8L7.6 11.2" stroke="var(--txd)" stroke-width="1.1" fill="none"></path></svg>
+        <div style="font:600 24px var(--ui);margin-top:8px">Welcome to ProofGraph</div>
+        <div style="color:var(--txd);font-size:12px">{{ verText }}</div>
+        <div style="display:flex;gap:10px;margin-top:22px">
+          <button onClick="{{ wSample }}" style="height:32px;padding:0 16px;border:none;border-radius:4px;background:var(--acc);color:#fff;font:600 12.5px var(--ui);cursor:pointer">Open sample workspace</button>
+          <button onClick="{{ wEmpty }}" style="height:32px;padding:0 16px;border:1px solid var(--bd2);border-radius:4px;background:transparent;color:var(--tx);font:12.5px var(--ui);cursor:pointer" style-hover="background:var(--hov)">New empty workspace</button>
+        </div>
+        <div style="width:100%;margin-top:26px;border:1px solid var(--bd);border-radius:4px;background:var(--chrome)">
+          <div style="padding:7px 12px;border-bottom:1px solid var(--bd);color:var(--txd);font:600 11px var(--ui);letter-spacing:.6px">RECENT</div>
+          <sc-for list="{{ recents }}" as="r" hint-placeholder-count="3">
+            <div onClick="{{ r.act }}" style="display:flex;gap:9px;align-items:center;padding:7px 12px;cursor:pointer" style-hover="background:var(--hov)">
+              <span style="width:16px;text-align:center;color:var(--txd)">{{ r.ic }}</span>
+              <span style="font-family:var(--mono);font-size:12px">{{ r.p }}</span>
+              <span style="flex:1"></span><span style="color:var(--txd);font-size:11px">{{ r.k }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="color:var(--txd);font-size:11px;margin-top:16px">the hub serves /graph · /analysis · workspace fs — the browser never touches disk</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ notWelcome }}" hint-placeholder-val="{{ true }}">
+  <div style="display:flex;min-height:0">
+    <div style="width:27px;border-right:1px solid var(--bd);display:flex;flex-direction:column;align-items:center;padding-top:4px;gap:3px">
+      <button onClick="{{ tgProj }}" title="Project tool window (Ctrl+Shift+E)" style="writing-mode:vertical-rl;transform:rotate(180deg);border:none;border-radius:3px;padding:9px 3px;font:11px var(--ui);letter-spacing:.4px;cursor:pointer;background:{{ projBg }};color:var(--tx)" style-hover="background:var(--hov)">Project</button>
+      <button onClick="{{ tgStruct }}" title="Structure — defs of the active file, from the served graph" style="writing-mode:vertical-rl;transform:rotate(180deg);border:none;border-radius:3px;padding:9px 3px;font:11px var(--ui);letter-spacing:.4px;cursor:pointer;background:{{ structBg }};color:var(--tx)" style-hover="background:var(--hov)">Structure</button>
+    </div>
+
+    <div style="flex:1;display:flex;flex-direction:column;min-width:0;min-height:0">
+      <div style="flex:1;display:flex;min-height:0">
+        <sc-if value="{{ leftOpen }}" hint-placeholder-val="{{ true }}">
+          <div style="width:{{ expW }}px;flex:none;display:flex;flex-direction:column;border-right:1px solid var(--bd);min-height:0">
+            <sc-if value="{{ projOpen }}" hint-placeholder-val="{{ true }}">
+              <div style="flex:3;display:flex;flex-direction:column;min-height:0">
+                <div style="display:flex;align-items:center;height:26px;padding:0 8px;background:var(--hdr);border-bottom:1px solid var(--bd)">
+                  <span style="font:600 11px var(--ui);letter-spacing:.5px">Project</span>
+                  <span style="margin-left:7px;color:var(--txd);font:10.5px var(--mono)">{{ wsRoot }}</span>
+                  <span style="flex:1"></span>
+                  <button onClick="{{ tgProj }}" title="hide (stripe button restores)" style="border:none;background:none;color:var(--txd);cursor:pointer;font-size:13px;padding:0 2px" style-hover="color:var(--tx)">—</button>
+                </div>
+                <div style="flex:1;overflow:auto;padding:3px 0">
+                  <sc-if value="{{ wsNote }}" hint-placeholder-val="{{ false }}">
+                    <div style="padding:8px 10px;color:{{ wsNoteCol }};font-size:11.5px;line-height:1.5"><b style="font-family:var(--mono)">{{ wsNoteFc }}</b> {{ wsNote }}</div>
+                  </sc-if>
+                  <sc-for list="{{ treeRows }}" as="r" hint-placeholder-count="8">
+                    <div onClick="{{ r.act }}" title="{{ r.key }}" style="display:flex;align-items:center;gap:5px;height:22px;padding-left:{{ r.pad }}px;padding-right:8px;cursor:pointer;background:{{ r.bg }};white-space:nowrap" style-hover="background:var(--hov)">
+                      <span style="width:10px;color:var(--txd);font-size:9px">{{ r.tw }}</span>
+                      <span style="width:17px;height:15px;border-radius:3px;background:{{ r.icbg }};color:{{ r.icc }};font:600 8.5px var(--mono);display:flex;align-items:center;justify-content:center">{{ r.ic }}</span>
+                      <span style="font-size:12px">{{ r.name }}</span>
+                      <span style="color:var(--acc);font-size:10px">{{ r.badge }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ structOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="flex:2;display:flex;flex-direction:column;min-height:0;border-top:1px solid var(--bd)">
+                <div style="display:flex;align-items:center;height:26px;padding:0 8px;background:var(--hdr);border-bottom:1px solid var(--bd)">
+                  <span style="font:600 11px var(--ui);letter-spacing:.5px">Structure</span>
+                  <span style="margin-left:7px;color:var(--txd);font:10.5px var(--mono)">{{ structFile }}</span>
+                  <span style="flex:1"></span>
+                  <button onClick="{{ tgStruct }}" style="border:none;background:none;color:var(--txd);cursor:pointer;font-size:13px;padding:0 2px" style-hover="color:var(--tx)">—</button>
+                </div>
+                <div style="flex:1;overflow:auto;padding:3px 0">
+                  <sc-if value="{{ structNote }}" hint-placeholder-val="{{ false }}"><div style="padding:8px 10px;color:var(--txd);font-size:11.5px">{{ structNote }}</div></sc-if>
+                  <sc-for list="{{ structRows }}" as="s" hint-placeholder-count="4">
+                    <div onClick="{{ s.act }}" title="select in graph" style="display:flex;align-items:center;gap:7px;height:22px;padding:0 12px;cursor:pointer;background:{{ s.bg }}" style-hover="background:var(--hov)">
+                      <span style="color:var(--txd);font:italic 600 11px var(--mono);width:12px">{{ s.g }}</span>
+                      <span style="font-size:12px">{{ s.name }}</span><span style="flex:1"></span>
+                      <span title="fill verdict" style="width:9px;height:9px;border-radius:50%;background:{{ s.dot }}"></span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+          <div onPointerDown="{{ splExp }}" role="separator" style="width:4px;margin:0 -2px;cursor:col-resize;z-index:5" style-hover="background:var(--acc)"></div>
+        </sc-if>
+
+        <div style="flex:1;display:flex;flex-direction:column;min-width:220px;min-height:0">
+          <div style="display:flex;align-items:stretch;height:30px;border-bottom:1px solid var(--bd);overflow:hidden">
+            <sc-for list="{{ tabsR }}" as="t" hint-placeholder-count="2">
+              <span style="display:flex;align-items:center;gap:6px;padding:0 6px 0 10px;background:{{ t.bg }};box-shadow:{{ t.line }};cursor:pointer" title="{{ t.key }}">
+                <span onClick="{{ t.act }}" style="display:flex;align-items:center;gap:6px">
+                  <span style="width:16px;height:14px;border-radius:3px;background:{{ t.icbg }};color:{{ t.icc }};font:600 8px var(--mono);display:flex;align-items:center;justify-content:center">{{ t.ic }}</span>
+                  <span style="font-size:12px;color:{{ t.col }}">{{ t.name }}</span>
+                  <span style="color:var(--acc);font-size:10px">{{ t.dirty }}</span>
+                </span>
+                <span onClick="{{ t.close }}" title="{{ t.closeTip }}" style="color:var(--txd);font-size:11px;padding:2px 3px;border-radius:2px" style-hover="background:var(--hov)">✕</span>
+              </span>
+            </sc-for>
+            <sc-if value="{{ noTabs }}" hint-placeholder-val="{{ false }}"><span style="align-self:center;padding:0 12px;color:var(--txd);font-size:11.5px">no open files — File › Open file…</span></sc-if>
+          </div>
+          <sc-if value="{{ edNote }}" hint-placeholder-val="{{ false }}">
+            <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--edbg);color:var(--txd);font-size:12px">{{ edNote }}</div>
+          </sc-if>
+          <sc-if value="{{ edOn }}" hint-placeholder-val="{{ true }}">
+            <div style="flex:1;overflow:auto;background:var(--edbg)">
+              <div style="min-width:max-content;padding-bottom:20px;font-size:{{ fontPx }}px;line-height:1.65;font-family:var(--mono)">
+                <sc-for list="{{ codeLines }}" as="L" hint-placeholder-count="10">
+                  <div onClick="{{ L.click }}" style="display:flex;background:{{ L.bg }}">
+                    <span style="width:46px;flex:none;text-align:right;padding-right:6px;color:var(--txd);background:var(--gut);border-right:1px solid var(--bd)">{{ L.n }}</span>
+                    <span style="width:10px;flex:none;background:var(--gut);color:{{ L.dotC }};font-size:8px;line-height:inherit;border-right:1px solid var(--bd)">{{ L.dot }}</span>
+                    <span style="padding:0 16px;white-space:pre;text-decoration:{{ L.deco }}"><sc-for list="{{ L.sp }}" as="s"><span style="color:var(--sy{{ s.t }})">{{ s.x }}</span></sc-for></span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ graphOpen }}" hint-placeholder-val="{{ true }}">
+          <div onPointerDown="{{ splGraph }}" role="separator" style="width:4px;margin:0 -2px;cursor:col-resize;z-index:5" style-hover="background:var(--acc)"></div>
+          <div style="width:{{ graphW }}px;flex:none;display:flex;flex-direction:column;border-left:1px solid var(--bd);min-height:0">
+            <div style="display:flex;align-items:center;height:26px;padding:0 8px;background:var(--hdr);border-bottom:1px solid var(--bd)">
+              <span style="font:600 11px var(--ui);letter-spacing:.5px">Graph</span>
+              <span style="margin-left:7px;color:var(--txd);font-size:10.5px">{{ gCount }}</span>
+              <span style="flex:1"></span>
+              <button onClick="{{ zout }}" title="zoom out" style="border:none;background:none;color:var(--txd);cursor:pointer;font-size:13px;padding:0 3px" style-hover="color:var(--tx)">−</button>
+              <span style="color:var(--txd);font:10.5px var(--mono);width:34px;text-align:center">{{ zoomPct }}</span>
+              <button onClick="{{ zin }}" title="zoom in" style="border:none;background:none;color:var(--txd);cursor:pointer;font-size:13px;padding:0 3px" style-hover="color:var(--tx)">+</button>
+              <button onClick="{{ fit }}" title="zoom to fit (React Flow fitView)" style="border:none;background:none;color:var(--txd);cursor:pointer;font-size:12px;padding:0 4px" style-hover="color:var(--tx)">⤢</button>
+              <button onClick="{{ tgGraph }}" title="hide (stripe button restores)" style="border:none;background:none;color:var(--txd);cursor:pointer;font-size:13px;padding:0 2px" style-hover="color:var(--tx)">—</button>
+            </div>
+            <sc-if value="{{ gNote }}" hint-placeholder-val="{{ false }}">
+              <div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--edbg);color:var(--txd);font-size:12px;padding:0 24px;text-align:center;line-height:1.6">{{ gNote }}</div>
+            </sc-if>
+            <sc-if value="{{ gOn }}" hint-placeholder-val="{{ true }}">
+              <div ref="{{ gref }}" onPointerDown="{{ panDown }}" style="position:relative;flex:1;overflow:hidden;background:var(--edbg);background-image:radial-gradient(var(--gdot) 1px,transparent 1.5px);background-size:22px 22px;cursor:grab">
+                <div style="position:absolute;left:0;top:0;transform:translate({{ panX }}px,{{ panY }}px) scale({{ zoom }});transform-origin:0 0;width:920px;height:620px">
+                  <svg width="920" height="620" style="position:absolute;left:0;top:0;pointer-events:none;overflow:visible">
+                    <path d="{{ edgeD }}" fill="none" stroke="var(--edge)" stroke-width="1.5"></path>
+                    <path d="{{ leadD }}" fill="none" stroke="#9E9E9E" stroke-width="1.6" stroke-dasharray="7 5"></path>
+                    <path d="{{ selD }}" fill="none" stroke="var(--acc)" stroke-width="2.4"></path>
+                  </svg>
+                  <sc-for list="{{ gnodes }}" as="n" hint-placeholder-count="6">
+                    <div data-gnode="1" onClick="{{ n.pick }}" title="{{ n.tip }}" style="position:absolute;left:{{ n.x }}px;top:{{ n.y }}px;width:{{ n.w }}px;height:46px;box-sizing:border-box;border-radius:5px;background:{{ n.bg }};border:{{ n.ring }};color:{{ n.tc }};padding:5px 10px;cursor:pointer;box-shadow:{{ n.sh }}">
+                      <div style="font:600 12px var(--ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.s }}</div>
+                      <div style="font:9.5px var(--mono);opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.meta }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+              <sc-if value="{{ insp }}" hint-placeholder-val="{{ false }}">
+                <div style="border-top:1px solid var(--bd);padding:8px 10px;display:flex;flex-direction:column;gap:5px;background:var(--chrome)">
+                  <div style="display:flex;align-items:baseline;gap:8px">
+                    <b style="font-size:12.5px">{{ inspName }}</b>
+                    <span style="color:var(--txd);font:10.5px var(--mono);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ inspId }}</span>
+                    <button onClick="{{ inspClear }}" style="border:none;background:none;color:var(--txd);cursor:pointer;font-size:11px">✕</button>
+                  </div>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+                    <span style="display:inline-flex;align-items:center;gap:5px;border:1px solid var(--bd2);border-radius:3px;padding:1px 7px;font:10.5px var(--mono)"><span style="width:8px;height:8px;border-radius:2px;background:{{ inspFillBg }}"></span>fill {{ inspFill }}</span>
+                    <span style="display:inline-flex;align-items:center;gap:5px;border:1px solid var(--bd2);border-radius:3px;padding:1px 7px;font:10.5px var(--mono)"><span style="width:8px;height:8px;border-radius:50%;border:2px {{ inspRingStyle }} {{ inspRingC }}"></span>{{ inspRing }}</span>
+                    <span style="color:var(--txd);font-size:10.5px">{{ inspWorst }}</span>
+                  </div>
+                  <div style="display:flex;gap:8px;align-items:center">
+                    <button onClick="{{ inspReveal }}" style="border:1px solid var(--bd2);background:transparent;color:var(--tx);border-radius:3px;height:20px;padding:0 8px;font:11px var(--ui);cursor:pointer" style-hover="background:var(--hov)">↗ reveal in editor</button>
+                    <span style="color:var(--txd);font:10.5px var(--mono)">{{ inspLoc }}</span>
+                  </div>
+                </div>
+              </sc-if>
+              <div style="border-top:1px solid var(--bd);background:var(--chrome)">
+                <div onClick="{{ legTg }}" style="display:flex;align-items:center;gap:6px;height:22px;padding:0 10px;cursor:pointer;color:var(--txd);font-size:10.5px" style-hover="color:var(--tx)">
+                  <span style="font-size:9px">{{ legTw }}</span> verdict legend (canonical: packages/schema/gen)
+                </div>
+                <sc-if value="{{ legendOpen }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding:0 10px 8px;display:flex;flex-direction:column;gap:5px;font-size:10.5px;color:var(--txd)">
+                    <div style="display:flex;gap:11px;flex-wrap:wrap">
+                      <span title="verdict from a real check" style="display:inline-flex;gap:4px;align-items:center"><span style="width:9px;height:9px;border-radius:2px;background:#2E7D32"></span>green</span>
+                      <span title="warnings" style="display:inline-flex;gap:4px;align-items:center"><span style="width:9px;height:9px;border-radius:2px;background:#F9A825"></span>amber</span>
+                      <span title="failing" style="display:inline-flex;gap:4px;align-items:center"><span style="width:9px;height:9px;border-radius:2px;background:#C62828"></span>red</span>
+                      <span title="definition / axiom-like" style="display:inline-flex;gap:4px;align-items:center"><span style="width:9px;height:9px;border-radius:2px;background:#1565C0"></span>blue</span>
+                      <span title="NOT green — hatched grey (honest ceiling)" style="display:inline-flex;gap:4px;align-items:center"><span style="width:9px;height:9px;border-radius:2px;background:repeating-linear-gradient(45deg,#9E9E9E,#9E9E9E 2px,#bdbdbd 2px,#bdbdbd 4px)"></span>unknown ≠ green</span>
+                      <span title="outline not computed — grey ring, never green" style="display:inline-flex;gap:4px;align-items:center"><span style="width:8px;height:8px;border-radius:50%;border:1.5px dashed #9E9E9E"></span>null ring</span>
+                      <span title="lead (resolved=false) — dashed, never an edge, never followed" style="display:inline-flex;gap:4px;align-items:center"><span style="width:14px;border-top:2px dashed #9E9E9E"></span>lead</span>
+                    </div>
+                    <div style="font-family:var(--mono);font-size:9.5px">worst-case-wins: {{ worstOrder }} · unrecognized token ranks WORST · unknown never upgrades</div>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{ botOpen }}" hint-placeholder-val="{{ true }}">
+        <div onPointerDown="{{ splBot }}" role="separator" style="height:4px;margin:-2px 0;cursor:row-resize;z-index:5" style-hover="background:var(--acc)"></div>
+        <div style="height:{{ botH }}px;flex:none;display:flex;flex-direction:column;border-top:1px solid var(--bd);min-height:0">
+          <div style="display:flex;align-items:stretch;height:26px;background:var(--hdr);border-bottom:1px solid var(--bd)">
+            <button onClick="{{ tabAi }}" style="border:none;cursor:pointer;padding:0 12px;font:11.5px var(--ui);background:{{ aiBg }};color:var(--tx);box-shadow:{{ aiLine }}">AI outlet</button>
+            <button onClick="{{ tabDiag }}" style="border:none;cursor:pointer;padding:0 12px;font:11.5px var(--ui);background:{{ diagBg }};color:var(--tx);box-shadow:{{ diagLine }}">Diagnostics ({{ diagCount }})</button>
+            <button onClick="{{ tabPin }}" style="border:none;cursor:pointer;padding:0 12px;font:11.5px var(--ui);background:{{ pinBg }};color:var(--tx);box-shadow:{{ pinLine }}">Pins console</button>
+            <span style="flex:1"></span>
+            <button onClick="{{ tgBot }}" title="hide (stripe button restores)" style="border:none;background:none;color:var(--txd);cursor:pointer;font-size:13px;padding:0 8px" style-hover="color:var(--tx)">—</button>
+          </div>
+          <sc-if value="{{ aiOn }}" hint-placeholder-val="{{ false }}">
+            <div style="flex:1;display:flex;flex-direction:column;min-height:0;background:var(--edbg)">
+              <div style="display:flex;gap:6px;padding:6px 10px;border-bottom:1px solid var(--bd)">
+                <span style="border:1px solid var(--bd2);border-radius:3px;padding:1px 7px;font:10px var(--mono);color:var(--txd)">transport: FAKE — labels itself</span>
+                <span style="border:1px solid var(--bd2);border-radius:3px;padding:1px 7px;font:10px var(--mono);color:var(--txd)">keys stay in the ai-server (:8478)</span>
+              </div>
+              <div style="flex:1;overflow:auto;padding:8px 12px;display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ aiLog }}" as="a" hint-placeholder-count="2">
+                  <div style="display:flex;gap:9px">
+                    <span style="flex:none;width:30px;text-align:right;color:{{ a.whoC }};font:600 10.5px var(--mono)">{{ a.who }}</span>
+                    <div style="flex:1;min-width:0">
+                      <div style="font-size:12px;line-height:1.55;color:var(--tx);user-select:text">{{ a.text }}</div>
+                      <sc-if value="{{ a.hasCtx }}" hint-placeholder-val="{{ false }}">
+                        <div style="display:flex;gap:5px;margin-top:5px;flex-wrap:wrap">
+                          <sc-for list="{{ a.ctx }}" as="c"><span style="border:1px solid var(--bd2);border-radius:3px;padding:1px 6px;font:10px var(--mono);color:var(--acc)">{{ c.t }}</span></sc-for>
+                        </div>
+                      </sc-if>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;gap:7px;padding:7px 10px;border-top:1px solid var(--bd)">
+                <input value="{{ aiQ }}" onChange="{{ setAiQ }}" placeholder="ask about the graph, a node, or a failure class…" style="flex:1;height:24px;border:1px solid var(--bd2);border-radius:3px;background:var(--chrome);color:var(--tx);padding:0 8px;font:12px var(--ui);outline:none">
+                <button onClick="{{ sendAi }}" style="height:26px;padding:0 12px;border:none;border-radius:3px;background:var(--acc);color:#fff;font:600 11.5px var(--ui);cursor:pointer">Ask</button>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ diagOn }}" hint-placeholder-val="{{ true }}">
+            <div style="flex:1;overflow:auto;background:var(--edbg);padding:4px 0">
+              <div style="padding:4px 12px;color:var(--txd);font-size:10.5px">{{ diagNote }}</div>
+              <sc-if value="{{ diagEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:6px 12px;color:var(--txd);font-size:11.5px">no diagnostics received — an empty list here is the honest state</div></sc-if>
+              <sc-for list="{{ diagRows }}" as="d" hint-placeholder-count="5">
+                <div onClick="{{ d.act }}" title="open in editor" style="display:flex;gap:8px;align-items:baseline;padding:3px 12px;cursor:pointer" style-hover="background:var(--hov)">
+                  <span style="flex:none;width:52px;text-align:center;border-radius:3px;background:{{ d.sevBg }};color:{{ d.sevC }};font:600 9.5px var(--mono);padding:1px 0">{{ d.sev }}</span>
+                  <span style="flex:none;color:var(--acc);font:11px var(--mono)">{{ d.loc }}</span>
+                  <span style="font-size:12px;color:var(--tx)">{{ d.m }}</span>
+                  <span style="color:var(--txd);font-size:10.5px">{{ d.meta }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ pinOn }}" hint-placeholder-val="{{ false }}">
+            <div style="flex:1;display:flex;flex-direction:column;min-height:0;background:var(--edbg)">
+              <div style="display:flex;gap:8px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--bd)">
+                <input value="{{ pinQ }}" onChange="{{ setPinQ }}" placeholder="filter probes (id / stream / payload substring)…" style="flex:1;max-width:340px;height:22px;border:1px solid var(--bd2);border-radius:3px;background:var(--chrome);color:var(--tx);padding:0 8px;font:11px var(--ui);outline:none">
+                <span style="color:var(--txd);font-size:10.5px">{{ pinNote }}</span>
+              </div>
+              <sc-if value="{{ pinFail }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:4px 12px;background:var(--bnW);border-bottom:1px solid var(--bnWb);font-size:11px"><b style="font-family:var(--mono)">hub-unreachable</b>: hub pins unavailable — showing the app-shell log only</div>
+              </sc-if>
+              <div style="flex:1;overflow:auto;padding:4px 0">
+                <sc-for list="{{ pinRows }}" as="p" hint-placeholder-count="8">
+                  <div style="display:flex;gap:8px;align-items:baseline;padding:2px 12px;font:10.5px var(--mono)">
+                    <span style="flex:none;width:76px;text-align:center;border-radius:3px;background:{{ p.sbg }};color:{{ p.sc }};padding:1px 0;font-size:9.5px">{{ p.stream }}</span>
+                    <b style="color:var(--tx)">{{ p.pid }}</b>
+                    <span style="color:var(--txd);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.payload }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+    </div>
+
+    <div style="width:27px;border-left:1px solid var(--bd);display:flex;flex-direction:column;align-items:center;padding-top:4px">
+      <button onClick="{{ tgGraph }}" title="Graph tool window (Ctrl+Shift+G)" style="writing-mode:vertical-rl;border:none;border-radius:3px;padding:9px 3px;font:11px var(--ui);letter-spacing:.4px;cursor:pointer;background:{{ graphBg }};color:var(--tx)" style-hover="background:var(--hov)">Graph</button>
+    </div>
+  </div>
+  </sc-if>
+  <sc-if value="{{ welcome }}" hint-placeholder-val="{{ false }}"><div></div></sc-if>
+
+  <sc-if value="{{ notWelcome }}" hint-placeholder-val="{{ true }}">
+  <div style="display:flex;align-items:stretch;height:23px;border-top:1px solid var(--bd)">
+    <button onClick="{{ tabAiS }}" style="border:none;cursor:pointer;padding:0 10px;font:11px var(--ui);background:{{ aiSBg }};color:var(--tx)" style-hover="background:var(--hov)">AI outlet</button>
+    <button onClick="{{ tabDiagS }}" style="border:none;cursor:pointer;padding:0 10px;font:11px var(--ui);background:{{ diagSBg }};color:var(--tx)" style-hover="background:var(--hov)">Diagnostics ({{ diagCount }})</button>
+    <button onClick="{{ tabPinS }}" style="border:none;cursor:pointer;padding:0 10px;font:11px var(--ui);background:{{ pinSBg }};color:var(--tx)" style-hover="background:var(--hov)">Pins console</button>
+  </div>
+  </sc-if>
+  <sc-if value="{{ welcome }}" hint-placeholder-val="{{ false }}"><div></div></sc-if>
+
+  <div style="display:flex;align-items:center;gap:2px;height:24px;border-top:1px solid var(--bd);padding:0 8px;font:11px var(--ui);color:var(--txd);overflow:hidden">
+    <sc-for list="{{ segs }}" as="s" hint-placeholder-count="5">
+      <span onClick="{{ s.act }}" title="{{ s.tip }}" style="display:inline-flex;align-items:center;gap:5px;padding:2px 7px;border-radius:3px;cursor:{{ s.cur }};color:{{ s.col }};font-family:{{ s.ff }};white-space:nowrap" style-hover="background:var(--hov)">
+        <sc-if value="{{ s.dot }}" hint-placeholder-val="{{ false }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ s.dot }}"></span></sc-if>
+        {{ s.t }}
+      </span>
+      <span style="width:1px;height:12px;background:var(--bd2);opacity:.5"></span>
+    </sc-for>
+    <span style="flex:1"></span>
+    <span style="font-family:var(--mono);white-space:nowrap">{{ selSeg }}</span>
+  </div>
+
+  <sc-if value="{{ dlgPrefs }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:90;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center">
+      <div style="width:780px;max-width:92%;height:540px;max-height:88%;display:flex;flex-direction:column;background:var(--chrome);border:1px solid var(--popbd);box-shadow:0 24px 60px rgba(0,0,0,.5);border-radius:6px;overflow:hidden">
+        <div style="display:flex;align-items:center;height:36px;padding:0 14px;border-bottom:1px solid var(--bd)">
+          <b style="font-size:13px">Settings</b><span style="margin-left:10px;color:var(--txd);font-size:11px">changes apply live in this prototype</span>
+          <span style="flex:1"></span><button onClick="{{ closeDlg }}" style="border:none;background:none;color:var(--txd);cursor:pointer;font-size:14px" style-hover="color:var(--tx)">✕</button>
+        </div>
+        <div style="flex:1;display:flex;min-height:0">
+          <div style="width:200px;flex:none;border-right:1px solid var(--bd);display:flex;flex-direction:column">
+            <input value="{{ setQ }}" onChange="{{ setSetQ }}" placeholder="search settings" style="margin:10px;height:24px;border:1px solid var(--bd2);border-radius:3px;background:var(--edbg);color:var(--tx);padding:0 8px;font:11.5px var(--ui);outline:none">
+            <sc-for list="{{ navRows }}" as="n" hint-placeholder-count="4">
+              <div onClick="{{ n.act }}" style="padding:6px 14px;cursor:pointer;background:{{ n.bg }};font-size:12px" style-hover="background:var(--hov)">{{ n.label }}</div>
+            </sc-for>
+          </div>
+          <div style="flex:1;overflow:auto;padding:18px 22px">
+            <sc-if value="{{ pgApp }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;gap:16px">
+                <div><b style="font-size:12.5px">Theme</b>
+                  <div style="display:flex;gap:8px;margin-top:8px">
+                    <sc-for list="{{ themeRows }}" as="t">
+                      <button onClick="{{ t.act }}" style="height:60px;width:120px;border-radius:4px;cursor:pointer;border:{{ t.bd }};background:{{ t.bg }};color:{{ t.col }};font:12px var(--ui)">{{ t.label }}</button>
+                    </sc-for>
+                  </div>
+                </div>
+                <div><b style="font-size:12.5px">Accent</b>
+                  <div style="display:flex;gap:9px;align-items:center;margin-top:8px">
+                    <input type="color" value="{{ acHex }}" onChange="{{ accPick }}" title="pick any accent color" style="width:38px;height:30px;border:1px solid var(--bd2);border-radius:4px;background:var(--edbg);padding:2px;cursor:pointer">
+                    <input value="{{ acHex }}" onChange="{{ accHexSet }}" style="width:84px;height:26px;border:1px solid var(--bd2);border-radius:3px;background:var(--edbg);color:var(--tx);padding:0 8px;font:11.5px var(--mono);outline:none">
+                    <span style="width:1px;height:20px;background:var(--bd2)"></span>
+                    <sc-for list="{{ swatches }}" as="w">
+                      <button onClick="{{ w.act }}" title="{{ w.c }}" style="width:24px;height:24px;border-radius:50%;cursor:pointer;background:{{ w.c }};border:none;box-shadow:{{ w.ring }}"></button>
+                    </sc-for>
+                  </div>
+                  <div style="color:var(--txd);font-size:11px;margin-top:6px">any color you like — verdict fills (green · amber · red · blue · unknown) stay canonical: proof semantics, never theme</div>
+                </div>
+                <div><b style="font-size:12.5px">Theme import</b>
+                  <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+                    <span style="border:1px solid var(--bd2);border-radius:3px;padding:4px 10px;font-size:12px;color:var(--txd)">Darcula / IntelliJ Light (bundled)</span>
+                    <button onClick="{{ importAct }}" style="height:26px;padding:0 12px;border:1px solid var(--bd2);border-radius:3px;background:transparent;color:var(--tx);font:12px var(--ui);cursor:pointer" style-hover="background:var(--hov)">Import from file… (.icls, VS Code .json)</button>
+                  </div>
+                  <div style="color:var(--txd);font-size:11px;margin-top:6px">imported schemes map token colors onto the shell variables via the Theme Importer plugin</div>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ pgEd }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <div><b style="font-size:12.5px">Font</b>
+                  <div style="display:flex;gap:10px;align-items:center;margin-top:8px">
+                    <span style="color:var(--txd);font-size:12px">JetBrains Mono ·</span>
+                    <button onClick="{{ fMinus }}" style="width:24px;height:24px;border:1px solid var(--bd2);border-radius:3px;background:transparent;color:var(--tx);cursor:pointer">−</button>
+                    <b style="font-family:var(--mono)">{{ fontPx }}</b>
+                    <button onClick="{{ fPlus }}" style="width:24px;height:24px;border:1px solid var(--bd2);border-radius:3px;background:transparent;color:var(--tx);cursor:pointer">+</button>
+                  </div>
+                </div>
+                <div style="border:1px solid var(--bd);border-radius:4px;background:var(--edbg);padding:10px 14px;font-size:{{ fontPx }}px;font-family:var(--mono)">
+                  <span style="color:var(--syK)">def</span> <span style="color:var(--syF)">parse_manifest</span><span style="color:var(--syX)">(path: str) -&gt; Manifest:</span>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ pgPlug }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <input value="{{ plugQ }}" onChange="{{ setPlugQ }}" placeholder="search the marketplace…" style="height:26px;border:1px solid var(--bd2);border-radius:3px;background:var(--edbg);color:var(--tx);padding:0 9px;font:12px var(--ui);outline:none">
+                <sc-for list="{{ plugRows }}" as="p" hint-placeholder-count="5">
+                  <div style="display:flex;gap:11px;align-items:center;border:1px solid var(--bd);border-radius:4px;padding:9px 12px;background:var(--edbg)">
+                    <span style="width:30px;height:30px;flex:none;border-radius:5px;background:{{ p.icbg }};display:flex;align-items:center;justify-content:center;color:#fff;font:700 12px var(--mono)">{{ p.icg }}</span>
+                    <div style="flex:1;min-width:0">
+                      <div style="display:flex;gap:8px;align-items:baseline"><b style="font-size:12.5px">{{ p.n }}</b><span style="color:var(--txd);font-size:10.5px">{{ p.v }} · ⤓ {{ p.dl }}</span></div>
+                      <div style="color:var(--txd);font-size:11.5px">{{ p.d }}</div>
+                    </div>
+                    <button onClick="{{ p.act }}" title="{{ p.tip }}" style="flex:none;height:24px;padding:0 12px;border-radius:3px;font:600 11px var(--ui);cursor:{{ p.cur }};border:{{ p.bbd }};background:{{ p.bbg }};color:{{ p.bcol }}">{{ p.btn }}</button>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ pgAn }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:16px">
+                <div><b style="font-size:12.5px">Pyright</b>
+                  <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+                    <sc-for list="{{ pyRows }}" as="r">
+                      <div onClick="{{ r.act }}" style="display:flex;gap:8px;align-items:center;cursor:pointer">
+                        <span style="width:14px;height:14px;border-radius:50%;border:1.5px solid var(--bd2);display:flex;align-items:center;justify-content:center"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.dot }}"></span></span>
+                        <span style="font-size:12px">{{ r.label }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+                <div onClick="{{ autoAct }}" style="display:flex;gap:8px;align-items:center;cursor:pointer">
+                  <span style="width:14px;height:14px;border-radius:3px;border:1.5px solid var(--bd2);background:{{ autoBg }};color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center">{{ autoChk }}</span>
+                  <span style="font-size:12px">Re-analyze automatically on save</span>
+                </div>
+                <div><b style="font-size:12.5px">Graph node cap</b>
+                  <div style="display:flex;gap:10px;align-items:center;margin-top:8px">
+                    <button onClick="{{ capMinus }}" style="width:24px;height:24px;border:1px solid var(--bd2);border-radius:3px;background:transparent;color:var(--tx);cursor:pointer">−</button>
+                    <b style="font-family:var(--mono)">{{ capV }}</b>
+                    <button onClick="{{ capPlus }}" style="width:24px;height:24px;border:1px solid var(--bd2);border-radius:3px;background:transparent;color:var(--tx);cursor:pointer">+</button>
+                    <span style="color:var(--txd);font-size:11px">caps stay probed + bannered by the cell, never silent</span>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:8px;padding:10px 14px;border-top:1px solid var(--bd)">
+          <button onClick="{{ closeDlg }}" style="height:26px;padding:0 14px;border:1px solid var(--bd2);border-radius:3px;background:transparent;color:var(--tx);font:12px var(--ui);cursor:pointer" style-hover="background:var(--hov)">Cancel</button>
+          <button onClick="{{ closeDlg }}" style="height:26px;padding:0 16px;border:none;border-radius:3px;background:var(--acc);color:#fff;font:600 12px var(--ui);cursor:pointer">OK</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ dlgAbout }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeDlg }}" style="position:absolute;inset:0;z-index:90;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center">
+      <div style="width:430px;background:var(--chrome);border:1px solid var(--popbd);box-shadow:0 24px 60px rgba(0,0,0,.5);border-radius:6px;padding:26px 28px;display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;gap:14px;align-items:center">
+          <svg width="44" height="44" viewBox="0 0 16 16"><circle cx="4" cy="3.5" r="2.1" fill="var(--acc)"></circle><circle cx="12" cy="6" r="2.1" fill="#2E7D32"></circle><circle cx="6.5" cy="12.5" r="2.1" fill="#C62828"></circle><path d="M5.5 5L10.5 5.8M5 5.5L6.2 10.6M11 7.8L7.6 11.2" stroke="var(--txd)" stroke-width="1.1" fill="none"></path></svg>
+          <div><div style="font:600 17px var(--ui)">ProofGraph</div><div style="color:var(--txd);font-size:11.5px">2026.2 · assembly build PG-262.SHELL</div></div>
+        </div>
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:4px;font:11.5px var(--mono);color:var(--txd)">
+          <span>schema pin: <b style="color:var(--tx)">{{ hVer }}/{{ hHash }}…</b> (GET /health — never hardcoded)</span>
+          <span>walls: {{ hWalls }}</span>
+          <span>runtime: hub 127.0.0.1:8477 · ai-server 127.0.0.1:8478</span>
+          <span>cells: byok-arena · capability-layer · editor-shell · graph-model · graph-view · schema · structure-extractor</span>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px">
+          <button onClick="{{ aboutCopy }}" style="height:26px;padding:0 12px;border:1px solid var(--bd2);border-radius:3px;background:transparent;color:var(--tx);font:12px var(--ui);cursor:pointer" style-hover="background:var(--hov)">Copy</button>
+          <button onClick="{{ closeDlg }}" style="height:26px;padding:0 16px;border:none;border-radius:3px;background:var(--acc);color:#fff;font:600 12px var(--ui);cursor:pointer">Close</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ dlgRoots }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:90;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center">
+      <div style="width:470px;background:var(--chrome);border:1px solid var(--popbd);box-shadow:0 24px 60px rgba(0,0,0,.5);border-radius:6px;overflow:hidden">
+        <div style="display:flex;align-items:center;height:36px;padding:0 14px;border-bottom:1px solid var(--bd)"><b style="font-size:13px">Choose declared roots</b><span style="flex:1"></span><button onClick="{{ closeDlg }}" style="border:none;background:none;color:var(--txd);cursor:pointer;font-size:14px">✕</button></div>
+        <div style="padding:10px 14px;color:var(--txd);font-size:11.5px">roots are DECLARED, never inferred — candidates from hub /fs/roots-candidates</div>
+        <div style="display:flex;flex-direction:column;padding:0 6px 8px">
+          <sc-for list="{{ rootRows }}" as="r" hint-placeholder-count="4">
+            <div onClick="{{ r.act }}" style="display:flex;gap:9px;align-items:center;padding:7px 8px;border-radius:3px;cursor:pointer" style-hover="background:var(--hov)">
+              <span style="width:14px;height:14px;border-radius:3px;border:1.5px solid var(--bd2);background:{{ r.bg }};color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center">{{ r.chk }}</span>
+              <span style="font-family:var(--mono);font-size:12px">{{ r.p }}</span>
+              <span style="flex:1"></span><span style="color:var(--txd);font-size:11px">{{ r.note }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:8px;padding:10px 14px;border-top:1px solid var(--bd)">
+          <button onClick="{{ closeDlg }}" style="height:26px;padding:0 14px;border:1px solid var(--bd2);border-radius:3px;background:transparent;color:var(--tx);font:12px var(--ui);cursor:pointer" style-hover="background:var(--hov)">Cancel</button>
+          <button onClick="{{ applyRoots }}" style="height:26px;padding:0 16px;border:none;border-radius:3px;background:var(--acc);color:#fff;font:600 12px var(--ui);cursor:pointer">Analyze</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ dlgGap }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:90;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center">
+      <div style="width:620px;max-width:94%;background:var(--chrome);border:1px solid var(--popbd);box-shadow:0 24px 60px rgba(0,0,0,.5);border-radius:6px;overflow:hidden">
+        <div style="display:flex;align-items:center;height:36px;padding:0 14px;border-bottom:1px solid var(--bd)"><b style="font-size:13px">Gap report</b><span style="margin-left:10px;color:var(--txd);font-size:11px">from the SERVED /analysis — the shell never recomputes it</span><span style="flex:1"></span><button onClick="{{ closeDlg }}" style="border:none;background:none;color:var(--txd);cursor:pointer;font-size:14px">✕</button></div>
+        <div style="padding:6px 14px 2px">
+          <div style="display:flex;gap:8px;padding:4px 0;color:var(--txd);font:600 10px var(--ui);letter-spacing:.5px;border-bottom:1px solid var(--bd)"><span style="width:220px">NODE</span><span style="width:80px">DECLARED</span><span style="flex:1">DERIVED (worst-case-wins)</span><span style="width:70px">STATE</span></div>
+          <sc-for list="{{ gapRows }}" as="g" hint-placeholder-count="5">
+            <div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--bd);align-items:baseline">
+              <span style="width:220px;font:11px var(--mono);color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ g.n }}</span>
+              <span style="width:80px;font-size:11px;color:var(--txd)">{{ g.d }}</span>
+              <span style="flex:1;font:11px var(--mono);color:var(--tx)">{{ g.w }}</span>
+              <span style="width:70px;font:600 10px var(--ui);color:{{ g.okc }}">{{ g.ok }}</span>
+            </div>
+          </sc-for>
+          <div style="padding:8px 0;color:var(--txd);font:10.5px var(--mono)">order: {{ worstOrder }} · unrecognized token ranks WORST and renders unknown</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ dlgOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:90;background:rgba(0,0,0,.45);display:flex;align-items:flex-start;justify-content:center;padding-top:80px">
+      <div style="width:520px;background:var(--chrome);border:1px solid var(--popbd);box-shadow:0 24px 60px rgba(0,0,0,.5);border-radius:6px;overflow:hidden">
+        <div style="padding:10px 12px;border-bottom:1px solid var(--bd)">
+          <input value="{{ openQ }}" onChange="{{ setOpenQ }}" placeholder="{{ openPh }}" style="width:100%;box-sizing:border-box;height:28px;border:1px solid var(--bd2);border-radius:3px;background:var(--edbg);color:var(--tx);padding:0 9px;font:12.5px var(--ui);outline:none">
+        </div>
+        <div style="max-height:300px;overflow:auto;padding:4px 0">
+          <sc-for list="{{ openRows }}" as="o" hint-placeholder-count="6">
+            <div onClick="{{ o.act }}" style="display:flex;gap:9px;align-items:center;padding:6px 14px;cursor:pointer" style-hover="background:var(--hov)">
+              <span style="width:17px;height:15px;border-radius:3px;background:{{ o.icbg }};color:{{ o.icc }};font:600 8.5px var(--mono);display:flex;align-items:center;justify-content:center">{{ o.ic }}</span>
+              <span style="font-family:var(--mono);font-size:12px">{{ o.p }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="padding:8px 12px;border-top:1px solid var(--bd);color:var(--txd);font-size:10.5px">server-side browse — every listing is a hub /fs/list call, path-jailed hub-side · Esc to close</div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600,&quot;height&quot;:1000},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;default&quot;:&quot;dark&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Shell&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#7C6FD4&quot;,&quot;#3574D4&quot;,&quot;#2FA080&quot;,&quot;#D4703A&quot;],&quot;default&quot;:&quot;#7C6FD4&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Shell&quot;},&quot;view&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ide&quot;,&quot;welcome&quot;],&quot;default&quot;:&quot;ide&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Shell&quot;}}">
+class Component extends DCLogic {
+  state = {ready:!!window.PGDATA,theme:null,accent:null,mode:null,menu:null,dlg:null,openMode:'file',page:'app',
+    projOpen:true,structOpen:true,graphOpen:true,botOpen:true,botTab:'diag',
+    expW:256,graphW:442,botH:212,fontPx:12.5,
+    tabs:['moatpkg/core.py','moatpkg/api.py'],act:'moatpkg/core.py',dirty:{'moatpkg/core.py':1},
+    exp:{'moatpkg':1},sel:null,hub:true,pyright:'live',autoRe:true,cap:500,
+    banners:[],zoom:0.55,panX:10,panY:8,pinQ:'',plugQ:'',setQ:'',openQ:'',inst:{},aiQ:'',aiLog:null,hl:0,hlF:null,legend:true,rootSel:null,accDraft:null};
+  gref = React.createRef();
+  componentDidMount(){
+    this._iv = setInterval(()=>{ if(window.PGDATA){ clearInterval(this._iv); this.setState({ready:true}, ()=>this.fit()); } }, 40);
+    this._esc = (e)=>{ if(e.key==='Escape') this.setState({menu:null,dlg:null}); };
+    document.addEventListener('keydown', this._esc);
+  }
+  componentWillUnmount(){ clearInterval(this._iv); document.removeEventListener('keydown', this._esc); }
+  th(){ return this.state.theme ?? this.props.theme ?? 'dark'; }
+  ac(){ return this.state.accent ?? this.props.accent ?? '#7C6FD4'; }
+  md(){ return this.state.mode ?? (this.props.view==='welcome' ? 'welcome' : 'sample'); }
+  ban(sev,fc,d){ this.setState(s=>({banners:[...s.banners.slice(-3),{sev,fc,d}]})); }
+  run(fn){ return ()=>{ this.setState({menu:null}); if(fn) fn(); }; }
+  toggleHub = ()=>{
+    const on = !this.state.hub;
+    this.setState({hub:on, banners:[], menu:null});
+    if(!on) this.ban('error','hub-unreachable','GET /graph failed: fetch refused \u2014 start the hub: python hub/serve_app.py (HTTP 8477). Every hub failure renders its NAMED class here, never a blank pane.');
+    else this.ban('info','hub-restored','reconnected \u2014 /graph + /analysis + /workspace refetched: 14 nodes \u00b7 18 edges \u00b7 3 leads served, 11 verdicts applied');
+  };
+  reanalyze = ()=>{
+    if(!this.state.hub) return this.ban('error','hub-unreachable','POST /analyze failed: fetch refused \u2014 start the hub: python hub/serve_app.py (HTTP 8477)');
+    if(this.md()==='empty'){ this.openSample(); this.ban('info','shell.analyze.ok','declared roots [moatpkg, tests] \u2192 14 nodes \u00b7 18 edges \u00b7 3 leads served; 11 verdicts applied (3 unverdicted stay grey)'); return; }
+    this.ban('info','shell.analyze.ok','re-applied: 11 verdicts \u2014 3 unverdicted stay grey (pending is honest, never green)');
+  };
+  save = ()=>{
+    const t=this.state.act;
+    if(!t || !this.state.dirty[t] || !this.state.hub) return;
+    const d={...this.state.dirty}; delete d[t]; this.setState({dirty:d});
+    if(this.state.autoRe) this.ban('info','shell.save.ok', t+' \u2192 PUT /fs/file (path-jailed) \u00b7 auto-reanalyze-on-save ran (preference)');
+  };
+  openFile(p, line){
+    if(!window.PGDATA.CODE[p]) return;
+    const tabs = this.state.tabs.includes(p) ? this.state.tabs : [...this.state.tabs, p];
+    this.setState({tabs, act:p, menu:null, dlg:null, hl:line||0, hlF:line?p:null});
+  }
+  closeTab(p){
+    if(this.state.dirty[p] && !window.confirm(p+' has unsaved changes \u2014 close and discard?')) return;
+    const tabs=this.state.tabs.filter(x=>x!==p);
+    const d={...this.state.dirty}; delete d[p];
+    this.setState({tabs, dirty:d, act: this.state.act===p ? (tabs[tabs.length-1]||null) : this.state.act});
+  }
+  openSample = ()=>this.setState({mode:'sample',tabs:['moatpkg/core.py','moatpkg/api.py'],act:'moatpkg/core.py',dirty:{'moatpkg/core.py':1},exp:{'moatpkg':1},banners:[],sel:null,menu:null,hub:true});
+  openEmpty = ()=>{ this.setState({mode:'empty',tabs:[],act:null,dirty:{},sel:null,banners:[],menu:null}); this.ban('info','workspace-not-open','empty workspace declared \u2014 run Analysis \u203a Run analyze (declared roots) to serve a graph; nothing renders green until a real check says so'); };
+  closeProject = ()=>this.setState({mode:'welcome',tabs:[],act:null,dirty:{},sel:null,banners:[],menu:null,dlg:null});
+  fit = ()=>{
+    const el=this.gref.current, D=window.PGDATA; if(!el||!D) return;
+    const z=Math.max(.2, Math.min(1.4, Math.min(el.clientWidth/(D.GW+40), el.clientHeight/(D.GH+40))));
+    this.setState({zoom:z, panX:Math.max(6,(el.clientWidth-D.GW*z)/2), panY:Math.max(6,(el.clientHeight-D.GH*z)/2)});
+  };
+  panDown = (e)=>{
+    if(e.target.closest('[data-gnode]') || e.target.closest('button')) return;
+    e.preventDefault();
+    const sx=e.clientX-this.state.panX, sy=e.clientY-this.state.panY;
+    const mv=(ev)=>this.setState({panX:ev.clientX-sx, panY:ev.clientY-sy});
+    const up=()=>{ window.removeEventListener('pointermove',mv); window.removeEventListener('pointerup',up); };
+    window.addEventListener('pointermove',mv); window.addEventListener('pointerup',up);
+  };
+  drag(which){ return (e)=>{
+    e.preventDefault();
+    const s={expW:this.state.expW,graphW:this.state.graphW,botH:this.state.botH}, sx=e.clientX, sy=e.clientY;
+    const mv=(ev)=>{
+      if(which==='exp') this.setState({expW:Math.max(180,Math.min(460,s.expW+ev.clientX-sx))});
+      else if(which==='graph') this.setState({graphW:Math.max(280,Math.min(640,s.graphW-(ev.clientX-sx)))});
+      else this.setState({botH:Math.max(110,Math.min(440,s.botH-(ev.clientY-sy)))});
+    };
+    const up=()=>{ window.removeEventListener('pointermove',mv); window.removeEventListener('pointerup',up); };
+    window.addEventListener('pointermove',mv); window.addEventListener('pointerup',up);
+  };}
+  resetLayout = ()=>this.setState({expW:256,graphW:442,botH:212,projOpen:true,structOpen:true,graphOpen:true,botOpen:true,menu:null,zoom:0.55,panX:10,panY:8});
+  dl(name,obj){
+    try{
+      const b=new Blob([JSON.stringify(obj,null,1)],{type:'application/json'});
+      const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download=name; a.click(); URL.revokeObjectURL(u);
+      this.ban('info','shell.export.ok',name+' \u2014 served bytes verbatim, never re-serialized (demo: local corpus)');
+    }catch(e){ this.ban('error','export-failed',String(e)); }
+  }
+  ext(n){ const D=window.PGDATA; const e=n.slice(n.lastIndexOf('.')+1); return D.EXTC[e]||['·','transparent','var(--txd)']; }
+  mkMenus(){
+    const S=this.state, md=this.md(), hub=S.hub, served = md==='sample' && hub;
+    const actT = S.act, dirty = actT && S.dirty[actT];
+    const fsWhy='hub /fs endpoints unavailable (hub-unreachable) \u2014 explorer and file ops are disabled with this reason';
+    const edWhy='Monaco editor wall is not mounted in this shell mock (headless host \u2014 same keyed dispose+mount path)';
+    const mk=(label,o)=>Object.assign({label,en:true,sep:false,chk:'',short:''},o);
+    const menus=[
+      {id:'file',label:'File',items:[
+        mk('Open folder\u2026',{en:hub,why:fsWhy,a:()=>this.setState({dlg:'open',openMode:'folder',openQ:''})}),
+        mk('Open file\u2026',{en:hub,why:fsWhy,a:()=>this.setState({dlg:'open',openMode:'file',openQ:''})}),
+        mk('Save',{short:'Ctrl+S',en:!!(dirty&&hub),why:!actT?'no file tab is open':!hub?fsWhy:'no unsaved changes in the active tab',a:this.save}),
+        mk('Re-analyze',{sep:true,a:this.reanalyze}),
+        mk('Export graph JSON',{en:served,why:'no /graph envelope served yet \u2014 nothing to export (export writes the SERVED bytes verbatim)',a:()=>this.dl('proofgraph-graph.json',{schema:'v5.2',nodes:window.PGDATA.NODES.map(n=>n.id),edges:window.PGDATA.counts.edges,leads:window.PGDATA.counts.leads})}),
+        mk('Export analysis JSON',{en:served,why:'no computed /analysis served \u2014 pending is never exported as green',a:()=>this.dl('proofgraph-analysis.json',{applied:11,unverdicted:3,gapAnalysis:window.PGDATA.GAPS})}),
+        mk('moatpkg/',{sep:true,en:hub,why:'recents need the hub fs endpoints',a:this.openSample}),
+        mk('moatpkg/core.py',{en:hub,why:'recents need the hub fs endpoints',a:()=>{ if(md!=='sample') this.openSample(); this.openFile('moatpkg/core.py'); }}),
+        mk('Close project',{sep:true,a:this.closeProject}),
+      ]},
+      {id:'edit',label:'Edit',items:[
+        mk('Undo',{short:'Ctrl+Z',en:false,why:edWhy}), mk('Redo',{short:'Ctrl+Y',en:false,why:edWhy}),
+        mk('Find',{short:'Ctrl+F',sep:true,en:false,why:edWhy}), mk('Replace',{short:'Ctrl+H',en:false,why:edWhy}),
+      ]},
+      {id:'view',label:'View',items:[
+        mk('Project tool window',{chk:S.projOpen?'\u2713':'',a:()=>this.setState({projOpen:!S.projOpen})}),
+        mk('Structure tool window',{chk:S.structOpen?'\u2713':'',a:()=>this.setState({structOpen:!S.structOpen})}),
+        mk('Graph tool window',{chk:S.graphOpen?'\u2713':'',a:()=>this.setState({graphOpen:!S.graphOpen})}),
+        mk('Bottom dock',{chk:S.botOpen?'\u2713':'',a:()=>this.setState({botOpen:!S.botOpen})}),
+        mk('Light theme',{sep:true,chk:this.th()==='light'?'\u2713':'',a:()=>this.setState({theme:'light'})}),
+        mk('Dark theme',{chk:this.th()==='dark'?'\u2713':'',a:()=>this.setState({theme:'dark'})}),
+        mk('Zoom graph to fit',{sep:true,en:served&&S.graphOpen,why:!served?'graph wall not mounted (no served envelope)':'graph dock is hidden (View \u203a Graph tool window)',a:this.fit}),
+        mk('Reset layout',{a:this.resetLayout}),
+        mk('Settings\u2026',{short:'Ctrl+,',sep:true,a:()=>this.setState({dlg:'prefs'})}),
+      ]},
+      {id:'analysis',label:'Analysis',items:[
+        mk('Run analyze',{a:this.reanalyze}),
+        mk('Choose declared roots\u2026',{en:hub,why:'hub unreachable \u2014 /fs/roots-candidates cannot answer',a:()=>this.setState({dlg:'roots'})}),
+        mk('Pyright: live',{sep:true,chk:S.pyright==='live'?'\u2713':'',a:()=>this.setState({pyright:'live'})}),
+        mk('Pyright: none (cross-module calls stay LEADS \u2014 honest)',{chk:S.pyright==='none'?'\u2713':'',a:()=>this.setState({pyright:'none'})}),
+        mk('Show gap report',{sep:true,en:served,why:'gapAnalysis comes from the SERVED /analysis \u2014 not served; the shell never recomputes it',a:()=>this.setState({dlg:'gap'})}),
+      ]},
+      {id:'help',label:'Help',items:[
+        mk('About ProofGraph',{a:()=>this.setState({dlg:'about'})}),
+        mk('Simulate hub outage (demo)',{sep:true,chk:!hub?'\u2713':'',a:this.toggleHub}),
+      ]},
+    ];
+    return menus.map(m=>({label:m.label, open:S.menu===m.id,
+      bg:S.menu===m.id?'var(--hov)':'transparent',
+      tg:()=>this.setState({menu:S.menu===m.id?null:m.id}),
+      hv:()=>{ if(S.menu&&S.menu!==m.id) this.setState({menu:m.id}); },
+      items:m.items.map(it=>({label:it.label,sep:it.sep,chk:it.chk,short:it.short,
+        tip:it.en?(it.short||''):(it.why||''),
+        col:it.en?'var(--tx)':'var(--txd)', cur:it.en?'pointer':'default', hbg:it.en?'var(--sel)':'transparent',
+        act:it.en?this.run(it.a):()=>{}}))}));
+  }
+  renderVals(){
+    const S=this.state, D=window.PGDATA, ready=S.ready&&!!D;
+    const theme=this.th(), ac=this.ac(), md=ready?this.md():'sample';
+    const hub=S.hub, sample=md==='sample', served=sample&&hub, welcome=md==='welcome';
+    const base={theme, ac, ready, welcome, notWelcome:!welcome, tbHint:'', tierTxt:'', transTxt:'', diagCount:0, projSub:'', hubDot:'transparent', hubTxt:'', verText:'', banners:[], menus:[], segs:[], treeRows:[], structRows:[], tabsR:[], codeLines:[], gnodes:[], aiLog:[], diagRows:[], pinRows:[], recents:[], navRows:[], themeRows:[], swatches:[], plugRows:[], pyRows:[], rootRows:[], gapRows:[], openRows:[], worstOrder:'', selSeg:'', fontPx:S.fontPx, expW:S.expW, graphW:S.graphW, botH:S.botH, zoom:S.zoom, panX:S.panX, panY:S.panY, gref:this.gref, closeDlg:()=>this.setState({dlg:null})};
+    if(!ready) return base;
+    const sevMap={error:['#C62828','rgba(198,40,40,.18)','#F28B8B'],warning:['#F9A825','rgba(249,168,37,.16)','#E5C558'],hint:['#9E9E9E','rgba(158,158,158,.15)','var(--txd)']};
+    const bnv={error:['var(--bnE)','var(--bnEb)'],warn:['var(--bnW)','var(--bnWb)'],info:['var(--bnI)','var(--bnIb)']};
+    // tree
+    let treeRows=[], wsNote=null, wsNoteFc='', wsNoteCol='var(--txd)';
+    if(md==='empty'){ wsNote='File \u203a Open folder\u2026 (hub fs live) \u2014 or run Analysis \u203a Run analyze on declared roots.'; wsNoteFc='workspace-not-open:'; }
+    else if(sample && !hub){ wsNote='GET /fs/list failed \u2014 explorer and file ops are disabled with this reason; the bundled moatpkg fixture backs the editor.'; wsNoteFc='hub-unreachable:'; wsNoteCol='#E5A0A0'; }
+    else if(sample){
+      const walk=(list,basePath,depth)=>{
+        [...list].sort((a,b)=>((b.c?1:0)-(a.c?1:0))||a.n.localeCompare(b.n)).forEach(e=>{
+          const p=basePath?basePath+'/'+e.n:e.n;
+          if(e.c){ const open=!!S.exp[p];
+            treeRows.push({key:p,name:e.n,tw:open?'\u25be':'\u25b8',ic:'',icbg:'transparent',icc:'var(--txd)',pad:8+depth*14,bg:'transparent',badge:'',act:()=>{const ex={...this.state.exp}; if(ex[p])delete ex[p]; else ex[p]=1; this.setState({exp:ex});}});
+            if(open) walk(e.c,p,depth+1);
+          } else {
+            const ic=this.ext(e.n);
+            treeRows.push({key:p,name:e.n,tw:'',ic:ic[0],icbg:ic[1],icc:ic[2],pad:20+depth*14,bg:S.act===p?'var(--sel)':'transparent',badge:S.dirty[p]?'\u25cf':'',act:()=>this.openFile(p)});
+          }
+        });
+      };
+      walk(D.TREE,'',0);
+    }
+    // structure
+    const structRows = (served&&S.act) ? D.NODES.filter(n=>n.file===S.act).map(n=>({g:n.kind==='class'?'C':n.kind==='const'?'\u03c0':'\u0192',name:n.s,dot:n.bg,bg:S.sel===n.id?'var(--sel)':'transparent',act:()=>this.setState({sel:n.id,graphOpen:true,hl:n.line,hlF:n.file})})) : [];
+    const structNote = structRows.length ? null : (S.act ? 'no graph defs in the active file' : 'no active editor tab');
+    // tabs + editor
+    const tabsR=S.tabs.map(p=>{ const ic=this.ext(p);
+      return {key:p,name:p.split('/').pop(),ic:ic[0],icbg:ic[1],icc:ic[2],dirty:S.dirty[p]?'\u25cf':'',col:S.act===p?'var(--tx)':'var(--txd)',
+        bg:S.act===p?'var(--tabact)':'transparent', line:S.act===p?'inset 0 -2.5px 0 var(--acc)':'none',
+        act:()=>this.setState({act:p}), close:(e)=>{e.stopPropagation();this.closeTab(p);}, closeTip:S.dirty[p]?'unsaved changes \u2014 closing asks before discarding':'close tab'};});
+    const diagsFor=(f)=>{const m={}; D.DIAGS.forEach(d=>{ if(d.f===f) m[d.l]=d.sev; }); return m;};
+    let codeLines=[], edNote=null;
+    if(!S.act) edNote='no active editor tab';
+    else { const dm=diagsFor(S.act);
+      codeLines=D.CODE[S.act].map((sp,i)=>{ const n=i+1, sev=dm[n];
+        return {n, sp:sp.map(t=>({t:t[0],x:t[1]})),
+          bg:(S.hl===n&&S.hlF===S.act)?'var(--lnhl)':'transparent',
+          deco:sev==='error'?'underline wavy #C62828':sev==='warning'?'underline wavy #F9A825':'none',
+          dot:sev?'\u25cf':'', dotC:sev?sevMap[sev][0]:'transparent',
+          click:()=>this.setState({hl:n,hlF:this.state.act})};});
+    }
+    // graph
+    let gnodes=[], gNote=null;
+    if(!served) gNote = !hub&&sample ? 'graph wall refused / unreachable \u2014 see the banner region (named class, never blank)' : 'no envelope served \u2014 run Analysis \u203a Run analyze on the declared roots';
+    else {
+      const mkN=(n,ghost)=>({x:n.x,y:n.y,w:n.w,s:n.s,meta:ghost?'lead \u00b7 resolved:false \u00b7 never followed':n.meta,tip:ghost?n.id+'\nlead (resolved=false) \u2014 dashed, never an edge, never followed':n.tip,
+        bg:ghost?'transparent':n.bg,tc:ghost?'var(--txd)':n.tc,ring:ghost?'1.5px dashed #9E9E9E':n.ring,
+        sh:S.sel===n.id?'0 0 0 3px var(--acc)':'0 1px 4px rgba(0,0,0,.3)',
+        pick:()=>this.setState({sel:S.sel===n.id?null:n.id})});
+      gnodes=[...D.NODES.map(n=>mkN(n,false)),...D.GHOSTS.map(g=>mkN(g,true))];
+    }
+    const selN = S.sel ? D.NODES.find(n=>n.id===S.sel) : null;
+    const selG = S.sel && !selN ? D.GHOSTS.find(g=>g.id===S.sel) : null;
+    // diagnostics
+    const diagRows = served ? D.DIAGS.map(d=>({sev:d.sev,sevBg:sevMap[d.sev][1],sevC:sevMap[d.sev][2],loc:d.f.split('/').pop()+':'+d.l,m:d.m,meta:'pyright \u00b7 '+d.rule+' \u00b7 v'+d.v,act:()=>this.openFile(d.f,d.l)})) : [];
+    const diagNote = !served ? (hub?'no workspace analyzed \u2014 the stub floor (tier G) names itself; an empty list is the honest state':'hub-lsp-ws bridge down (hub-unreachable) \u2014 no live diagnostics stream exists') : 'live pyright over the hub WS bridge \u2014 rows read VERBATIM off editor.lsp.in.diagnostics (the cell\u2019s probe, never re-derived)';
+    // pins
+    const streams={hub:['rgba(86,168,245,.16)','#56A8F5'],'graph-view':['rgba(42,172,184,.16)','#2AACB8'],'editor-shell':['rgba(179,174,96,.18)','#B3AE60'],'app-shell':['rgba(124,111,212,.2)','var(--acc)']};
+    const q=S.pinQ.trim().toLowerCase();
+    const pinRows=D.PINS.filter(p=>hub||p[0]==='app-shell').filter(p=>!q||p.join(' ').toLowerCase().includes(q)).map(p=>({stream:p[0],sbg:streams[p[0]][0],sc:streams[p[0]][1],pid:p[1],payload:p[2]}));
+    // ai
+    const aiLog=(S.aiLog||[{who:'you',text:D.AI.q},{who:'ai',text:D.AI.a,ctx:D.AI.ctx}]).map(a=>({who:a.who,whoC:a.who==='ai'?'var(--acc)':'var(--txd)',text:a.text,hasCtx:!!(a.ctx&&a.ctx.length),ctx:(a.ctx||[]).map(t=>({t}))}));
+    // status
+    const segs=[];
+    segs.push({t:'127.0.0.1:8477',dot:hub?'#3FB27F':'#C62828',act:this.toggleHub,cur:'pointer',col:'var(--txd)',ff:'var(--mono)',tip:'hub transport \u2014 click to simulate an outage (demo); every failure renders its NAMED class'});
+    segs.push({t:hub?'pin: '+D.HEALTH.v+'/'+D.HEALTH.hash.slice(0,8)+'\u2026':'pin: unserved',col:'var(--txd)',ff:'var(--mono)',cur:'default',tip:'hub-served schema pin (GET /health) \u2014 never hardcoded'});
+    segs.push({t:hub?'tier F \u00b7 hub-lsp-ws':'tier ? \u00b7 probing',col:'var(--txd)',ff:'var(--mono)',cur:'default',tip:'measured tier \u2014 capability.wall.construct pin verbatim; the stub floor declares itself'});
+    segs.push({t:served?D.counts.nodes+' nodes \u00b7 '+D.counts.edges+' edges \u00b7 '+D.counts.leads+' leads':'no graph served yet',col:'var(--txd)',ff:'var(--ui)',cur:'default',tip:'counts from the byte-gated served /graph envelope id sets'});
+    segs.push({t:served?'analysis: applied (11 verdicts)':hub?'analysis: \u2026':'analysis: failed (hub-unreachable)',col:'var(--txd)',ff:'var(--ui)',cur:'default',tip:'GET /analysis state \u2014 pending is honest, never green'});
+    const nDirty=Object.keys(S.dirty).filter(k=>S.tabs.includes(k)).length;
+    if(nDirty) segs.push({t:'\u25cf '+nDirty+' unsaved',col:'var(--acc)',ff:'var(--ui)',cur:'default',tip:'tabs with unsaved changes'});
+    // settings
+    const pages=[['app','Appearance'],['ed','Editor \u00b7 Font'],['plug','Plugins'],['an','Analysis']];
+    const sq=S.setQ.trim().toLowerCase();
+    const navRows=pages.filter(p=>!sq||p[1].toLowerCase().includes(sq)).map(p=>({label:p[1],bg:S.page===p[0]?'var(--sel)':'transparent',act:()=>this.setState({page:p[0]})}));
+    const themeRows=[{k:'dark',label:'Dark (Darcula)'},{k:'light',label:'Light (IntelliJ)'}].map(t=>({label:t.label,bd:theme===t.k?'2px solid var(--acc)':'1px solid var(--bd2)',bg:t.k==='dark'?'#2B2B2B':'#FFFFFF',col:t.k==='dark'?'#BBBBBB':'#222',act:()=>this.setState({theme:t.k})}));
+    const swatches=['#7C6FD4','#3574D4','#2FA080','#D4703A'].map(c=>({c,ring:ac===c?'0 0 0 2px var(--chrome),0 0 0 4px '+c:'none',act:()=>this.setState({accent:c})}));
+    const pq=S.plugQ.trim().toLowerCase();
+    const plugRows=D.PLUGINS.filter(p=>!pq||(p.n+' '+p.d).toLowerCase().includes(pq)).map((p,i)=>{
+      const inst=S.inst[p.n]!==undefined?S.inst[p.n]:!!p.inst;
+      return {n:p.n,d:p.d,v:p.v,dl:p.dl,icg:p.n.slice(0,1),icbg:['#7C6FD4','#3574D4','#2FA080','#D4703A','#B3AE60','#C77DBB'][i%6],
+        btn:p.bundled?'Bundled':inst?'Installed \u2713':'Install',cur:p.bundled?'default':'pointer',tip:p.bundled?'bundled cell \u2014 part of the organism':'',
+        bbd:inst||p.bundled?'1px solid var(--bd2)':'none',bbg:inst||p.bundled?'transparent':'var(--acc)',bcol:inst||p.bundled?'var(--txd)':'#fff',
+        act:()=>{ if(!p.bundled) this.setState({inst:{...S.inst,[p.n]:!inst}}); }};});
+    const pyRows=[{k:'live',label:'live \u2014 resolve cross-module calls over the hub bridge'},{k:'none',label:'none \u2014 cross-module calls stay LEADS (honest)'}].map(r=>({label:r.label,dot:S.pyright===r.k?'var(--acc)':'transparent',act:()=>this.setState({pyright:r.k})}));
+    // roots
+    const rsel=S.rootSel||Object.fromEntries(D.ROOTS.map(r=>[r.p,!!r.on]));
+    const rootRows=D.ROOTS.map(r=>({p:r.p,note:r.note,chk:rsel[r.p]?'\u2713':'',bg:rsel[r.p]?'var(--acc)':'transparent',act:()=>this.setState({rootSel:{...rsel,[r.p]:!rsel[r.p]}})}));
+    // open dialog
+    const oq=S.openQ.trim().toLowerCase();
+    const paths=S.dlg==='open'?(this.state.openMode==='folder'?['moatpkg','tests','examples/mini','tools/gen']:Object.keys(D.CODE)):[];
+    const openRows=paths.filter(p=>!oq||p.toLowerCase().includes(oq)).map(p=>{
+      const folder=this.state.openMode==='folder'; const ic=folder?['\u25b8','transparent','var(--txd)']:this.ext(p);
+      return {p,ic:folder?'\u25a4':ic[0],icbg:folder?'transparent':ic[1],icc:folder?'var(--txd)':ic[2],
+        act:()=>{ if(folder){ this.setState({dlg:null}); if(md!=='sample')this.openSample(); this.ban('info','shell.folder.open',p+' \u2192 POST /analyze {root} \u2192 full refresh'); } else { if(md!=='sample')this.openSample(); this.openFile(p); } }};});
+    return Object.assign(base,{
+      menus:this.mkMenus(),
+      banners:S.banners.map((b,i)=>({fc:b.fc,d:b.d,bg:bnv[b.sev][0],bd:bnv[b.sev][1],dis:()=>this.setState({banners:S.banners.filter((_,j)=>j!==i)})})),
+      // toolbar
+      reAct:this.reanalyze, rootsAct:()=>this.setState({dlg:'roots'}),
+      saveAct:this.save, saveTip:(S.act&&S.dirty[S.act]&&hub)?'PUT /fs/file (Ctrl+S)':(!S.act?'no file tab is open':!hub?'hub /fs endpoints unavailable':'no unsaved changes in the active tab'),
+      saveCol:(S.act&&S.dirty[S.act]&&hub)?'var(--tx)':'var(--txd)', saveCur:(S.act&&S.dirty[S.act]&&hub)?'pointer':'default',
+      tbHint: sample?'declared roots: moatpkg \u00b7 tests':'no roots declared',
+      tierTxt:hub?'F':'\u2014', transTxt:hub?'hub-lsp-ws':'probing',
+      themeAct:()=>this.setState({theme:theme==='dark'?'light':'dark'}), setAct:()=>this.setState({dlg:'prefs'}),
+      // welcome
+      verText:'2026.2 \u00b7 assembly build PG-262.SHELL \u00b7 schema '+D.HEALTH.v,
+      wSample:this.openSample, wEmpty:this.openEmpty,
+      recents:D.RECENTS.map(r=>({p:r.p,k:r.k,ic:r.k==='folder'?'\u25a4':'\u00b7',act:()=>{ this.openSample(); if(r.k==='file') this.openFile(r.p); }})),
+      // stripes + docks
+      tgProj:()=>this.setState({projOpen:!S.projOpen}), tgStruct:()=>this.setState({structOpen:!S.structOpen}),
+      tgGraph:()=>this.setState({graphOpen:!S.graphOpen}), tgBot:()=>this.setState({botOpen:!S.botOpen}),
+      projBg:S.projOpen?'var(--sel)':'transparent', structBg:S.structOpen?'var(--sel)':'transparent', graphBg:S.graphOpen?'var(--sel)':'transparent',
+      leftOpen:S.projOpen||S.structOpen, projOpen:S.projOpen, structOpen:S.structOpen, graphOpen:S.graphOpen, botOpen:S.botOpen,
+      wsRoot: sample?'~/proofgraph/moatpkg':'', treeRows, wsNote, wsNoteFc, wsNoteCol,
+      structRows, structNote, structFile:S.act?S.act.split('/').pop():'',
+      tabsR, noTabs:tabsR.length===0, codeLines, edNote, edOn:!edNote,
+      gNote, gOn:!gNote, gnodes, edgeD:served?D.edgeD:'', leadD:served?D.leadD:'', selD:served&&S.sel?(D.SELD[S.sel]||''):'',
+      gCount:served?D.counts.nodes+' nodes':'', zoomPct:Math.round(S.zoom*100)+'%',
+      zin:()=>this.setState({zoom:Math.min(1.6,S.zoom*1.2)}), zout:()=>this.setState({zoom:Math.max(.2,S.zoom/1.2)}), fit:this.fit, panDown:this.panDown,
+      insp:!!(selN||selG), inspName:selN?selN.s:selG?selG.s:'', inspId:S.sel||'',
+      inspFill:selN?selN.fill+(selN.fill==='unknown'?' (\u2260 green)':''):'lead', inspFillBg:selN?selN.bg:'transparent',
+      inspRing:selN?(selN.outline===null?'ring: null \u2192 not-yet-computed':'ring '+selN.outline):'resolved:false',
+      inspRingC:selN?(selN.outline===null?'#9E9E9E':D.COLORS[selN.outline]):'#9E9E9E', inspRingStyle:selN&&selN.outline!==null?'solid':'dashed',
+      inspWorst:selN?(selN.worst.length>1?'worstOf ['+selN.worst.join(', ')+'] \u2014 worst-case-wins':''):'never an edge, never followed',
+      inspLoc:selN?selN.file+':'+selN.line:'unresolved cross-module call',
+      inspReveal:selN?()=>this.openFile(selN.file,selN.line):()=>{}, inspClear:()=>this.setState({sel:null}),
+      legendOpen:S.legend, legTg:()=>this.setState({legend:!S.legend}), legTw:S.legend?'\u25be':'\u25b8', worstOrder:D.WORST_ORDER,
+      // bottom
+      aiOn:S.botTab==='ai', diagOn:S.botTab==='diag', pinOn:S.botTab==='pins',
+      aiBg:S.botTab==='ai'?'var(--tabact)':'transparent', diagBg:S.botTab==='diag'?'var(--tabact)':'transparent', pinBg:S.botTab==='pins'?'var(--tabact)':'transparent',
+      aiLine:S.botTab==='ai'?'inset 0 2.5px 0 var(--acc)':'none', diagLine:S.botTab==='diag'?'inset 0 2.5px 0 var(--acc)':'none', pinLine:S.botTab==='pins'?'inset 0 2.5px 0 var(--acc)':'none',
+      tabAi:()=>this.setState({botTab:'ai'}), tabDiag:()=>this.setState({botTab:'diag'}), tabPin:()=>this.setState({botTab:'pins'}),
+      tabAiS:()=>this.setState(s=>({botTab:'ai',botOpen:s.botTab==='ai'?!s.botOpen:true})),
+      tabDiagS:()=>this.setState(s=>({botTab:'diag',botOpen:s.botTab==='diag'?!s.botOpen:true})),
+      tabPinS:()=>this.setState(s=>({botTab:'pins',botOpen:s.botTab==='pins'?!s.botOpen:true})),
+      aiSBg:S.botOpen&&S.botTab==='ai'?'var(--sel)':'transparent', diagSBg:S.botOpen&&S.botTab==='diag'?'var(--sel)':'transparent', pinSBg:S.botOpen&&S.botTab==='pins'?'var(--sel)':'transparent',
+      diagRows, diagNote, diagCount:diagRows.length, diagEmpty:diagRows.length===0,
+      pinRows, pinQ:S.pinQ, setPinQ:(e)=>this.setState({pinQ:e.target.value}), pinNote:'tail bound 120/stream \u00b7 hub + app-shell merged', pinFail:!hub,
+      aiLog, aiQ:S.aiQ, setAiQ:(e)=>this.setState({aiQ:e.target.value}),
+      sendAi:()=>{ const t=S.aiQ.trim(); if(!t) return;
+        const cur=S.aiLog||[{who:'you',text:D.AI.q},{who:'ai',text:D.AI.a,ctx:D.AI.ctx}];
+        const a=S.sel?('With '+S.sel+' selected: its verdict facts are on the inspector \u2014 FAKE transport answers locally; a live ai-server (:8478) would receive {question, nodeId} and the served verdict context.'):'FAKE transport (labels itself): the ai-server (:8478) is not attached in this shell mock, so this is a canned local reply. Keys never enter the browser \u2014 they stay in the ai-server process.';
+        this.setState({aiLog:[...cur,{who:'you',text:t},{who:'ai',text:a,ctx:S.sel?[S.sel]:[]}],aiQ:''}); },
+      segs, selSeg:S.sel?'sel: '+S.sel:'no selection',
+      splExp:this.drag('exp'), splGraph:this.drag('graph'), splBot:this.drag('bot'),
+      // dialogs
+      dlgPrefs:S.dlg==='prefs', dlgAbout:S.dlg==='about', dlgRoots:S.dlg==='roots', dlgGap:S.dlg==='gap', dlgOpen:S.dlg==='open',
+      setQ:S.setQ, setSetQ:(e)=>this.setState({setQ:e.target.value}), navRows,
+      pgApp:S.page==='app', pgEd:S.page==='ed', pgPlug:S.page==='plug', pgAn:S.page==='an',
+      themeRows, swatches,
+      acHex:S.accDraft!==null&&S.accDraft!==undefined?S.accDraft:ac,
+      accPick:(e)=>this.setState({accent:e.target.value,accDraft:null}),
+      accHexSet:(e)=>{const raw=e.target.value;let v=raw.trim();if(v&&v[0]!=='#')v='#'+v;if(/^#[0-9a-fA-F]{6}$/.test(v)){this.setState({accent:v,accDraft:null});}else{this.setState({accDraft:raw});}},
+      importAct:()=>this.ban('info','theme-import','picker mocked \u2014 the Theme Importer plugin maps VS Code .json / JetBrains .icls token colors onto the shell variables'),
+      fMinus:()=>this.setState({fontPx:Math.max(10,S.fontPx-.5)}), fPlus:()=>this.setState({fontPx:Math.min(18,S.fontPx+.5)}),
+      plugRows, plugQ:S.plugQ, setPlugQ:(e)=>this.setState({plugQ:e.target.value}),
+      pyRows, autoAct:()=>this.setState({autoRe:!S.autoRe}), autoBg:S.autoRe?'var(--acc)':'transparent', autoChk:S.autoRe?'\u2713':'',
+      capV:S.cap, capMinus:()=>this.setState({cap:Math.max(100,S.cap-100)}), capPlus:()=>this.setState({cap:Math.min(2000,S.cap+100)}),
+      hVer:D.HEALTH.v, hHash:D.HEALTH.hash.slice(0,8), hWalls:D.HEALTH.walls.map(w=>w[0]+' '+w[1]).join(' \u00b7 '),
+      aboutCopy:()=>{ try{ navigator.clipboard.writeText('ProofGraph 2026.2 \u00b7 schema '+D.HEALTH.v+'/'+D.HEALTH.hash); this.ban('info','copied','about info copied to clipboard'); }catch(e){ this.ban('warn','copy-failed',String(e)); } },
+      rootRows, applyRoots:()=>{ const sel=Object.entries(S.rootSel||Object.fromEntries(D.ROOTS.map(r=>[r.p,!!r.on]))).filter(e=>e[1]).map(e=>e[0]); this.setState({dlg:null}); if(md==='empty') this.openSample(); this.ban('info','shell.analyze.request','declared roots ['+sel.join(', ')+'] \u2192 POST /analyze (roots are declared, never inferred)'); },
+      gapRows:D.GAPS.map(g=>({n:g.n,d:g.d,w:g.w,ok:g.ok,okc:g.ok==='consistent'?'#3FB27F':g.ok==='guarded'?'#E5C558':'var(--txd)'})),
+      openRows, openQ:S.openQ, setOpenQ:(e)=>this.setState({openQ:e.target.value}), openPh:this.state.openMode==='folder'?'open folder \u2014 POST /analyze {root}\u2026':'open file \u2014 hub /fs/read\u2026',
+    });
+  }
+}
+</script>
+</body>
+</html>

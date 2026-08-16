@@ -1,0 +1,101 @@
+[
+  {
+    "dst": "richpkg.core.Base",
+    "extractor": "pyright",
+    "kind": "calls",
+    "resolved": true,
+    "resolver": "pyright",
+    "src": "richpkg.core.alpha",
+    "tier": "T2"
+  },
+  {
+    "dst": "richpkg.core.beta",
+    "extractor": "pyright",
+    "kind": "calls",
+    "resolved": true,
+    "resolver": "pyright",
+    "src": "richpkg.core.alpha",
+    "tier": "T2"
+  },
+  {
+    "dst": "richpkg.helpers.gamma",
+    "extractor": "pyright",
+    "kind": "calls",
+    "resolved": true,
+    "resolver": "pyright",
+    "src": "richpkg.core.alpha",
+    "tier": "T2"
+  },
+  {
+    "dst": "unresolved:<dynamic>",
+    "extractor": "pyright",
+    "kind": "calls",
+    "resolved": false,
+    "resolver": "",
+    "src": "richpkg.core.alpha",
+    "tier": "T2"
+  },
+  {
+    "dst": "richpkg.core.beta",
+    "extractor": "pyright",
+    "kind": "calls",
+    "resolved": true,
+    "resolver": "pyright",
+    "src": "richpkg.helpers.gamma",
+    "tier": "T2"
+  },
+  {
+    "dst": "unresolved:os.path.join",
+    "extractor": "pyright",
+    "kind": "calls",
+    "resolved": false,
+    "resolver": "",
+    "src": "richpkg.models.Child",
+    "tier": "T2"
+  },
+  {
+    "dst": "richpkg.helpers",
+    "extractor": "grimp",
+    "kind": "imports",
+    "resolved": true,
+    "resolver": "grimp",
+    "src": "richpkg.core",
+    "tier": "T2"
+  },
+  {
+    "dst": "unresolved:<dynamic-import>",
+    "extractor": "pyright",
+    "kind": "imports",
+    "resolved": false,
+    "resolver": "",
+    "src": "richpkg.dyn.load_plugin",
+    "tier": "T2"
+  },
+  {
+    "dst": "richpkg.core",
+    "extractor": "grimp",
+    "kind": "imports",
+    "resolved": true,
+    "resolver": "grimp",
+    "src": "richpkg.helpers",
+    "tier": "T2"
+  },
+  {
+    "dst": "richpkg.core",
+    "extractor": "grimp",
+    "kind": "imports",
+    "resolved": true,
+    "resolver": "grimp",
+    "src": "richpkg.models",
+    "tier": "T2"
+  },
+  {
+    "dst": "richpkg.core.Base",
+    "extractor": "pyright",
+    "kind": "inherits",
+    "resolved": true,
+    "resolver": "pyright",
+    "src": "richpkg.models.Child",
+    "tier": "T2"
+  }
+]

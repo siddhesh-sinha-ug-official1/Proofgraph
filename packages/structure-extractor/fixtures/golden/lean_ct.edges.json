@@ -1,0 +1,11 @@
+[
+  {
+    "dst": "Verified.base_fact",
+    "extractor": "lean-driver",
+    "kind": "proof_uses",
+    "resolved": true,
+    "resolver": "lean-kernel",
+    "src": "Verified.uses_base",
+    "tier": "T2"
+  }
+]

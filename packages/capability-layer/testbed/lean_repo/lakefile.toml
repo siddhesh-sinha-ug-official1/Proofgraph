@@ -1,0 +1,13 @@
+# Probe-repo lake package. `defaultTargets` makes the profile's prepare step
+# (`lake build`) compile Util+lib to .olean so the file worker for main.lean
+# can resolve its imports (measured fact: lake serve does NOT auto-build
+# imports on this toolchain -- an unbuilt workspace degrades honestly).
+name = "leanfixture"
+version = "0.1.0"
+defaultTargets = ["Util", "lib"]
+
+[[lean_lib]]
+name = "Util"
+
+[[lean_lib]]
+name = "lib"

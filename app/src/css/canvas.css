@@ -1,0 +1,78 @@
+/* ── main area: rail + full-bleed canvas ── */
+.main-area { display: flex; flex: 1; min-height: 0; }
+.rail {
+  width: 44px; flex: 0 0 44px; display: flex; flex-direction: column; align-items: center;
+  padding: 6px 0; gap: 4px; border-right: 1px solid var(--bd);
+}
+.rail-btn {
+  display: flex; align-items: center; justify-content: center; width: 34px; height: 34px;
+  border: none; border-radius: 9px; background: transparent; color: var(--txd); cursor: pointer;
+}
+.rail-btn:hover { background: var(--hov); }
+.rail-btn-active { background: var(--sel); color: var(--acc); }
+.rail-spacer { flex: 1; }
+.rail-settings { margin-top: 4px; }
+
+.canvas-area { flex: 1; position: relative; min-width: 0; overflow: hidden; }
+.canvas-area:focus { outline: none; }
+.graph-dots {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(var(--gdot) 1px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+.graph-host { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
+.graph-note { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 60px; }
+
+/* canvas overlays (inset past the docked edges — App sets left/right/bottom) */
+.canvas-overlay { position: absolute; z-index: 6; }
+.stats-pill {
+  top: 12px; color: var(--txd); font: 11px var(--ui); background: var(--is);
+  border: 1px solid var(--bd); border-radius: 9px; padding: 5px 11px; box-shadow: var(--shadow);
+  max-width: 520px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.zoom-cluster {
+  top: 12px; display: flex; align-items: center; gap: 1px; background: var(--is);
+  border: 1px solid var(--bd); border-radius: 9px; padding: 2px 5px; box-shadow: var(--shadow);
+}
+.zoom-cluster button { border: none; background: none; color: var(--txd); cursor: pointer; font-size: 13px; padding: 0 6px; }
+.zoom-cluster button:hover:not(:disabled) { color: var(--tx); }
+.zoom-cluster button:disabled { opacity: .5; cursor: not-allowed; }
+.zoom-pct { color: var(--txd); font: 10.5px var(--mono); min-width: 36px; text-align: center; }
+
+.legend-cluster { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.legend-chip {
+  display: flex; align-items: center; gap: 6px; height: 24px; padding: 0 11px; cursor: pointer;
+  color: var(--txd); font-size: 10.5px; background: var(--is); border: 1px solid var(--bd);
+  border-radius: 9px; box-shadow: var(--shadow);
+}
+.legend-chip:hover { color: var(--tx); }
+.legend-tw { font-size: 9px; }
+.legend-panel {
+  background: var(--is); border: 1px solid var(--bd); border-radius: 10px;
+  box-shadow: var(--shadow); padding: 9px 12px; max-width: 560px; font-size: 10.5px; color: var(--txd);
+}
+.legend-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 4px 0; }
+.legend-item { display: inline-flex; align-items: center; gap: 6px; }
+.legend-dot { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+.legend-ring { width: 10px; height: 10px; border-radius: 50%; border: 2px solid; display: inline-block; }
+.legend-lead { width: 22px; height: 0; border-top: 2px dashed; border-color: var(--txd); display: inline-block; }
+
+.inspector {
+  z-index: 7; width: 320px; background: var(--is); border: 1px solid var(--bd);
+  border-radius: 11px; box-shadow: var(--shadow); padding: 10px 12px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.inspector-head { display: flex; align-items: baseline; gap: 8px; }
+.inspector-head b { font-size: 12.5px; }
+.inspector-id { color: var(--txd); font-size: 10.5px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.inspector-head button { border: none; background: none; color: var(--txd); cursor: pointer; font-size: 11px; }
+.inspector-facts { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.inspector-chip { display: inline-flex; align-items: center; gap: 5px; background: var(--rs); border-radius: 6px; padding: 2px 8px; font-size: 10.5px; }
+.inspector-dot { width: 8px; height: 8px; border-radius: 2.5px; }
+.inspector-ring { width: 8px; height: 8px; border-radius: 50%; border-width: 2px; }
+.inspector-actions { display: flex; gap: 8px; align-items: center; }
+.inspector-actions > button {
+  border: 1px solid var(--bd); background: transparent; color: var(--tx); border-radius: 6px;
+  height: 22px; padding: 0 9px; font: 11.5px var(--ui); cursor: pointer;
+}
+.inspector-actions > button:hover { background: var(--hov); }

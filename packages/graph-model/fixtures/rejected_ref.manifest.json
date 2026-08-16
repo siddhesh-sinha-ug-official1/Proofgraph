@@ -1,0 +1,25 @@
+{
+  "module": {
+    "name": "rejected_ref",
+    "file": "fixtures/rejected_ref.py",
+    "lang": "python"
+  },
+  "decls": [
+    {
+      "ordinal": 1,
+      "kind": "function",
+      "name": "E",
+      "byteStart": 0,
+      "byteEnd": 22
+    }
+  ],
+  "trivia": [],
+  "refs": [
+    {
+      "fromDecl": "rejected_ref.GHOST",
+      "refName": "E",
+      "kind": "calls",
+      "atByte": 0
+    }
+  ]
+}

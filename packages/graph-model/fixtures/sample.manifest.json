@@ -1,0 +1,48 @@
+{
+  "module": {
+    "name": "sample",
+    "file": "fixtures/sample.py",
+    "lang": "python"
+  },
+  "decls": [
+    {
+      "ordinal": 1,
+      "kind": "function",
+      "name": "A",
+      "byteStart": 0,
+      "byteEnd": 24
+    },
+    {
+      "ordinal": 2,
+      "kind": "function",
+      "name": "B",
+      "byteStart": 26,
+      "byteEnd": 48
+    },
+    {
+      "ordinal": 3,
+      "kind": "function",
+      "name": "C",
+      "byteStart": 50,
+      "byteEnd": 72
+    }
+  ],
+  "trivia": [
+    {
+      "byteStart": 24,
+      "byteEnd": 26
+    },
+    {
+      "byteStart": 48,
+      "byteEnd": 50
+    }
+  ],
+  "refs": [
+    {
+      "fromDecl": "sample.A",
+      "refName": "B",
+      "kind": "calls",
+      "atByte": 20
+    }
+  ]
+}

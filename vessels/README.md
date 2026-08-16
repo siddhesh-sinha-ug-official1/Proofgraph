@@ -1,0 +1,48 @@
+# proofgraph/vessels — connector suites and launchers (assembly code, NOT a cell)
+
+Vessels compose cell WALLS in one process and prove the seams between them:
+V1 (the capability-layer -> structure-extractor feed), V2 (the hub WS `/lsp`
+bridge driven end-to-end to a real pyright squiggle), V3 (the
+structure-extractor -> graph-model seam), the V4 hub launcher spawned by the
+app's v4.serve tests, and `pathing.py` — the alias loader every Python vessel
+and the hub use to load cell walls without sys.path shadowing. Suite
+aggregator paths (invoked by `run_all_suites.py`):
+`python vessels/test_v1.py` = 11 tests ·
+`python vessels/test_v3_extractor_to_model.py` = 16 tests ·
+`node --test vessels/test_v2_squiggle.mjs` = 4 tests.
+
+Not in the table: `REPORT-*.md` (dated round reports — the historical record
+corpus, checked by the epistemic-honesty sweep rather than this file audit),
+`ASSEMBLY-CHANGES.md` (the area change log), `TRACE-node.json` (the recorded
+trace seed written by `app/test/v4.serve.trace.test.tsx`), `fixtures_v2/`
+(fixture data, exempt) and `__pycache__` (generated).
+
+## Files (verified)
+
+Verified purposes from `audit/AUDIT-vessels.json` (adversarial claim audit,
+Stage-B refuted-corrected). Line counts measured on disk 2026-08-03 (post doc-fix state).
+
+| file | lines | verified purpose |
+|---|---|---|
+| `pathing.py` | 191 | Loads each Python cell's wall.py and the flat packages/schema modules under unique importlib aliases (proofgraph_wall_<cell> / proofgraph_schema_<stem>) and guards sys.path against top-level package shadowing via SysPathShadowingError; called by every Python vessel and the hub to compose cells in one process, idempotently (sys.modules-cached). |
+| `v1_capability_extractor.py` | 75 | Facade re-exporting V1CapabilityFeed plus the wall faces and error classes from v1_walls/v1_feed under the original module path; carries the V1 seam-invariants docstring; imported directly by outerwall (analyze_capability.py) and the V1 test suite (v1_seam_shared.py) — acceptance code reaches it only indirectly through outerwall. |
+| `v1_walls.py` | 65 | Loads the capability-layer and structure-extractor walls through pathing, file-execs packages/schema/gen/schema_constants.py for the canonical EXTRACTOR_LANGS set, re-binds the wall faces, imports cell 2's tap surface, and defines SilentTierUpgradeError / UnrecordedStubFallback; consumed only via the v1_capability_extractor facade and v1_feed. |
+| `v1_feed.py` | 163 | V1CapabilityFeed: per-language capability_fn factory over cell 2's wall that refuses face-vs-pin tier disagreement (SilentTierUpgradeError), records refusal->local-stub fallbacks in provenance BEFORE returning the handle, raises UnknownLanguageError for languages neither cell knows, logs the duplicated-subprocess and no-grammar-floor bounds, and owns shutdown of cell 2's live LSP children (pin payloads returned as proof). |
+| `v1_seam_shared.py` | 137 | Lazily builds the ONE shared V1 test stack (live V1CapabilityFeed + five wall extractions: python live-CT, labelled reduced-S double, awk, lean, latex) exactly as the pre-split setUpClass did; raises a loud SkipTest without npx; atexit cleanup mirrors the old tearDownClass while test_z keeps the explicit shutdown; imported by both V1 test split modules. |
+| `test_v1.py` | 61 | Runnable aggregator for the 11-test V1 connector suite (`python vessels/test_v1.py`, invoked by that path from run_all_suites and run_demo); load_tests runs test_v1_live_python then test_v1_langs_lifecycle so test_z (explicit shutdown) stays last. |
+| `test_v1_live_python.py` | 117 | V1 split 1/2 (6 tests): asserts the python tier crosses the seam byte-equal pin-to-pin, resolved edges exist only at measured CT, the labelled S double yields zero resolved edges with the tier-gate cap pin fired, the subprocess-duplication bounds are logged, and awk (measured G) leaves the extractor honestly empty with typed refusal on honestCeiling. |
+| `test_v1_langs_lifecycle.py` | 135 | V1 split 2/2 (5 tests): lean measured CT carried byte-equal with the kernel driver really invoked and zero green from the unelaboratable fixture; latex typed refusal -> recorded local-stub G fallback; unknown language refused by both walls with no fabricated tier; test_z shuts the feed down and sweeps for orphaned node.exe processes. |
+| `v2_hub_runner.py` | 136 | Spawned-process entry point for V2: stands capability_wall('python') -> CapabilityLspBackend -> HubServer (instance mode, capability pins attached), refuses to print ready unless the face tier equals the measuredTier pin, then answers the six documented stdin commands (kill-backend/sessions/audit/session-info/capability-pins/shutdown) as one-line JSON. |
+| `v2_hub_info.py` | 93 | Evidence extractors for v2_hub_runner: _session_info parses one BridgeSession's raw-frame ledger (raw kept up to the hub's 65536-byte LSP_RAW_RETENTION_BYTES bound, sha256 always) into didOpen/publish/configuration facts; _bridge_pins derives the same facts from the capability cell's own capability.probe.msg stage=bridge events. |
+| `v2_runner_protocol.mjs` | 47 | Runner class: line-oriented JSON protocol client over the spawned hub runner's stdio — buffers stdout lines, skips non-JSON noise, queues/awaits replies with timeout + stderr tail in errors, and rejects on protocol-level error fields; used by v2_squiggle_env and the case modules. |
+| `test_v2_squiggle.mjs` | 37 | `node --test` entry point for the 4-test V2 suite: imports v2_squiggle_cases then v2_squiggle_drop so the cases register in the original order over the one spawned hub from v2_squiggle_env; the header documents the composition chain and the single DECLARED transport adaptation (initialize enrichment). |
+| `v2_squiggle_env.mjs` | 164 | Shared V2 environment: builds the demo-file fixture (ASCII-asserted so byte==char offsets, pyright-canonical file URI), two schema nodes, editor-shell dist imports, the WS MessageTransports factory with the logged initialize enrichment, tasklist-based node PID census, and the before/after hooks that spawn/kill the v2_hub_runner process into the shared ctx. |
+| `v2_squiggle_cases.mjs` | 183 | V2 cases 1-2: re-asserts the runner's face==pin==construct tier evidence, then drives the end-to-end squiggle and checks it at the exact byte span with the real pyright message, uri/version guards applied, node attach + gutter red/unknown decisions, the workspace/configuration round-trip, and the same didOpen/publish facts byte-identical across editor pins, capability pins, hub ledger, and hub /pins aggregation, ending with a clean ledger audit. |
+| `v2_squiggle_drop.mjs` | 116 | V2 cases 3-4: kills the pyright backend mid-session and asserts the editor's bounded-retry loud give-up (2 probed reconnects, 2 probed handshake fails, hub kill/eof pins, no hang) with the killed session's ledger audit naming lsp-bridge-drop on any mismatch; then the teardown case shuts the wall+hub down and sweeps for orphaned node.exe against the pre-run baseline. |
+| `serve_hub_v4.py` | 71 | V4 hub launcher: runs hub run_pipeline on cell 3's richpkg fixture (recorded pyright, stub capability, V3's exact rich config), starts HubServer on ephemeral ports, prints one JSON ready line (ports + envelope counts + declaredRoots + entryName), then parks on stdin so its lifetime is bounded by the parent test's pipe; spawned per split V4 test file via app/test/helpers/v4hub.ts. |
+| `v3_seam_shared.py` | 93 | Lazily builds the two shared V3 Bundles (skeleton and rich fixtures, configs mirroring cell 3's selftest/harness.py) by extracting through the extractor wall and ingesting through the graph-model wall via pathing-loaded modules plus the canonical ids mint; exposes pin-payload/byte helpers to the four V3 split test modules. |
+| `test_v3_extractor_to_model.py` | 59 | Runnable aggregator for the 16-test V3 connector suite (`python vessels/test_v3_extractor_to_model.py`, invoked by that path from run_all_suites and faultcheck fault c); load_tests runs byte_identity, accounting, semantics, negatives in the original class order. |
+| `test_v3_byte_identity.py` | 145 | V3 split 1/4 (5 tests): node/edge/lead ids byte-identical across envelope, both cells' pin streams, and the accepted graph; declared counts reconciled pin-x-pin; and the MEMBRANE-SPEC 'Node-preimage bound' gap closed by recomputing every accepted node id from the extractor's pinned preimages through the canonical mint, full coverage both directions. |
+| `test_v3_accounting.py` | 129 | V3 split 2/4 (3 tests): resolved=false rows survive both walls as leads only (prefix intact, set-equal ids, never in edges[]), and every extracted node/edge candidate is either accepted or named-rejected with counts reconciled exactly across both cells' pins including the dedup arithmetic. |
+| `test_v3_semantics.py` | 140 | V3 split 3/4 (3 tests): the importlib-moat unused story surfaces through both walls with the soundness note and blind spots carried; every verdict stays unknown (never green) through two membranes byte-for-byte; and the root-vocabulary-mismatch finding — the model wall refuses claims without decl roots (roots-undeclared) and refuses module ids as roots (unknown-root) while the extractor's module-level T3 claim stays on its own pins. |
+| `test_v3_negatives.py` | 147 | V3 split 4/4 (5 tests): a one-byte-flipped edge id is rejected as id-mismatch and a lead moved into edges[] as lead-in-edges — both with extractor pins proving the originals were clean; plus the pathing guards — unique wall aliases with idempotent reload, and both sys-path-shadowing invariants raising loudly. |

@@ -1,0 +1,24 @@
+# structure-extractor/extractor
+
+Cell 3's pipeline package. `pipeline.py` (ExtractorCell) orchestrates boundary -> ingest -> T1 -> docks -> assemble -> T3 -> output under stage timers; `schema.py`/`schema_ids.py` mirror the frozen schema and the canonical mint; `assemble.py` enforces the tier-inflation/faked-edge/unbacked-green guards; `wall_pin.py`/`wall_support.py` back the Phase-1 wall in `../wall.py`; `t3.py`/`t3_checks.py` compute the two-library graph properties.
+
+## Files (verified)
+
+Line counts and verified-purpose lines below are copied verbatim from the adversarial claim audit (`proofgraph/audit/AUDIT-structure-extractor.json`); each purpose line was written from the code itself and checked against the file's tests.
+
+| File | Lines | Verified purpose |
+|---|---:|---|
+| `__init__.py` | 10 | Package docstring naming the ExtractorCell entry points and the probe quartet; no code. |
+| `assemble.py` | 187 | S3: normalizes dock decisions into deduped SchemaEdges with provenance and enforces the tier-inflation, faked-edge (incl. post-dedup 1:1 backstop), unbacked-green and anonymous-provenance guards; tier-inflation, unbacked-green and the anonymous-node path probe their violation before raising, the faked-edge raise sites do NOT (only the pipeline-level extractor.error.caught fires during propagation); called by ExtractorCell._run. |
+| `boundary.py` | 97 | Import-boundary gate: ast-scans every .py under extractor/, allows only DECLARED_DEPS/stdlib/intra-cell imports, rejects SUBPROCESS_ONLY tools as imports, probes every check plus the SPDX license posture; wired first in the pipeline (asserted by test_boundary). |
+| `capability.py` | 70 | Local stub of cell 2's capability(lang): python and lean report CT (each honestly reachable in this environment), all other langs G; allows_resolution() mirrors the canonical CT-only table (sync-asserted); replaced at run time via PipelineConfig.capability_fn. |
+| `ingest.py` | 171 | S0: walks the root, detects language (extension/shebang/content), groups per-lang SourceSets, detects backend-specific project roots, resolves capability tiers and picks docks; every file, decision and applied cap is probed. |
+| `pipeline.py` | 193 | ExtractorCell: orchestrates boundary->ingest->T1->docks->assemble->T3->output under stage timers, exposes probeCatalog/dump/tap/history, writes graph.json/honest_ceilings.json/history.jsonl, returns the canonical envelope with edges[] and leads[] split. |
+| `pipeline_config.py` | 47 | PipelineConfig dataclass (roots, pyright mode/recording, johnson bound, capability_fn, out_dir, exclude names, lean driver knobs) plus the 7-entry HONEST_GAPS list S5 probes verbatim (count asserted by test_connectors). |
+| `pipeline_docks.py` | 73 | make_dock: builds the per-language dock from config — lean driver knobs threaded, python pyright backend chosen by mode (live/record/recorded/none), stale recordings refused loudly (leads only), out-of-root files dropped via probed caps; docks mapping stays a call-time parameter so the pipeline.ALL_DOCKS test seam works. |
+| `schema.py` | 192 | Frozen Schema v0 mirror: enum constants, pinned schema identity, the green-attestation predicate (origin 'checked' + 'lean-kernel:' source), the 'unresolved:' placeholder helper, and SchemaNode/SchemaEdge whose validate() enforces kinds, unbacked-green, placeholder and provenance rules; re-exports the mint from schema_ids (facade). |
+| `schema_ids.py` | 85 | The content-addressed ID mint: sha256 over 0x1f-joined domain-tagged structural preimages truncated to 16 hex with n_/e_ prefixes; byte-agrees with packages/schema/ids.py (asserted against vectors.json by the membrane test). |
+| `t3.py` | 178 | S4: excludes leads first (probed), builds the rustworkx digraph, computes SCCs, bounded Johnson cycles (caps probed), reachability from uniquely-matched roots (unmatched raises), unused vs unreferenced kept distinct, condensation-DAG check; delegates the NetworkX cross-check and export to t3_checks. |
+| `t3_checks.py` | 90 | S4 helpers: the NetworkX agreement oracle (SCC/cycles/reachability recompute + diff; cycle comparison skipped under a hit count cap, and says so) and the DOT/JSON T3 export; called only by compute_t3. |
+| `wall_pin.py` | 67 | assert_schema_pin: three-way agreement between the cell's pinned pair (read at call time — drift after birth still refuses), packages/schema/PIN, and the recomputed canonical schema.json hash; probes the check and raises WallSchemaPinMismatch on disagreement or unreadability. |
+| `wall_support.py` | 150 | Wall support: the WallRefusal hierarchy + FAILURE_CLASSES registry (7 classes), validate_envelope (edges resolved-only, leads placeholder-prefixed, every id recomputes under the mint), the WallPins quartet accessor, and _merge_config; wall.py re-exports all of it. |

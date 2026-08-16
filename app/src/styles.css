@@ -1,0 +1,88 @@
+/* UI-1C round — the graph-first shell's chrome, pixel-faithful to
+   shell-design/README.md §Design tokens. Layout + THEME ONLY: verdict colors
+   come from the canonical modules (@graph-view/src/verdict — never restated
+   here); the free accent drives --acc only (--sel/--lnhl are computed tints
+   set inline by App). Fonts: "Segoe UI" UI · self-hosted JetBrains Mono
+   (@fontsource, imported in main.tsx). Radii: panels/windows 11px, popups
+   10px, controls 7px, chips 6px. Header 42px · title bars 32px · rows 25px ·
+   status 26px · rail 44px (34px buttons, radius 9px). Monaco keeps the cell's
+   own darcula theme (cell-owned, not overridden).
+
+   SUB200 restructure: the chrome now lives in cohesive imported sheets
+   (css/tokens · chrome · canvas · windows · panes · dialogs · ai — vite
+   inlines @import); THIS file keeps the cell-5 DOM skin section INTACT below
+   (its comment block + no-!important-on-paint invariants are test-asserted
+   on this file's bytes by test/shell1c.skin). Rule content unchanged. */
+
+@import "./css/tokens.css";
+@import "./css/chrome.css";
+@import "./css/canvas.css";
+@import "./css/windows.css";
+@import "./css/panes.css";
+@import "./css/dialogs.css";
+@import "./css/ai.css";
+
+/* ── cell-5 DOM skin (graph node cards + edges — presentation-level cascade) ──
+   BOUND, LOGGED EXPLICITLY: these selectors key on cell 5's RENDERED DOM
+   (.react-flow__* containers + the cell's .proof-node/.prov/.sig inner markup,
+   packages/graph-view — READ-ONLY, never edited). A future cell-5 markup change
+   sheds this skin (the cards fall back to the cell's own inline styling — ugly,
+   never wrong). The alternative — a labelled cell-5 change request moving the
+   design tokens into the cell — was recorded as an option NOT taken this round.
+
+   VERDICT COLORS STAY CANONICAL: the cell paints fill (inline background),
+   ring (inline box-shadow) and lead strokes (inline on the LeadEdge path)
+   itself — NO rule below sets background/box-shadow/fill colors on the node,
+   and the ONLY !important declarations are non-color card geometry/typography
+   (radius, padding, font family) + the accent SELECTION outline (the cell's
+   selection affordance is a plain #000 outline — an affordance, not a verdict;
+   the design draws it in the free accent). Enforced by test/shell1c.skin:
+   verdict-hex grep over app/src == 0, and computed fill/ring colors identical
+   with the skin sheet enabled vs disabled. */
+
+/* the design's dotted grid already renders app-side (.graph-dots, 24px,
+   var(--gdot)); React Flow's own <Background /> pattern (20px, own greys)
+   would double-draw it — hidden, chrome-level */
+.app-root .react-flow__background { display: none; }
+.app-root .react-flow__attribution { background: transparent; }
+.app-root .react-flow__attribution a { color: var(--txd); font: 9px var(--ui); }
+
+/* node card: prototype geometry/typography over the cell's verdict paints
+   (!important beats the cell's inline radius 8 / padding 8 / system-ui —
+   inline background + box-shadow are untouched and keep winning) */
+.app-root .react-flow__node.react-flow__node-proofNode { cursor: pointer; } /* outranks RF's .draggable grab */
+.app-root .proof-node {
+  border-radius: 9px !important;
+  padding: 5px 10px !important;
+  font-family: var(--ui) !important;
+  box-sizing: border-box;
+}
+.app-root .proof-node > header {
+  font: 600 12px var(--ui);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.app-root .proof-node .prov,
+.app-root .proof-node .sig {
+  display: block;
+  font: 9.5px var(--mono);
+  opacity: .8;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+/* connection anchors: the design draws none — visually silent, geometry kept
+   (edges still route through the cell's static handle positions) */
+.app-root .proof-node .react-flow__handle { opacity: 0; pointer-events: none; }
+
+/* selection ring in the free accent (prototype: 0 0 0 3px var(--acc));
+   offset 3px clears the cell's 3px box-shadow VERDICT ring, which stays */
+.app-root .react-flow__node.selected .proof-node {
+  outline: 3px solid var(--acc) !important;
+  outline-offset: 3px;
+}
+
+/* resolved edges onto the design's edge token (no !important: the LeadEdge's
+   inline stroke #grey + dash — the cell's lead paint — must keep winning) */
+.app-root .react-flow__edge .react-flow__edge-path {
+  stroke: var(--edge);
+  stroke-width: 1.5;
+}
+.app-root .react-flow__edge-leadEdge .react-flow__edge-path { stroke-width: 1.6; }

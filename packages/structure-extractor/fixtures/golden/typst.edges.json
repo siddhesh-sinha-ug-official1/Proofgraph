@@ -1,0 +1,38 @@
+[
+  {
+    "dst": "unresolved:helpers.typ",
+    "extractor": "typst-eval",
+    "kind": "imports",
+    "resolved": false,
+    "resolver": "",
+    "src": "main:Introduction",
+    "tier": "T2"
+  },
+  {
+    "dst": "unresolved:fig-one",
+    "extractor": "typst-eval",
+    "kind": "references",
+    "resolved": false,
+    "resolver": "",
+    "src": "main:Introduction",
+    "tier": "T2"
+  },
+  {
+    "dst": "unresolved:sec-intro",
+    "extractor": "typst-eval",
+    "kind": "references",
+    "resolved": false,
+    "resolver": "",
+    "src": "main:Introduction",
+    "tier": "T2"
+  },
+  {
+    "dst": "unresolved:sec-missing",
+    "extractor": "typst-eval",
+    "kind": "references",
+    "resolved": false,
+    "resolver": "",
+    "src": "main:Introduction",
+    "tier": "T2"
+  }
+]
