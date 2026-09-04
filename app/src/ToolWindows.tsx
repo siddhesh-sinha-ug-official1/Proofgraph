@@ -1,5 +1,5 @@
 /**
- * UI-1C round — the tool-window LAYER: five JetBrains-grade windows over the
+ * UI-1C round — the tool-window LAYER: five JetBrains-style windows over the
  * full-bleed graph canvas, rendered as plain absolutely-positioned divs
  * exactly as prototyped in shell-design/ProofGraphGraphFirst.dc.html.
  *

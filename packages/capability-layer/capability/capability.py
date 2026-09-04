@@ -33,7 +33,7 @@ from .probes import ProbeBus, probeCatalog, tap  # noqa: F401  (re-exported)
 from .capability_config import (  # noqa: F401  (re-exported public surface)
     LEAN_TOOLCHAIN, _LAYER_ROOT, _default_config, _lake_exe, _plan_shim)
 from .capability_state import (  # noqa: F401  (re-exported public surface)
-    Capability, _LAST, dump, history)
+    Capability, _LAST, _LAST_LOCK, dump, history)
 
 
 def capability(lang: str, repo: str | None = None,
@@ -50,8 +50,9 @@ def capability(lang: str, repo: str | None = None,
 
     bus = ProbeBus()
     state: dict = {"cache": None}
-    _LAST["bus"] = bus
-    _LAST["state"] = state
+    with _LAST_LOCK:
+        _LAST["bus"] = bus
+        _LAST["state"] = state
 
     # A — discovery sweep  (dump() carries the ENTIRE state, help text included;
     # the discovery.output probe payload stays slim — the compilerHelp call lead

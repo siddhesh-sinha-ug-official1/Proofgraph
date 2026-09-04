@@ -103,7 +103,7 @@ line-gate (sub-200 ceiling, 0 offenders across 743 files) are green.
 3. Header notes framing historical build-machine paths added to
    `CONSOLIDATED-FINDINGS.md`, `REMEDIATION-REPORT.md`,
    `audit/AUDIT-SUMMARY.md`. Each explains that any `A:\…` /
-   `Sidd_` tokens below are quoted evidence, not runtime inputs, and
+   path tokens below are quoted evidence, not runtime inputs, and
    cross-refs the existing `INTEGRATION-MANIFEST.json` `_repoNote` and
    README "Repository scope" framing.
 

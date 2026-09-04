@@ -1,10 +1,10 @@
 # Pre-GitHub review — consolidated findings ledger
 
 > **Historical evidence note.** This ledger quotes evidence verbatim from finder
-> agents that ran on the build machine (Windows / user `Sidd_` / drive `A:\`).
-> Any `Sidd_` or `A:\...\...` tokens below are **historical build-machine paths
-> reproduced from finder output** for auditability. They are not runtime inputs,
-> and none of them exist on a clone. See `README.md` "Repository scope" and
+> agents that ran on the build machine. Path references below are
+> **historical build-machine paths reproduced from finder output** for
+> auditability. They are not runtime inputs, and none of them exist on a
+> clone. See `README.md` "Repository scope" and
 > `INTEGRATION-MANIFEST.json` `_repoNote` for the full provenance framing.
 
 *9 finder agents (efficiency · altitude · reuse/duplication · docs-vs-code · language-pitfall
@@ -115,7 +115,7 @@ robustness/latent · **P3** hygiene/dedup/dead · **DECLARED** = already an owne
 |----|---------|-----|
 | G1 | no requirements.txt/pyproject → fresh clone ModuleNotFounds immediately | add requirements.txt (rustworkx, networkx, grimp, tree-sitter, tree-sitter-language-pack, pytest, websockets) + a README install step |
 | G2 | no .gitignore → first push ships ~515MB node_modules + __pycache__ + regenerated artifacts | write .gitignore (node_modules, __pycache__, dist, .vite, .lake, out/, .pytest_cache, .testtmp, acceptance/evidence, acceptance/browser, per-run analysis-*.json/TRACE if regenerable) |
-| G3 | PII in committed acceptance JSON (username Sidd_, A:\ paths) | scrub to relative/placeholder paths or gitignore + regenerate; ensure none in tracked files |
+| G3 | PII in committed acceptance JSON (local username, drive paths) | scrub to relative/placeholder paths or gitignore + regenerate; ensure none in tracked files |
 | G4 | ../agentic-convos and A:\2..26lean-push references break off-machine (README + INTEGRATION-MANIFEST) | rewrite as "build-machine provenance (not in repo)"; keep hashes as historical record |
 | G5 | OUTERWALL-CONTRACT "hub 8477 (HTTP+WS)" wrong — WS is 8479 | correct to HTTP 8477 / WS 8479 (discovered via /health) |
 | G6 | outerwall/README documents `run_demo --full` (now `--suites`) | fix the flag name |

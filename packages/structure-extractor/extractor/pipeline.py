@@ -1,6 +1,6 @@
 """The cell: S0 ingest → S1 T1 → S2 docks → S3 assemble → S4 T3 → S5 output.
 
-ExtractorCell is the maximally probe-able façade of this round:
+ExtractorCell is the densely instrumented façade of this round:
   probeCatalog() — every available lead (Probe Density §3)
   dump()         — the ENTIRE internal state at the moment of call (§4)
   tap(id, fn)    — subscribe to one live lead (§4)

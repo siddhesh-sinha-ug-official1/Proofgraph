@@ -1,4 +1,4 @@
-# proofgraph/app — the HUMAN FACE (UI-1C round: the graph-first shell)
+# proofgraph/app — the browser shell (UI-1C round: the graph-first shell)
 
 **Design provenance**: this shell implements the **1c graph-first**
 exploration from the Claude Design handoff at `proofgraph/shell-design/`
@@ -7,7 +7,7 @@ of record). The prototypes are design REFERENCES recreated here in React+TS —
 never copied in; `support.js`/`proofdata.js` (mock runtime/corpus) are not
 wired: the real app keeps hub data.
 
-The graph-first shell over the composed organism: a 42px header (hamburger →
+The graph-first shell over the assembled system: a 42px header (hamburger →
 inline menubar · logo mark · project switcher · analyze split-button ·
 search-everywhere · settings cog · hub `/health` transport chip) over a
 FULL-BLEED pannable graph canvas (cell 5's wall under the window layer),

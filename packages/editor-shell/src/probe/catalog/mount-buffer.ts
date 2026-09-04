@@ -22,7 +22,7 @@ export const MOUNT_PROBES: ProbeSpec[] = [
     "Which JSON token-color theme is active; default here means Darcula work isn't wired."),
   p("editor.mount.features.enabled", "mount", "value",
     "{multiCursor,folding,minimap,findReplace,bracketMatching,semanticHighlighting}",
-    "Which first-class IDE features are on — recorded truth, not assumed."),
+    "Which Monaco features are on — recorded truth, not assumed."),
   p("editor.mount.readonly.guard", "mount", "decision", "{readOnly,reason}",
     "Whether the model is read-only; a read-only projection must reject edits and never mutate bytes."),
   p("editor.mount.dispose", "mount", "state", "{modelUri,reason}",

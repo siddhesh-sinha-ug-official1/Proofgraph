@@ -39,8 +39,11 @@ export async function runReconnectAttempts(host: ReconnectHost): Promise<void> {
       await host.reopen(host.probe.ref(rp));
       host.notifyReopened();
       return;
-    } catch {
-      // handshake.fail / transport.state error probes already emitted inside.
+    } catch (err) {
+      // handshake.fail / transport.state error probes already emitted inside;
+      // log the attempt-level failure for completeness.
+      host.probe.emit("editor.conn.transport.state",
+        { phase: "reconnect-attempt-error", attempt, detail: String(err) }, null);
     }
   }
   host.state.phase = "closed";

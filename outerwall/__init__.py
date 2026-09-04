@@ -1,6 +1,6 @@
 """proofgraph outer wall — Phase 3 programmatic face (assembly code, NOT a cell).
 
-ONE membrane around the composed organism.  This package is the Python face
+One membrane around the assembled system.  This package is the Python face
 frozen by OUTERWALL-CONTRACT.md:
 
     from outerwall import analyze, analyze_session, system_pins

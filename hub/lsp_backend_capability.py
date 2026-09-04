@@ -80,9 +80,9 @@ class CapabilityLspBackend:
 
     def start(self, send_to_client) -> None:
         """Per-connection setup: fresh child, fresh ledgers, pump thread."""
-        self.session_no += 1
-        session_no = self.session_no
         with self._lock:
+            self.session_no += 1
+            session_no = self.session_no
             self.received = []
             self.sent = []
         self._send = send_to_client
@@ -131,8 +131,9 @@ class CapabilityLspBackend:
                 if closer is not None:
                     try:
                         closer()
-                    except Exception:  # noqa: BLE001 — already closing
-                        pass
+                    except Exception as exc:  # noqa: BLE001 — already closing
+                        print(f"[lsp_backend] closer() error (ignored): {exc}",
+                              flush=True)
                 return
             frame = json.dumps(msg)
             # capability-side pin: the same frame, on the CELL's own bus.

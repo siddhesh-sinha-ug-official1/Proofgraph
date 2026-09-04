@@ -1,6 +1,6 @@
 # Outer-wall contract — Phase 3 (frozen before build)
 
-The big outer wall: ONE membrane around the composed organism. Two faces; emergent value inside.
+The outer wall: one membrane around the assembled system. Two interfaces; cross-cell analysis inside.
 
 ## Programmatic face (Python, `proofgraph/outerwall/`)
 

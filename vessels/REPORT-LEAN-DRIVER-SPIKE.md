@@ -20,7 +20,7 @@ report.
 
 ```
 cd packages/structure-extractor/extractor/docks/lean_driver   # cwd matters: adjacent lean-toolchain pins the version
-A:\lean\elan\bin\lean.exe --run Driver.lean <absolute-or-relative .lean path>
+lean --run Driver.lean <absolute-or-relative .lean path>
 ```
 
 - stdout: ONE compressed JSON document (single line), nothing else.

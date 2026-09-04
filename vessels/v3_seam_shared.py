@@ -40,12 +40,14 @@ RICH_CFG = {"roots": list(RICH_ROOTS), "python_package": "richpkg",
 RICH_ENTRY = "richpkg.core.alpha"          # the fixture's entry decl
 
 
-def sx_payloads(wall, probe_id):
+def wall_payloads(wall, probe_id):
+    """Filter a wall's pin history to payloads matching one probe id."""
     return [e["payload"] for e in wall.pins.history() if e["probeId"] == probe_id]
 
 
-def gm_payloads(wall, probe_id):
-    return [e["payload"] for e in wall.pins.history() if e["probeId"] == probe_id]
+# Aliases kept so existing test call sites don't need to change.
+sx_payloads = wall_payloads
+gm_payloads = wall_payloads
 
 
 def as_bytes(s: str) -> bytes:
@@ -74,8 +76,8 @@ class Bundle:
         self.accepted = self.gm.pins.dump()["wall"]["ingested"]
 
 
-SKELETON: Bundle = None
-RICH: Bundle = None
+SKELETON: Bundle | None = None
+RICH: Bundle | None = None
 
 
 def ensure_bundles():

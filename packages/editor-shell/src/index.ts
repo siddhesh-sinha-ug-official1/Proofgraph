@@ -1,6 +1,6 @@
 /**
  * ProofGraph Tree 4 — Editor Shell cell. Public surface (deliberately WIDE:
- * everything exposed — Prime Directive). Since ASSEMBLY Phase 1 the membrane
+ * everything exposed — probe-everything rule). Since ASSEMBLY Phase 1 the membrane
  * exists as ./wall.js (createEditorWall), promoted OVER these pins, not a
  * replacement: the wide surface stays exported for tests/demo.
  */

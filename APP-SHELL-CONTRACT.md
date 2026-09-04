@@ -1,4 +1,4 @@
-# App-shell round — IDE-grade human face (contract, frozen before build)
+# App-shell round — IDE-style browser interface (contract, frozen before build)
 
 The Phase-3 face was a walking skeleton (split view, zero chrome — per OUTERWALL-CONTRACT
 "minimal this round"). This round gives it the IDE grammar users expect (PyCharm-style)

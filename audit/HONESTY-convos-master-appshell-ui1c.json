@@ -52,7 +52,7 @@
   "highlights": {
     "exactMatchesToday": [
       "packages/schema/PIN schemaHash 3f3123699c45a8d906db0fe00f0830e0a9f25b9ce30586cfbf30337db6043d9c",
-      "Tree-1 baseline 004b9d00 present in A:/2lean-push/graph-model",
+      "Tree-1 baseline 004b9d00 present in packages/graph-model",
       "schema tests 23 py + 14 ts; 8 golden id vectors (vectors.json)",
       "hub probe catalog exactly 40 (claim 32->40); hub tests exactly 44 (claim 36->44); path-escape matrix exactly 14 shapes; WinError-1314 symlink skip present",
       "run_shell_demo: all 11 named checks present verbatim",

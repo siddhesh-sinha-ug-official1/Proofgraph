@@ -1,6 +1,6 @@
 """Tree 3 — ProofGraph Structure & Relationship Extractor cell.
 
-Maximally probe-able; the Phase-1 membrane (wall.py, MEMBRANE-SPEC.md) is
+Densely instrumented; the Phase-1 membrane (wall.py, MEMBRANE-SPEC.md) is
 promoted OVER these pins and never replaces them.  Public entry points:
 
     from extractor.pipeline import ExtractorCell, PipelineConfig

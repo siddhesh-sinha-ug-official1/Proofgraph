@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Canonical Frozen Schema v0 (document revision v0.1) — the ONE source of truth for the six-cell assembly. Zero runtime deps.",
+  "description": "Canonical Frozen Schema v0 (document revision v0.1) — the single source of truth for the six-cell assembly. Zero runtime deps.",
   "scripts": {
     "test": "node --test tests/*.test.ts",
     "check": "python schemagen.py --check"

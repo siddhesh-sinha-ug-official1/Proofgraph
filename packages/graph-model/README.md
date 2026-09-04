@@ -1,6 +1,6 @@
 # Tree 1 — Graph Model (walking skeleton, maximal probe surface)
 
-The keystone cell of ProofGraph: the **Frozen Schema v0** (the constitution every
+The schema-owning cell of ProofGraph: the **Frozen Schema v0** (the canonical schema every
 other tree imports), a headless 8-stage pipeline over a hand-written fixture, one
 T3 property (reachability-from-roots via **rustworkx**, cross-checked against
 **NetworkX**), three isomorphic projections carrying identical content-addressed
@@ -12,7 +12,7 @@ wall (`wall.py`, spec in `MEMBRANE-SPEC.md`) later added 12 additive
 `graph-model.wall.*` leads — catalog 104 → 116; the diagnostic quartet stays
 reachable via `wall.pins`.
 
-## Frozen artifacts (the constitution)
+## Frozen artifacts (the canonical schema)
 
 | artifact | role |
 |---|---|

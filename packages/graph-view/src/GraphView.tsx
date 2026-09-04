@@ -89,10 +89,17 @@ function GraphViewInner({ cell, expandedIds }: GraphViewProps) {
 
   const [selectedId, setSelectedId] = useState<string | null>(cell.controller.selectedId);
 
+  // O(1) lookup map for centerAndHighlight (P-4: replaces O(n) find per click).
+  const rfNodeById = useMemo(() => {
+    const m = new Map<string, (typeof cell.rfNodes)[number]>();
+    for (const n of cell.rfNodes) m.set(n.id, n);
+    return m;
+  }, [cell.rfNodes]);
+
   // Late-bind the DOM centering into the S7 hooks (link.ts reads them at call time).
   useEffect(() => {
     cell.linkHooks.centerAndHighlight = (nodeId: string) => {
-      const n = cell.rfNodes.find((r) => r.id === nodeId);
+      const n = rfNodeById.get(nodeId);
       const viewport = n
         ? { x: n.position.x + n.width / 2, y: n.position.y + n.height / 2, zoom: 1.2 }
         : { x: 0, y: 0, zoom: 1 };
@@ -101,7 +108,7 @@ function GraphViewInner({ cell, expandedIds }: GraphViewProps) {
       return viewport;
     };
     return () => { delete cell.linkHooks.centerAndHighlight; };
-  }, [cell, setCenter]);
+  }, [cell, setCenter, rfNodeById]);
 
   const nodes: Node<RFNodeData>[] = useMemo(
     () =>

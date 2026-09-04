@@ -12,6 +12,11 @@ from pathlib import Path
 
 from .harness import NM_APP, NM_ESHELL, NM_GVIEW, PY, append, patch, plant
 
+def _npx(*args: str) -> list[str]:
+    if os.name == "nt":
+        return ["cmd", "/c", "npx", *args]
+    return ["npx", *args]
+
 # ── the six faults (a–e core guards + f line-gate) ───────────────────────────
 FAULTS = [
     {
@@ -63,8 +68,8 @@ FAULTS = [
         payload = hub_pipeline.canonical_json_bytes(served_f)
         self._graph_payload_cache = (cache_key, payload, dict(counts))
         return payload, counts'''),
-        "cmd": ["cmd", "/c", "npx", "vitest", "run", "--no-cache",
-                "test/v4.serve.test.tsx"],
+        "cmd": _npx("vitest", "run", "--no-cache",
+                "test/v4.serve.test.tsx"),
         "cwd": Path("app"),
         "junctions": [NM_APP, NM_GVIEW],
         "signatures": ["serializer-edge-drop"],
@@ -118,8 +123,8 @@ FAULTS = [
             '// the P3 build gate\'s dist byte-scan must fail.\n'
             '(globalThis as unknown as Record<string, unknown>).__faultInjectedSecret =\n'
             '  "byok-arena-dev-master-secret-CHANGE-ME";\n'),
-        "cmd": ["cmd", "/c", "npx", "vitest", "run", "--no-cache",
-                "test/p3.build.gate.test.ts"],
+        "cmd": _npx("vitest", "run", "--no-cache",
+                "test/p3.build.gate.test.ts"),
         "cwd": Path("app"),
         "junctions": [NM_APP, NM_GVIEW, NM_ESHELL],
         "signatures": ["key-shaped material reached the browser bundle",

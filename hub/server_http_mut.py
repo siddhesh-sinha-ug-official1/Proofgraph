@@ -17,10 +17,22 @@ from server_http_get import _failure_class_of
 HubError = hub_pipeline.HubError
 
 
+#: S4: maximum body size for PUT/POST (16 MiB — generous for any graph
+#: payload; prevents a malicious localhost client from exhausting memory).
+MAX_BODY_BYTES = 16 * 1024 * 1024
+
+
 class MutRoutesMixin:
 
     def _read_json_body(self, what: str) -> dict:
         length = int(self.headers.get("Content-Length") or 0)
+        if length < 0:
+            raise HubError("hub-bad-request",
+                           f"{what}: negative Content-Length {length}")
+        if length > MAX_BODY_BYTES:
+            raise HubError("hub-body-too-large",
+                           f"{what}: Content-Length {length} exceeds "
+                           f"limit {MAX_BODY_BYTES}")
         raw = self.rfile.read(length) if length else b""
         try:
             body = json.loads(raw.decode("utf-8")) if raw else {}
@@ -70,15 +82,7 @@ class MutRoutesMixin:
                                   "detail": f"no route {route!r}"})
             return
         try:
-            length = int(self.headers.get("Content-Length") or 0)
-            raw = self.rfile.read(length) if length else b""
-            try:
-                body = json.loads(raw.decode("utf-8")) if raw else {}
-                if not isinstance(body, dict):
-                    raise ValueError("body must be a JSON object")
-            except (ValueError, UnicodeDecodeError) as exc:
-                raise HubError("hub-bad-request",
-                               f"unparseable /analyze body: {exc}") from exc
+            body = self._read_json_body("POST /analyze")
             result = self.hub.analyze(body)
             self._send_json(200, result)
         except HubError as exc:

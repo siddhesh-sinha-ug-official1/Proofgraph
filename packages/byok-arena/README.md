@@ -5,7 +5,7 @@ One uniform `ModelAdapter` over **Anthropic / OpenAI / Gemini**, each call bille
 meter and the **arena** — the proof harness that runs two providers on the SAME
 tool-call task and asserts their **normalized** outputs agree.
 
-This round follows the Prime Directive: **maximally probe-able, no membrane.**
+This round follows the probe-everything rule: **densely instrumented, no membrane.**
 Every internal is exposed on purpose. The production face has since been carved as the
 Phase-1 wall (`src/wall.ts` → MEMBRANE-SPEC.md) — additive only, every pin intact.
 

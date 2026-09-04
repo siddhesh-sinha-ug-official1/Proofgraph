@@ -165,17 +165,25 @@ class V1CapabilityFeed:
         self._down = True
         captured: list[dict] = []
         untap = cap_probes.tap("capability.wall.shutdown", captured.append)
+        errors: list[str] = []
         try:
-            for wall in self._walls.values():
-                wall.shutdown()
+            for lang, wall in list(self._walls.items()):
+                try:
+                    wall.shutdown()
+                except Exception as exc:  # noqa: BLE001 — each wall shuts down independently
+                    errors.append(f"{lang}: {exc}")
         finally:
             untap()
-        self.shutdown_pins = [e["payload"] for e in captured]
-        # [H11] invalidate — capability_fn now refuses, live_clients returns
-        # []; anyone holding the pre-shutdown handles has an explicit stale
-        # reference (typed by _down + FeedShutdownError on the next fetch).
-        self._handles.clear()
-        self._walls.clear()
+            self.shutdown_pins = [e["payload"] for e in captured]
+            # [H11] invalidate — capability_fn now refuses, live_clients
+            # returns []; anyone holding the pre-shutdown handles has an
+            # explicit stale reference (typed by _down + FeedShutdownError
+            # on the next fetch).
+            self._handles.clear()
+            self._walls.clear()
+        if errors:
+            print(f"[V1Feed] shutdown errors (walls shut down independently, "
+                  f"all attempted): {'; '.join(errors)}", flush=True)
         return list(self.shutdown_pins)
 
     def live_clients(self):

@@ -100,6 +100,11 @@ export class Connector {
       throw err;
     }
 
+    // If disposed during the await, close the transport we just opened and bail.
+    if (this.disposed) {
+      transports.close();
+      return;
+    }
     // Replace the tracked transport: unsubscribe the OLD wire's close
     // listener so a stale abandoned wire closing later can never tear down
     // this session (review finding), and track identity for the same reason.
@@ -121,6 +126,11 @@ export class Connector {
       // whose eventual close tore down healthy sessions).
       thisTransport.close();
       throw err;
+    }
+    // If disposed during handshake, tear down the wire we just established.
+    if (this.disposed) {
+      thisTransport.close();
+      return;
     }
     this.state.phase = "open";
     this.probe.emit(
@@ -149,7 +159,10 @@ export class Connector {
       { phase: "closed", detail: "transport closed by peer or failure" },
       null,
     );
-    void this.reconnectLoop();
+    void this.reconnectLoop().catch((err) => {
+      this.probe.emit("editor.conn.transport.state",
+        { phase: "reconnect-loop-error", detail: String(err) }, null);
+    });
   }
 
   /** At most ONE reconnect loop runs; attempts live in ./reconnect.ts. */

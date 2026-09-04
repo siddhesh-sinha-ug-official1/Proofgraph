@@ -19,6 +19,7 @@ import AiPanel from "./AiPanel";
 import { DiagnosticsList, PinsConsole } from "./BottomDock";
 import { VerdictLegend } from "./VerdictLegend";
 import { EditorWindowBody } from "./EditorWindowBody";
+import { ErrorBoundary } from "./ErrorBoundary";
 import type { ShellCtx } from "./useShell";
 
 export function AppMain({ s }: { s: ShellCtx }): React.ReactElement {
@@ -26,20 +27,22 @@ export function AppMain({ s }: { s: ShellCtx }): React.ReactElement {
 
   const windowContent: Record<WinId, React.ReactNode> = {
     project: (
-      <Explorer
-        hubBase={s.hubBase} httpDo={s.httpDo}
-        workspaceRoot={s.workspace?.root ?? null}
-        workspaceFailure={s.workspaceFailure}
-        dirtyPaths={s.dirtyPaths} openPaths={s.openPaths}
-        activePath={s.tabsSnap.activePath}
-        onOpenFile={(p) => void s.openFile(p)}
-        refreshToken={s.explorerRefresh}
-      />
+      <ErrorBoundary name="project explorer">
+        <Explorer
+          hubBase={s.hubBase} httpDo={s.httpDo}
+          workspaceRoot={s.workspace?.root ?? null}
+          workspaceFailure={s.workspaceFailure}
+          dirtyPaths={s.dirtyPaths} openPaths={s.openPaths}
+          activePath={s.tabsSnap.activePath}
+          onOpenFile={(p) => void s.openFile(p)}
+          refreshToken={s.explorerRefresh}
+        />
+      </ErrorBoundary>
     ),
-    editor: <EditorWindowBody s={s} />,
-    ai: <AiPanel aiBase={s.aiBase} />,
-    diag: <DiagnosticsList rows={s.diagnostics} note={s.diagnosticsNote} />,
-    pins: <PinsConsole hubBase={s.hubBase} httpDo={s.httpDo} />,
+    editor: <ErrorBoundary name="editor"><EditorWindowBody s={s} /></ErrorBoundary>,
+    ai: <ErrorBoundary name="AI panel"><AiPanel aiBase={s.aiBase} /></ErrorBoundary>,
+    diag: <ErrorBoundary name="diagnostics"><DiagnosticsList rows={s.diagnostics} note={s.diagnosticsNote} /></ErrorBoundary>,
+    pins: <ErrorBoundary name="pins console"><PinsConsole hubBase={s.hubBase} httpDo={s.httpDo} /></ErrorBoundary>,
   };
 
   const windowMeta = {
@@ -71,7 +74,11 @@ export function AppMain({ s }: { s: ShellCtx }): React.ReactElement {
               graph wall refused/unreachable — see the banner region (named class, never blank)
             </div>
           )}
-          {s.phase === "ready" && s.wall !== null && <GraphView key={s.graphViewKey} cell={s.wall.cell} />}
+          {s.phase === "ready" && s.wall !== null && (
+            <ErrorBoundary name="graph">
+              <GraphView key={s.graphViewKey} cell={s.wall.cell} />
+            </ErrorBoundary>
+          )}
         </div>
 
         {counts !== null && (

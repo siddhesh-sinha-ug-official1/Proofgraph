@@ -35,6 +35,9 @@ export interface ProbeBusOptions {
   cellId?: string;
   /** Inject null-returning clock for byte-identical histories across runs. */
   wallClock?: () => number | null;
+  /** Maximum events kept in history. Oldest events are evicted when exceeded.
+   *  Default 50_000; pass 0 for unbounded (test-only). */
+  maxHistory?: number;
 }
 
 export class ProbeBus {
@@ -44,12 +47,14 @@ export class ProbeBus {
   private taps = new Map<string, Set<TapHandler>>();
   private specById = new Map<string, ProbeSpec>();
   private wallClock: () => number | null;
+  private maxHistory: number;
   /** probeIds that were emitted this run (for catalog-completeness checks). */
   private firedIds = new Set<string>();
 
   constructor(opts: ProbeBusOptions = {}) {
     this.cellId = opts.cellId ?? "editor-shell";
     this.wallClock = opts.wallClock ?? defaultWallNanos;
+    this.maxHistory = opts.maxHistory ?? 50_000;
     for (const spec of PROBE_CATALOG) {
       if (this.specById.has(spec.probeId)) {
         throw new Error(`duplicate probe catalog entry: ${spec.probeId}`);
@@ -82,6 +87,13 @@ export class ProbeBus {
       wallNanos: spec.kind === "timing" ? this.wallClock() : null,
     };
     this.events.push(event);
+    // Evict oldest events when the cap is exceeded (prevents unbounded growth
+    // in long editing sessions).  Eviction drops the oldest 10% in one splice
+    // so it doesn't run on every emit.
+    if (this.maxHistory > 0 && this.events.length > this.maxHistory) {
+      const drop = Math.max(1, Math.floor(this.maxHistory * 0.1));
+      this.events.splice(0, drop);
+    }
     this.firedIds.add(probeId);
     const handlers = this.taps.get(probeId);
     if (handlers) for (const h of [...handlers]) h(event);

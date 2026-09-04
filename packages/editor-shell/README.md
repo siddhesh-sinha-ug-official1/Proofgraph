@@ -1,10 +1,10 @@
-# ProofGraph — Tree 4: Editor Shell (Monaco, JetBrains-grade)
+# ProofGraph — Tree 4: Editor Shell (Monaco, JetBrains-style)
 
 The **text projection** of the ProofGraph model: an editor cell that renders live
 diagnostics, each node's **FILL** verdict (its own compiler verdict) in the gutter,
 its **OUTLINE** trust-base ring (worst-case-wins), and does **brushing-and-linking**
-over a shared event bus carrying `Node.id`s — instrumented at **maximum probe
-density** (the deliberately probe-able cell; since ASSEMBLY Phase 1 its minimal
+over a shared event bus carrying `Node.id`s — instrumented at **dense probe
+instrumentation** (the deliberately probe-able cell; since ASSEMBLY Phase 1 its minimal
 membrane exists as `src/wall.ts` — `createEditorWall`, promoted OVER the pins,
 never replacing them).
 

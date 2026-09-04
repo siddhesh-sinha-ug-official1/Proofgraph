@@ -66,6 +66,6 @@ hub/lsp_backend_capability.py.  Behavior and import surface unchanged.
 from __future__ import annotations
 
 # hub is import-flat by design (no __init__.py) — flat imports only.
-from lsp_backend_capability import CapabilityLspBackend, _write_framed
+from lsp_backend_capability import CapabilityLspBackend  # noqa: F401
 
 __all__ = ["CapabilityLspBackend"]

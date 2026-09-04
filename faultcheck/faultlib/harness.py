@@ -20,8 +20,8 @@ PROOFGRAPH = FAULTCHECK_DIR.parent
 for _stream in (sys.stdout, sys.stderr):
     try:
         _stream.reconfigure(encoding="utf-8", errors="replace")
-    except Exception:                             # noqa: BLE001 — best effort
-        pass
+    except Exception as _exc:                     # noqa: BLE001 — best effort
+        print(f"[harness] stream reconfigure failed: {_exc}", file=sys.stderr)
 
 # node_modules trees a JS-suite scratch copy needs (junctioned, read-only use)
 NM_APP = Path("app") / "node_modules"
@@ -55,25 +55,42 @@ def run_cmd(cmd: list[str], cwd: Path, timeout_s: int) -> tuple[int, str]:
 
 def copy_tree(dst: Path) -> None:
     """Scratch copy of the proofgraph tree.  Excluded (regenerated state,
-    never inputs): node_modules (junctioned per fault), __pycache__, .git,
-    .vite caches, app/dist (the build gate rebuilds it), *.pyc."""
-    cmd = ["robocopy", str(PROOFGRAPH), str(dst), "/E",
-           "/XD", "node_modules", "__pycache__", ".git", ".vite",
-           str(PROOFGRAPH / "app" / "dist"),
-           "/XF", "*.pyc",
-           "/NFL", "/NDL", "/NJH", "/NJS", "/NP", "/R:2", "/W:1"]
-    rc = subprocess.run(cmd, stdout=subprocess.DEVNULL).returncode
-    if rc >= 8:  # robocopy: <8 == success family
-        raise RuntimeError(f"robocopy failed rc={rc} copying to {dst}")
+    never inputs): node_modules (junctioned/symlinked per fault),
+    __pycache__, .git, .vite caches, app/dist (the build gate rebuilds
+    it), *.pyc."""
+    _SKIP_DIRS = {"node_modules", "__pycache__", ".git", ".vite", "dist"}
+
+    def _ignore(directory, entries):
+        rel = Path(directory).relative_to(PROOFGRAPH)
+        ignored = set()
+        for e in entries:
+            if e in _SKIP_DIRS:
+                ignored.add(e)
+            elif rel == Path("app") and e == "dist":
+                ignored.add(e)
+            elif e.endswith((".pyc", ".pyo")):
+                ignored.add(e)
+        return ignored
+
+    shutil.copytree(PROOFGRAPH, dst, ignore=_ignore, dirs_exist_ok=True)
 
 
 def make_junction(link: Path, target: Path) -> None:
+    """Create a directory junction (Windows) or symlink (POSIX) from link
+    to target.  Junctions on Windows don't require elevated privileges;
+    symlinks on POSIX are the natural equivalent."""
     link.parent.mkdir(parents=True, exist_ok=True)
-    rc = subprocess.run(["cmd", "/c", "mklink", "/J", str(link), str(target)],
-                        stdout=subprocess.DEVNULL,
-                        stderr=subprocess.DEVNULL).returncode
-    if rc != 0 or not link.exists():
-        raise RuntimeError(f"junction failed: {link} -> {target}")
+    if IS_WIN:
+        rc = subprocess.run(["cmd", "/c", "mklink", "/J", str(link), str(target)],
+                            stdout=subprocess.DEVNULL,
+                            stderr=subprocess.DEVNULL).returncode
+        if rc != 0 or not link.exists():
+            raise RuntimeError(f"junction failed: {link} -> {target}")
+    else:
+        try:
+            os.symlink(target, link, target_is_directory=True)
+        except OSError as e:
+            raise RuntimeError(f"symlink failed: {link} -> {target}: {e}") from e
 
 
 def patch(path: Path, old: str, new: str) -> None:
@@ -102,23 +119,28 @@ def plant(path: Path, n_lines: int) -> None:
 
 
 def discard(root: Path, junctions: list[Path]) -> str:
-    """Unlink junctions FIRST (os.rmdir removes the link, never the target),
-    then rmtree the scratch.  Refuses to delete anything outside tempdir."""
+    """Unlink junctions/symlinks FIRST (os.rmdir on Windows removes the
+    junction without touching the target; os.unlink on POSIX removes the
+    symlink), then rmtree the scratch.  Refuses to delete anything outside
+    tempdir."""
     tmp = Path(tempfile.gettempdir()).resolve()
     if tmp not in root.resolve().parents:
         return f"REFUSED (not under {tmp})"
     for j in junctions:
         try:
-            os.rmdir(j)
+            if IS_WIN:
+                os.rmdir(j)
+            else:
+                os.unlink(j)
         except OSError as e:
-            return f"junction unlink FAILED ({j.name}: {e}) — tree left at {root}"
+            return f"junction/symlink unlink FAILED ({j.name}: {e}) — tree left at {root}"
     for attempt in (1, 2, 3):
         try:
             shutil.rmtree(root)
             return "discarded"
         except OSError:
             time.sleep(2 * attempt)
-    return f"rmtree could not finish (Windows file locks) — leftover at {root}"
+    return f"rmtree could not finish (file locks?) — leftover at {root}"
 
 
 def excerpt(output: str, signatures: list[str], max_lines: int = 6) -> list[str]:

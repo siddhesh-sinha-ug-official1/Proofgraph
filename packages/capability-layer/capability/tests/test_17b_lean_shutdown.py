@@ -29,18 +29,17 @@ class TestLeanShutdown(unittest.TestCase):
         self.assertTrue(shutdown_seen[0]["payload"]["terminated"])
         client = wall.handle._client
         self.assertIsNotNone(client.proc.poll(), "lake shim still alive")
-        if os.name == "nt":
-            # orphaned-subprocess-tree guard: every lean.exe/lake.exe spawned
-            # by this run must be gone (the chain is 4 deep; killing only the
-            # top orphans the watchdog and its file workers)
-            before = _STATE["lean_pids_before"]
-            deadline = time.time() + 20
+        # orphaned-subprocess-tree guard: every lean/lake process spawned
+        # by this run must be gone (the chain is 4 deep; killing only the
+        # top orphans the watchdog and its file workers).
+        before = _STATE["lean_pids_before"]
+        deadline = time.time() + 20
+        leaked = _lean_pids() - before
+        while leaked and time.time() < deadline:
+            time.sleep(1)
             leaked = _lean_pids() - before
-            while leaked and time.time() < deadline:
-                time.sleep(1)
-                leaked = _lean_pids() - before
-            self.assertEqual(leaked, set(),
-                             f"orphaned lean/lake processes: {leaked}")
+        self.assertEqual(leaked, set(),
+                         f"orphaned lean/lake processes: {leaked}")
 
 
 if __name__ == "__main__":

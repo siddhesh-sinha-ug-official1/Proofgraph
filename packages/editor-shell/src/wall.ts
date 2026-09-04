@@ -128,7 +128,10 @@ export async function createEditorWall(cfg: EditorWallConfig): Promise<EditorWal
   try {
     await cell.open();
   } catch (err) {
-    await cell.dispose("wall: open() failed").catch(() => {});
+    await cell.dispose("wall: open() failed").catch((disposeErr) => {
+      cell.probe.emit("editor.conn.transport.state",
+        { phase: "dispose-after-open-fail", detail: String(disposeErr) }, null);
+    });
     throw err;
   }
   cell.probe.emit("editor.wall.mount", {

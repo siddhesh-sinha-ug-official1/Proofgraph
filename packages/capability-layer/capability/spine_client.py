@@ -70,7 +70,8 @@ class _ClientCore:
         env.setdefault("PYTHONIOENCODING", "utf-8")
         self.proc = subprocess.Popen(
             self.argv, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE, env=env, bufsize=0)
+            stderr=subprocess.PIPE, env=env, bufsize=0,
+            start_new_session=(os.name != "nt"))
         self._crashed_reported = False
         # per-generation objects handed to the threads as ARGUMENTS: a stale
         # reader from a killed generation can never inject its EOF marker (or

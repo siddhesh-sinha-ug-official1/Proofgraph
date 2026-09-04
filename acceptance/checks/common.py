@@ -100,16 +100,29 @@ def wait_port(port: int, timeout_s: float,
 
 
 def kill_tree(proc: subprocess.Popen) -> None:
+    """Kill the whole process tree.  On Windows, taskkill /T handles it.
+    On POSIX, SIGTERM the process group (if the child was started with
+    start_new_session), then fall back to SIGKILL if it doesn't exit."""
     if proc is None or proc.poll() is not None:
         return
     if IS_WIN:
         subprocess.run(["taskkill", "/F", "/T", "/PID", str(proc.pid)],
                        capture_output=True)
     else:
-        proc.terminate()
+        import signal as _sig
+        try:
+            pgid = os.getpgid(proc.pid)
+            os.killpg(pgid, _sig.SIGTERM)
+        except OSError:
+            proc.terminate()
     try:
         proc.wait(timeout=10)
     except subprocess.TimeoutExpired:
+        if not IS_WIN:
+            try:
+                os.killpg(os.getpgid(proc.pid), 9)
+            except OSError:
+                pass
         proc.kill()
 
 
@@ -123,7 +136,8 @@ def run_node(args: list[str], timeout_s: int, cwd: Path = ROOT):
     tree-kill all pipe writers close and communicate() sees EOF."""
     proc = subprocess.Popen(args, cwd=str(cwd), stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE, text=True,
-                            encoding="utf-8", errors="replace", shell=False)
+                            encoding="utf-8", errors="replace", shell=False,
+                            start_new_session=(not IS_WIN))
     try:
         out, err = proc.communicate(timeout=timeout_s)
         return proc.returncode, out or "", err or ""

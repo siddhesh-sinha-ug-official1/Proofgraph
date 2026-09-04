@@ -190,7 +190,7 @@ unsafe def main (args : List String) : IO UInt32 := do
   let out := Json.mkObj [
     ("toolchain", Json.mkObj [
       ("leanVersion", Json.str Lean.versionString),
-      ("how", Json.str "lean --run Driver.lean <target>, elan shim A:\\lean\\elan\\bin\\lean.exe, version pinned by the adjacent lean-toolchain file; kernel trustLevel 0")]),
+      ("how", Json.str "lean --run Driver.lean <target>, elan shim (~/.elan/bin/lean or %USERPROFILE%\\.elan\\bin\\lean.exe), version pinned by the adjacent lean-toolchain file; kernel trustLevel 0")]),
     ("decls", Json.arr (declRecs.map (·.2))),
     ("imports", Json.arr importJs),
     ("errors", Json.arr errJs),

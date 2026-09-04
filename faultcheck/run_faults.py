@@ -8,7 +8,7 @@ tree (tempdir; the working tree is NEVER touched) and running the EXISTING
 suite/gate against it, asserting that the suite REPORTS FAILURE with the
 guard's own named class.  Method per fault (the honesty protocol):
 
-  1. fresh scratch copy of the whole proofgraph tree (robocopy; node_modules
+  1. fresh scratch copy of the whole proofgraph tree (shutil.copytree; node_modules
      junctioned read-only where a JS suite needs them; __pycache__/.git/
      app-dist excluded — regenerated state, never inputs);
   2. CONTROL: the exact suite command runs CLEAN in the scratch copy and must
@@ -77,44 +77,51 @@ def run_fault(spec: dict) -> dict:
     print(f"    defect:    {spec['defect']}")
     scratch = Path(tempfile.mkdtemp(prefix=f"pg-fault-{key[:1]}-"))
     root = scratch / "proofgraph"
+    junctions: list[Path] = []
     t0 = time.monotonic()
-    print(f"    scratch:   {root}")
-    copy_tree(root)
-    junctions = []
-    for rel in spec["junctions"]:
-        link = root / rel
-        make_junction(link, PROOFGRAPH / rel)
-        junctions.append(link)
-    print(f"    copy+junctions: {time.monotonic() - t0:.1f}s")
+    try:
+        print(f"    scratch:   {root}")
+        copy_tree(root)
+        for rel in spec["junctions"]:
+            link = root / rel
+            make_junction(link, PROOFGRAPH / rel)
+            junctions.append(link)
+        print(f"    copy+junctions: {time.monotonic() - t0:.1f}s")
 
-    cmd, cwd = spec["cmd"], root / spec["cwd"]
-    shown = " ".join(cmd[2:] if cmd[:2] == ["cmd", "/c"] else cmd)
-    print(f"    suite:     {shown}   (cwd {spec['cwd']})")
+        cmd, cwd = spec["cmd"], root / spec["cwd"]
+        shown = " ".join(cmd[2:] if cmd[:2] == ["cmd", "/c"] else cmd)
+        print(f"    suite:     {shown}   (cwd {spec['cwd']})")
 
-    t1 = time.monotonic()
-    rc_ctl, out_ctl = run_cmd(cmd, cwd, spec["timeout"])
-    ctl_ok = rc_ctl == 0
-    print(f"    CONTROL (clean copy): rc={rc_ctl} "
-          f"{'PASS' if ctl_ok else 'FAIL — scratch env broken, fault run void'} "
-          f"({time.monotonic() - t1:.1f}s)")
-    for ln in excerpt(out_ctl, [], 2):
-        print(f"        | {ln}")
-
-    caught, rc_flt, ev = False, None, []
-    if ctl_ok:
-        spec["inject"](root)
-        t2 = time.monotonic()
-        rc_flt, out_flt = run_cmd(cmd, cwd, spec["timeout"])
-        ev = excerpt(out_flt, spec["signatures"])
-        sig_hit = any(s in out_flt for s in spec["signatures"])
-        caught = (rc_flt != 0) and sig_hit
-        print(f"    FAULT RUN: rc={rc_flt} "
-              f"suiteFailed={rc_flt != 0} signatureFound={sig_hit} "
-              f"({time.monotonic() - t2:.1f}s)")
-        for ln in ev:
+        t1 = time.monotonic()
+        rc_ctl, out_ctl = run_cmd(cmd, cwd, spec["timeout"])
+        ctl_ok = rc_ctl == 0
+        print(f"    CONTROL (clean copy): rc={rc_ctl} "
+              f"{'PASS' if ctl_ok else 'FAIL — scratch env broken, fault run void'} "
+              f"({time.monotonic() - t1:.1f}s)")
+        for ln in excerpt(out_ctl, [], 2):
             print(f"        | {ln}")
-    fate = discard(scratch, junctions)
-    print(f"    scratch: {fate}")
+
+        caught, rc_flt, ev = False, None, []
+        if ctl_ok:
+            spec["inject"](root)
+            t2 = time.monotonic()
+            rc_flt, out_flt = run_cmd(cmd, cwd, spec["timeout"])
+            ev = excerpt(out_flt, spec["signatures"])
+            sig_hit = any(s in out_flt for s in spec["signatures"])
+            caught = (rc_flt != 0) and sig_hit
+            print(f"    FAULT RUN: rc={rc_flt} "
+                  f"suiteFailed={rc_flt != 0} signatureFound={sig_hit} "
+                  f"({time.monotonic() - t2:.1f}s)")
+            for ln in ev:
+                print(f"        | {ln}")
+    except Exception as exc:
+        print(f"    ERROR: {exc}")
+        return {"key": key, "controlPassed": False, "faultRc": None,
+                "caught": False, "evidence": [str(exc)],
+                "wall_s": round(time.monotonic() - t0, 1)}
+    finally:
+        fate = discard(scratch, junctions)
+        print(f"    scratch: {fate}")
     return {"key": key, "controlPassed": ctl_ok, "faultRc": rc_flt,
             "caught": caught, "evidence": ev,
             "wall_s": round(time.monotonic() - t0, 1)}

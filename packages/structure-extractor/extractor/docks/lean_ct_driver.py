@@ -41,7 +41,8 @@ def run_driver(bus: ProbeBus, rel_path: str, abspath: Path,
     try:
         proc = subprocess.Popen(cmd, cwd=str(driver_dir),
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                text=True, encoding="utf-8")
+                                text=True, encoding="utf-8",
+                                start_new_session=(sys.platform != "win32"))
     except OSError as exc:
         raise DriverDead("driver-crash", f"spawn failed: {exc}") from exc
     try:
@@ -49,13 +50,19 @@ def run_driver(bus: ProbeBus, rel_path: str, abspath: Path,
     except subprocess.TimeoutExpired:
         # tree-kill discipline (cell precedent, pyright_backend.close):
         # the elan shim spawns a child lean — killing the shim alone
-        # orphans it; taskkill /T reaps the tree.
+        # orphans it.  On Windows, taskkill /T reaps the tree; on POSIX,
+        # SIGKILL the process group (the child is its own group leader
+        # via start_new_session=True).
         if sys.platform == "win32":
             try:
                 subprocess.run(["taskkill", "/PID", str(proc.pid), "/T", "/F"],
                                capture_output=True, timeout=15)
             except Exception:
                 pass
+        else:
+            import os as _os, signal as _sig
+            try: _os.killpg(_os.getpgid(proc.pid), _sig.SIGKILL)
+            except OSError: pass
         try:
             proc.kill()
         except Exception:

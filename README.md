@@ -21,7 +21,7 @@ suites PASS (verbatim table: [REMEDIATION-REPORT.md](REMEDIATION-REPORT.md) §3,
 
 ## Architecture — cells → walls → vessels → outer wall → faces
 
-### The constitution: one schema
+### One schema, shared by all cells
 
 [`packages/schema/`](packages/schema/README.md) is the single source of truth:
 `schema.json` (Frozen Schema v0, rev v0.1) + `capability.json` (the depth-tier
@@ -34,7 +34,7 @@ generated artifacts in sync.
 
 | Cell | Package | What it does (verified) | Suite (live baseline) |
 |---|---|---|---|
-| 1 | [`packages/graph-model/`](packages/graph-model/README.md) | The keystone: 8-stage pipeline over content-addressed IDs, rustworkx reachability cross-checked vs NetworkX, byte-exact text→model→text round-trip gate; Phase-1 wall adds 12 `graph-model.wall.*` leads | 113 |
+| 1 | [`packages/graph-model/`](packages/graph-model/README.md) | Schema-owning cell: 8-stage pipeline over content-addressed IDs, rustworkx reachability cross-checked vs NetworkX, byte-exact text→model→text round-trip gate; Phase-1 wall adds 12 `graph-model.wall.*` leads | 113 |
 | 2 | [`packages/capability-layer/`](packages/capability-layer/README.md) | Measures what a language toolchain honestly delivers (A–J pipeline + P0–P11 battery) and stamps the *measured* depth tier — CT is unreachable without a real P2 pass | 131 (live pyright + lean) |
 | 3 | [`packages/structure-extractor/`](packages/structure-extractor/README.md) | Source → schema-conformant graph: T1 nodes via tree-sitter (7 languages), T2 resolved edges via per-language docks — including the live Lean kernel driver — T3 properties via rustworkx | 140 (full live) |
 | 4 | [`packages/editor-shell/`](packages/editor-shell/README.md) | Monaco text projection: FILL verdict gutter, OUTLINE trust-base ring, brushing/linking over a shared bus of `Node.id`s; guard: green-may-never-be-faked | 96 + import gate |
@@ -82,12 +82,12 @@ three lean4 v4.31.0 `Init/*` files, two independent runs byte-compare equal).
 
 ### Faces
 
-- [`app/`](app/README.md) — the human face: the graph-first browser shell
+- [`app/`](app/README.md) — the browser UI: the graph-first browser shell
   (React + Monaco + React Flow) over hub data, per the
   [APP-SHELL-CONTRACT.md](APP-SHELL-CONTRACT.md) and the
   [`shell-design/`](shell-design/README.md) reference. Suite: vitest 111 + 1
   todo (incl. the P3 built-bundle secret scan) + `tsc --noEmit` clean.
-- [`ai/`](ai/README.md) — the machine face: the V6 AI outlet (graph as data,
+- [`ai/`](ai/README.md) — the API interface: the V6 AI outlet (graph as data,
   one tool round, key-scrub invariants) + the P3 ai face server over the
   byok-arena wall. Suite: 14.
 - [`acceptance/`](acceptance/README.md) — the §7 acceptance gate:
@@ -148,21 +148,29 @@ analyzes to **literally zero green** — pyright resolves, it never verifies.
 
 ## Install
 
-Prerequisites: Windows 11 / Python 3.12 / Node ≥ 24 (native TS type-stripping) /
+Prerequisites: Python 3.12 / Node ≥ 24 (native TS type-stripping) /
 `elan` + `lake` on PATH for the Lean path (toolchain pins: driver v4.31.0,
 cell-2 repo v4.32.0 — limitation 1 below).
 
-```
+Tested on: Windows 11, macOS (arm64 / x86_64), Ubuntu 22.04+.
+
+```bash
 # 1. Python deps (pinned; see requirements.txt)
 pip install -r requirements.txt
 
 # 2. Per-package Node deps — the JS packages keep their OWN node_modules
 #    (deliberately NOT an npm workspace: hoisting would break the cells'
 #    import-boundary gates), so npm ci in each:
-cd packages/editor-shell && npm ci && cd ../..
-cd packages/graph-view   && npm ci && cd ../..
-cd app                   && npm ci && cd ..
-cd ai                    && npm ci && cd ..
+for d in packages/editor-shell packages/graph-view app ai; do
+  (cd "$d" && npm ci)
+done
+```
+
+On Windows (PowerShell), replace the loop with:
+```powershell
+foreach ($d in @("packages\editor-shell","packages\graph-view","app","ai")) {
+  Push-Location $d; npm ci; Pop-Location
+}
 ```
 
 The `ai/` and `byok-arena` Node deps are zero/near-zero; `packages/byok-arena`
@@ -227,7 +235,7 @@ cd app && npm run dev          # vite 5199
 
 ## The diagnostic surface (pins)
 
-Probes are the assembly's nervous system: append-only, cataloged, never
+Probes are the assembly's diagnostic layer: append-only, cataloged, never
 shrinking. `outerwall.system_pins` is the outermost aggregation of the five
 Python-side catalogs — **422 entries measured on the moat fixture**
 (25 outerwall + 40 hub + 149 structure-extractor + 116 graph-model +

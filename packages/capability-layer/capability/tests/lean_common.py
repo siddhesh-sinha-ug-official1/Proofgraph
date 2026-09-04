@@ -14,27 +14,42 @@ from capability.tests.wall_common import _events, _load_wall  # noqa: F401
 
 
 def _lean_pids() -> set[str]:
-    """PIDs of lean.exe/lake.exe processes (Windows) — the orphan-sweep
-    baseline.  The spawned chain is 4 deep (elan shim lake → real lake →
-    lean watchdog → lean file workers); killing only the top orphans the
-    rest (failure class: orphaned-subprocess-tree)."""
-    if os.name != "nt":
-        return set()
-    pids = set()
-    for image in ("lean.exe", "lake.exe"):
-        cp = subprocess.run(
-            ["tasklist", "/FI", f"IMAGENAME eq {image}", "/FO", "CSV"],
-            capture_output=True, text=True)
-        for line in (cp.stdout or "").splitlines():
-            parts = [p.strip('"') for p in line.split('","')]
-            if len(parts) >= 2 and parts[0].lower() == image:
-                pids.add(parts[1])
+    """PIDs of lean/lake processes — the orphan-sweep baseline.  The spawned
+    chain is 4 deep (elan shim lake → real lake → lean watchdog → lean file
+    workers); killing only the top orphans the rest (failure class:
+    orphaned-subprocess-tree)."""
+    pids: set[str] = set()
+    if os.name == "nt":
+        for image in ("lean.exe", "lake.exe"):
+            cp = subprocess.run(
+                ["tasklist", "/FI", f"IMAGENAME eq {image}", "/FO", "CSV"],
+                capture_output=True, text=True)
+            for line in (cp.stdout or "").splitlines():
+                parts = [p.strip('"') for p in line.split('","')]
+                if len(parts) >= 2 and parts[0].lower() == image:
+                    pids.add(parts[1])
+    else:
+        for name in ("lean", "lake"):
+            try:
+                cp = subprocess.run(
+                    ["pgrep", "-x", name],
+                    capture_output=True, text=True)
+                for line in (cp.stdout or "").strip().splitlines():
+                    if line.strip():
+                        pids.add(line.strip())
+            except FileNotFoundError:
+                pass  # pgrep not installed
     return pids
 
 
 def _lake_available() -> bool:
-    return shutil.which("lake") is not None or os.path.exists(
-        r"A:\lean\elan\bin\lake.exe")
+    if shutil.which("lake") is not None:
+        return True
+    # Check the elan default shim location.
+    if os.name == "nt":
+        return os.path.exists(
+            os.path.expandvars(r"%USERPROFILE%\.elan\bin\lake.exe"))
+    return os.path.exists(os.path.expanduser("~/.elan/bin/lake"))
 
 
 _STATE: dict = {}

@@ -2,8 +2,7 @@
 
 > [Adversarial-claim-audit note, 2026-08: HISTORICAL build-round document, kept
 > as the harness/fixture reference. Paths below name the original build home
-> `A:/24lean-push/editor-shell`; the cell now lives at
-> `proofgraph/packages/editor-shell` (run `npm test` there). The catalog has
+> `packages/editor-shell` (run `npm test` there). The catalog has
 > since grown 121 → 128 leads (ASSEMBLY Phase 1 wall) and the suite is 96
 > tests across 31 files (SUB200 split). Harness/fixture facts below remain
 > accurate.]
@@ -16,7 +15,7 @@ agent's test files.** If you find a src bug, put it in your structured output
 ## Build & run (use your OWN outDir — six agents run concurrently)
 
 ```
-cd A:/24lean-push/editor-shell
+cd packages/editor-shell
 npx tsc -p tsconfig.json --outDir dist-<yourname>
 node --test dist-<yourname>/test/<your-file>.test.js
 ```

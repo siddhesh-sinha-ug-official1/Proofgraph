@@ -34,7 +34,7 @@ allowed); 1 = elaboration errors (still emits the JSON, errors[] filled);
 
 ```
 cd <this directory>          # cwd matters: the adjacent lean-toolchain pins the version
-A:\lean\elan\bin\lean.exe --run Driver.lean fixtures\clean.lean
+lean --run Driver.lean fixtures/clean.lean
 ```
 
 Toolchain pin: `lean-toolchain` → **leanprover/lean4:v4.31.0** (installed,

@@ -1358,7 +1358,7 @@
     "underclaim": 0,
     "stale": 2
    },
-   "notes": "Stale bits (original build home A:/24lean-push, catalog '121+') marked with a dated historical-note header instead of rewriting the historical document; current suite/catalog values stated in the note."
+   "notes": "Stale bits (original build home packages, catalog '121+') marked with a dated historical-note header instead of rewriting the historical document; current suite/catalog values stated in the note."
   },
   {
    "path": "package.json",
@@ -1444,7 +1444,7 @@
   },
   {
    "path": "test/AGENT-GUIDE.md",
-   "what": "dated historical-note header added: original build home A:/24lean-push, catalog since grown 121->128, suite 96 tests / 31 files; harness facts below unchanged"
+   "what": "dated historical-note header added: original build home packages, catalog since grown 121->128, suite 96 tests / 31 files; harness facts below unchanged"
   },
   {
    "path": "src/util/sha256.ts",

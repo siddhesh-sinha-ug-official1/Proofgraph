@@ -24,8 +24,10 @@ import tempfile
 import threading
 from pathlib import Path
 
+import os
+
 from .common import (AI_DIR, APP_DIR, EVIDENCE_DIR, HEADLESS_DIR, ROOT,
-                     hub_server, kill_tree, last_json_line, run_node,
+                     IS_WIN, hub_server, kill_tree, last_json_line, run_node,
                      wait_port)
 
 
@@ -52,7 +54,8 @@ def _spawn_ai(hub_base: str):
     proc = subprocess.Popen(
         ["node", str(AI_DIR / "server.ts"), "--port", "0", "--hub", hub_base],
         cwd=str(ROOT), stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-        text=True, encoding="utf-8", errors="replace")
+        text=True, encoding="utf-8", errors="replace",
+        start_new_session=(not IS_WIN))
     ready: dict = {}
     stderr_tail: collections.deque = collections.deque(maxlen=200)
     stdout_tail: collections.deque = collections.deque(maxlen=200)
@@ -102,7 +105,8 @@ def _spawn_vite(port: int):
     vlf = open(vite_log, "w", encoding="utf-8")
     proc = subprocess.Popen(
         ["node", str(vite_entry), "--port", str(port), "--strictPort"],
-        cwd=str(APP_DIR), stdout=vlf, stderr=subprocess.STDOUT)
+        cwd=str(APP_DIR), stdout=vlf, stderr=subprocess.STDOUT,
+        start_new_session=(not IS_WIN))
     if not wait_port(port, 90):
         kill_tree(proc)
         vlf.close()

@@ -109,6 +109,17 @@ class LspBridgeMixin:
                           {"path": path, "reason": "unknown-endpoint"})
             conn.close(1008, "unknown-endpoint")
             return
+        # S3: origin check — mirror the HTTP CORS policy (loopback only).
+        origin = conn.request.headers.get("Origin", "")
+        if origin:
+            from urllib.parse import urlparse as _up
+            o = _up(origin)
+            if o.scheme not in ("http", "https") or \
+               o.hostname not in ("localhost", "127.0.0.1", "::1"):
+                self.log.emit("hub.lsp.close",
+                              {"origin": origin, "reason": "foreign-origin"})
+                conn.close(1008, "foreign-origin")
+                return
         try:
             backend, is_instance = self._checkout_backend()
         except HubError as exc:

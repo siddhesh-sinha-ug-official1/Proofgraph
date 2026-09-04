@@ -85,10 +85,19 @@ export async function until(fn, timeoutMs, what, everyMs = 250) {
 }
 
 export function nodePids() {
-  const out = execSync('tasklist /FI "IMAGENAME eq node.exe" /FO CSV /NH')
-    .toString();
-  return new Set(out.split(/\r?\n/).filter((l) => l.includes("node.exe"))
-    .map((l) => Number(l.split('","')[1])));
+  if (process.platform === "win32") {
+    const out = execSync('tasklist /FI "IMAGENAME eq node.exe" /FO CSV /NH')
+      .toString();
+    return new Set(out.split(/\r?\n/).filter((l) => l.includes("node.exe"))
+      .map((l) => Number(l.split('","')[1])));
+  }
+  // POSIX: use pgrep to find node processes.
+  try {
+    const out = execSync("pgrep -x node", { encoding: "utf-8" });
+    return new Set(out.trim().split(/\n/).filter(Boolean).map(Number));
+  } catch {
+    return new Set();   // pgrep exits 1 when no matches
+  }
 }
 
 export const evts = (wall, id) =>

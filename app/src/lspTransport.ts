@@ -47,7 +47,14 @@ export function connectBrowserTransports(
         const data = typeof ev.data === "string"
           ? ev.data
           : new TextDecoder("utf-8").decode(ev.data as ArrayBuffer);
-        const msg = JSON.parse(data);
+        let msg: unknown;
+        try {
+          msg = JSON.parse(data);
+        } catch {
+          // Malformed JSON-RPC frame — skip rather than crash the connection.
+          console.warn("[lspTransport] ignoring malformed JSON frame:", data.slice(0, 200));
+          return;
+        }
         for (const h of [...msgHandlers]) h(msg);
       });
       ws.addEventListener("close", () => {

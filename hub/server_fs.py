@@ -120,10 +120,16 @@ class WorkspaceFsMixin:
                            f"/fs/list cannot read {str(rel)!r}: {exc}") from exc
         for child in children:
             is_dir = child.is_dir()
+            size = None
+            if not is_dir:
+                try:
+                    size = child.stat().st_size
+                except OSError:
+                    size = None  # file removed between iterdir() and stat()
             entries.append({
                 "name": child.name,
                 "kind": "dir" if is_dir else "file",
-                "size": None if is_dir else child.stat().st_size,
+                "size": size,
             })
         payload = {"path": self._rel_of(target), "entries": entries}
         self.log.emit("hub.fs.list",

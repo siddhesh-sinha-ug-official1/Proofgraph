@@ -5,10 +5,12 @@ reaching it through the `capability.capability` module attributes."""
 
 from __future__ import annotations
 
+import threading
 from dataclasses import dataclass, field
 
 from .handle import Handle
 
+_LAST_LOCK = threading.Lock()
 _LAST = {"bus": None, "state": {}}
 
 
@@ -26,20 +28,22 @@ class Capability:
 
 def dump() -> dict:
     """The ENTIRE internal state of the last (or in-flight) run."""
-    s = _LAST["state"]
-    return {
-        "discovery": s.get("discovery"),
-        "scorecard": s.get("scorecard"),
-        "treewalk": s.get("treewalk"),
-        "shimState": s.get("shimState"),
-        "battery": s.get("battery"),
-        "cache": s.get("cache"),
-        "libInventory": s.get("libInventory"),
-        "capability": s.get("capability"),
-    }
+    with _LAST_LOCK:
+        s = _LAST["state"]
+        return {
+            "discovery": s.get("discovery"),
+            "scorecard": s.get("scorecard"),
+            "treewalk": s.get("treewalk"),
+            "shimState": s.get("shimState"),
+            "battery": s.get("battery"),
+            "cache": s.get("cache"),
+            "libInventory": s.get("libInventory"),
+            "capability": s.get("capability"),
+        }
 
 
 def history() -> list[dict]:
     """The ordered probe stream (by logicalClock) for the last run."""
-    bus = _LAST["bus"]
+    with _LAST_LOCK:
+        bus = _LAST["bus"]
     return bus.history() if bus else []

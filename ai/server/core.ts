@@ -93,9 +93,11 @@ export async function createAiServer(cfg: AiServerConfig = {}): Promise<AiServer
     const acao = acaoFor(origin);
     return {
       "Content-Type": "application/json; charset=utf-8",
-      ...(acao ? { "Access-Control-Allow-Origin": acao, "Vary": "Origin" } : {}),
-      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
+      ...(acao ? {
+        "Access-Control-Allow-Origin": acao, "Vary": "Origin",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      } : {}),
     };
   }
 

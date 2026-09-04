@@ -39,27 +39,47 @@ def _events(hist, probe_id):
 
 
 def _node_pids() -> set[str]:
-    if os.name != "nt":
-        return set()
-    cp = subprocess.run(["tasklist", "/FI", "IMAGENAME eq node.exe", "/FO", "CSV"],
-                        capture_output=True, text=True)
-    pids = set()
-    for line in (cp.stdout or "").splitlines():
-        parts = [p.strip('"') for p in line.split('","')]
-        if len(parts) >= 2 and parts[0].lower() == "node.exe":
-            pids.add(parts[1])
-    return pids
+    """Snapshot of running node PIDs — used to detect orphans after teardown.
+    On Windows, tasklist.  On POSIX, pgrep."""
+    if os.name == "nt":
+        cp = subprocess.run(["tasklist", "/FI", "IMAGENAME eq node.exe", "/FO", "CSV"],
+                            capture_output=True, text=True)
+        pids = set()
+        for line in (cp.stdout or "").splitlines():
+            parts = [p.strip('"') for p in line.split('","')]
+            if len(parts) >= 2 and parts[0].lower() == "node.exe":
+                pids.add(parts[1])
+        return pids
+    else:
+        try:
+            cp = subprocess.run(["pgrep", "-x", "node"],
+                                capture_output=True, text=True)
+            return set((cp.stdout or "").split())
+        except FileNotFoundError:
+            return set()
 
 
 # ---- the shared stack (original V1Connector.setUpClass, built once) --------
 
-node_before: set[str] = None
-feed: V1CapabilityFeed = None
-wall_py = env_py = hist_py = None
-wall_s = env_s = hist_s = None
-awk_handle = awk_root = wall_awk = env_awk = hist_awk = None
-wall_lean = env_lean = hist_lean = None
-wall_tex = env_tex = hist_tex = None
+node_before: set[str] | None = None
+feed: V1CapabilityFeed | None = None
+wall_py: object | None = None
+env_py: dict | None = None
+hist_py: list | None = None
+wall_s: object | None = None
+env_s: dict | None = None
+hist_s: list | None = None
+awk_handle: object | None = None
+awk_root: str | None = None
+wall_awk: object | None = None
+env_awk: dict | None = None
+hist_awk: list | None = None
+wall_lean: object | None = None
+env_lean: dict | None = None
+hist_lean: list | None = None
+wall_tex: object | None = None
+env_tex: dict | None = None
+hist_tex: list | None = None
 
 _built = False
 

@@ -3,7 +3,7 @@
 
 One command, from anywhere:
 
-    python A:\\30lean-push\\proofgraph\\packages\\structure-extractor\\extractor\\docks\\lean_driver\\run_smoke.py
+    python packages/structure-extractor/extractor/docks/lean_driver/run_smoke.py
 
 What it does: runs `lean --run Driver.lean <target>` (cwd = this directory,
 so the adjacent `lean-toolchain` file pins the version) against the three
@@ -29,8 +29,9 @@ Also asserted every run: toolchain.leanVersion == the version named in the
 adjacent lean-toolchain pin (currently leanprover/lean4:v4.31.0), and the
 limits[] array is present and non-empty (declared limits ride in the output).
 
-Lean binary resolution: $LEAN_EXE if set, else A:\\lean\\elan\\bin\\lean.exe
-(this machine's elan shim), else `lean` on PATH.
+Lean binary resolution: $LEAN_EXE if set, else the elan default shim
+(~/.elan/bin/lean on POSIX, %USERPROFILE%\\.elan\\bin\\lean.exe on Windows),
+else `lean` on PATH.
 
 Exit code: 0 = all assertions pass; 1 = any failure (each printed).
 NOTE: a cold toolchain (first `lean --run` after boot / elan install) can
@@ -53,9 +54,13 @@ def lean_exe() -> str:
     cand = os.environ.get("LEAN_EXE")
     if cand and os.path.exists(cand):
         return cand
-    shim = r"A:\lean\elan\bin\lean.exe"
-    if os.path.exists(shim):
-        return shim
+    # elan default shim location (platform-dependent).
+    if os.name == "nt":
+        elan_shim = os.path.expandvars(r"%USERPROFILE%\.elan\bin\lean.exe")
+    else:
+        elan_shim = os.path.expanduser("~/.elan/bin/lean")
+    if os.path.exists(elan_shim):
+        return elan_shim
     found = shutil.which("lean")
     if found:
         return found

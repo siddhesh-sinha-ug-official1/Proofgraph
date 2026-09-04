@@ -23,9 +23,13 @@ def _default_lean_exe() -> str | None:
     cand = os.environ.get("LEAN_EXE")
     if cand and os.path.exists(cand):
         return cand
-    shim = r"A:\lean\elan\bin\lean.exe"
-    if os.path.exists(shim):
-        return shim
+    # elan default shim location (platform-dependent).
+    if os.name == "nt":
+        elan_shim = os.path.expandvars(r"%USERPROFILE%\.elan\bin\lean.exe")
+    else:
+        elan_shim = os.path.expanduser("~/.elan/bin/lean")
+    if os.path.exists(elan_shim):
+        return elan_shim
     return shutil.which("lean")
 
 

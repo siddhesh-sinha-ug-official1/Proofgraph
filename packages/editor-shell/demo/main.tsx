@@ -4,7 +4,7 @@
  * Layout per §7.3: the editor is one pane, the "graph pane" (a stand-in for
  * Tree 5, since this is a clean-room build) is a SIBLING pane; they talk ONLY
  * through the shared SelectionBus. Below both: a live probe console tapping
- * the cell's firehoses — the Prime Directive made visible.
+ * the cell's firehoses — the probe-everything rule made visible.
  *
  * SUB200 restructure: the cell wiring + display helpers live in
  * ./demo-cell.ts; this module is the React shell, behavior unchanged.

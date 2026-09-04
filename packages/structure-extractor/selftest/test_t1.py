@@ -41,7 +41,7 @@ def _copytree_writable(src: Path, dst: Path) -> None:
     machine), the temp copy inherits it and later rewrites fail with
     PermissionError.  Failure class: attribute propagation, guarded by
     explicitly clearing ReadOnly on every copied file.  (Post-review fix from
-    the cell's final DONE state at A:\\23lean-push — the assembly copy was
+    the cell's final DONE state (prior build round) — the assembly copy was
     taken mid-build and predated it; ported during the schema swap.)"""
     shutil.copytree(src, dst)
     for p in dst.rglob("*"):

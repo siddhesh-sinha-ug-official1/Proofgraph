@@ -50,17 +50,24 @@ def _load_wall() -> dict:
 
 
 def _node_pids() -> set[str]:
-    """PIDs of node.exe processes (Windows) — the orphan sweep baseline."""
-    if os.name != "nt":
-        return set()
-    cp = subprocess.run(["tasklist", "/FI", "IMAGENAME eq node.exe", "/FO", "CSV"],
-                        capture_output=True, text=True)
-    pids = set()
-    for line in (cp.stdout or "").splitlines():
-        parts = [p.strip('"') for p in line.split('","')]
-        if len(parts) >= 2 and parts[0].lower() == "node.exe":
-            pids.add(parts[1])
-    return pids
+    """PIDs of node processes — the orphan sweep baseline.
+    On Windows, tasklist.  On POSIX, pgrep."""
+    if os.name == "nt":
+        cp = subprocess.run(["tasklist", "/FI", "IMAGENAME eq node.exe", "/FO", "CSV"],
+                            capture_output=True, text=True)
+        pids = set()
+        for line in (cp.stdout or "").splitlines():
+            parts = [p.strip('"') for p in line.split('","')]
+            if len(parts) >= 2 and parts[0].lower() == "node.exe":
+                pids.add(parts[1])
+        return pids
+    else:
+        try:
+            cp = subprocess.run(["pgrep", "-x", "node"],
+                                capture_output=True, text=True)
+            return set((cp.stdout or "").split())
+        except FileNotFoundError:
+            return set()
 
 
 _STATE: dict = {}
@@ -181,17 +188,17 @@ class TestPythonProfileLive(unittest.TestCase):
         self.assertTrue(shutdown_seen[0]["payload"]["terminated"])
         client = wall.handle._client
         self.assertIsNotNone(client.proc.poll(), "cmd/npx wrapper still alive")
-        if os.name == "nt":
-            # orphaned-subprocess-tree guard: every node.exe spawned by this
-            # run must be gone (killing only the cmd wrapper orphans node)
-            before = _STATE["node_pids_before"]
-            deadline = time.time() + 20
+        # orphaned-subprocess-tree guard: every node process spawned by this
+        # run must be gone.  On Windows, killing only the cmd wrapper orphans
+        # node; on POSIX, killing only the npx parent orphans the node child.
+        before = _STATE["node_pids_before"]
+        deadline = time.time() + 20
+        leaked = _node_pids() - before
+        while leaked and time.time() < deadline:
+            time.sleep(1)
             leaked = _node_pids() - before
-            while leaked and time.time() < deadline:
-                time.sleep(1)
-                leaked = _node_pids() - before
-            self.assertEqual(leaked, set(),
-                             f"orphaned node.exe processes: {leaked}")
+        self.assertEqual(leaked, set(),
+                         f"orphaned node processes: {leaked}")
 
 
 if __name__ == "__main__":

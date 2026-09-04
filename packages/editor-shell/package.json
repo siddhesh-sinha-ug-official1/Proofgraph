@@ -2,7 +2,7 @@
   "name": "proofgraph-editor-shell",
   "version": "0.0.1",
   "private": true,
-  "description": "ProofGraph Tree 4 — Editor Shell cell: text projection at IDE quality, maximally probe-able.",
+  "description": "ProofGraph Tree 4 — Editor Shell cell: text projection with Monaco, verdict display, and LSP diagnostics.",
   "type": "module",
   "license": "PolyForm-Noncommercial-1.0.0",
   "scripts": {

@@ -122,14 +122,15 @@ class V1ConnectorLangsLifecycle(unittest.TestCase):
         for lang, client in clients:
             self.assertIsNotNone(client.proc.poll(),
                                  f"{lang}: LSP child still alive after shutdown")
-        if os.name == "nt":
-            deadline = time.time() + 20
+        # orphaned-subprocess-tree guard: every node process spawned by this
+        # run must be gone — _node_pids() uses tasklist (Win) / pgrep (POSIX).
+        deadline = time.time() + 20
+        leaked = _node_pids() - st.node_before
+        while leaked and time.time() < deadline:
+            time.sleep(1)
             leaked = _node_pids() - st.node_before
-            while leaked and time.time() < deadline:
-                time.sleep(1)
-                leaked = _node_pids() - st.node_before
-            self.assertEqual(leaked, set(),
-                             f"orphaned node.exe processes: {leaked}")
+        self.assertEqual(leaked, set(),
+                         f"orphaned node processes: {leaked}")
         # [H11] AFTER shutdown: cached handles must NOT be handed out (dead
         # children).  capability_fn refuses with the typed FeedShutdownError,
         # live_clients() returns [] (caches cleared), and the shutdown pin

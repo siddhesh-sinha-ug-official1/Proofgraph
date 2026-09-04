@@ -52,12 +52,27 @@ for _stream in (sys.stdout, sys.stderr):
     try: _stream.reconfigure(encoding="utf-8", errors="replace")
     except Exception: pass                        # noqa: BLE001 — best effort
 
+IS_WIN = os.name == "nt"
+
+def _npm(*args: str) -> list[str]:
+    """npm command, wrapped for Windows (cmd /c) where bare npm.cmd can't be
+    exec'd directly by subprocess without shell=True."""
+    if IS_WIN:
+        return ["cmd", "/c", "npm", *args]
+    return ["npm", *args]
+
+def _npx(*args: str) -> list[str]:
+    """npx command, same Windows wrapping as _npm."""
+    if IS_WIN:
+        return ["cmd", "/c", "npx", *args]
+    return ["npx", *args]
+
 SUITES: list[tuple[str, list[str], Path, int]] = [
     # name, command, cwd, timeout_s
     ("line-gate (sub-200 ceiling)", [PY, "linegate.py"], ROOT, 300),
     ("schema (py)", [PY, "tests/test_schema_package.py"],
      ROOT / "packages" / "schema", 600),
-    ("schema (ts)", ["cmd", "/c", "npm", "test"],
+    ("schema (ts)", _npm("test"),
      ROOT / "packages" / "schema", 600),
     ("cell 1 graph-model", [PY, "-m", "unittest", "discover", "-s", "tests"],
      ROOT / "packages" / "graph-model", 900),
@@ -65,18 +80,18 @@ SUITES: list[tuple[str, list[str], Path, int]] = [
      ROOT / "packages" / "capability-layer", 2400),
     ("cell 3 structure-extractor", [PY, "selftest/run_all.py"],
      ROOT / "packages" / "structure-extractor", 2400),
-    ("cell 4 editor-shell", ["cmd", "/c", "npm", "test"],
+    ("cell 4 editor-shell", _npm("test"),
      ROOT / "packages" / "editor-shell", 1800),
-    ("cell 5 graph-view", ["cmd", "/c", "npx", "vitest", "run", "--no-cache"],
+    ("cell 5 graph-view", _npx("vitest", "run", "--no-cache"),
      ROOT / "packages" / "graph-view", 1800),
-    ("cell 6 byok-arena", ["cmd", "/c", "npm", "test"],
+    ("cell 6 byok-arena", _npm("test"),
      ROOT / "packages" / "byok-arena", 1800),
     ("hub", [PY, "hub/test_hub.py"], ROOT, 1800),
     ("outerwall", [PY, "outerwall/test_outerwall.py"], ROOT, 1800),
-    ("ai", ["cmd", "/c", "npm", "test"], ROOT / "ai", 900),
-    ("app vitest (+build gate)", ["cmd", "/c", "npx", "vitest", "run", "--no-cache"],
+    ("ai", _npm("test"), ROOT / "ai", 900),
+    ("app vitest (+build gate)", _npx("vitest", "run", "--no-cache"),
      ROOT / "app", 2400),
-    ("app tsc --noEmit", ["cmd", "/c", "npx", "tsc", "--noEmit"],
+    ("app tsc --noEmit", _npx("tsc", "--noEmit"),
      ROOT / "app", 900),
     ("vessel V1 (capability x extractor)", [PY, "vessels/test_v1.py"], ROOT, 1800),
     ("vessel V3 (extractor x model)", [PY, "vessels/test_v3_extractor_to_model.py"],
@@ -96,19 +111,26 @@ def _env() -> dict:
 
 
 def _tree_kill(proc: subprocess.Popen) -> None:
-    """[H4] taskkill /F /T the WHOLE process tree — plain proc.kill() reaps
-    only cmd.exe, orphaning node/vitest grandchildren that still hold the
+    """Kill the WHOLE process tree — on Windows via taskkill /F /T, on
+    POSIX via os.killpg (the subprocess is started in its own process
+    group by _run_with_tree_kill).  Plain proc.kill() only reaps the
+    direct child, orphaning node/vitest grandchildren that still hold the
     stdout pipe (failure class: `orphaned-subprocess-tree`)."""
     if proc is None or proc.poll() is not None: return
-    if os.name == "nt":
+    if IS_WIN:
         try:
             subprocess.run(["taskkill", "/F", "/T", "/PID", str(proc.pid)],
                            capture_output=True, timeout=15)
         except Exception:                                # noqa: BLE001
             pass
     else:
-        try: proc.kill()
+        import signal
+        try: os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
         except OSError: pass
+        try: proc.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            try: os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
+            except OSError: pass
     try: proc.wait(timeout=10)
     except subprocess.TimeoutExpired: pass  # tree may still be exiting
 
@@ -118,9 +140,13 @@ def _run_with_tree_kill(cmd, cwd, env, timeout_s):
     stdlib's own proc.kill()+communicate() blocks on grandchildren still
     holding the stdout pipe; after tree-kill pipe writers close, communicate
     sees EOF."""
+    # On POSIX, start_new_session=True puts the child in its own process
+    # group so _tree_kill can os.killpg the whole tree.  On Windows this
+    # kwarg is ignored (taskkill /T handles tree-kill by PID).
     proc = subprocess.Popen(cmd, cwd=str(cwd), env=env,
                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                            text=True, encoding="utf-8", errors="replace")
+                            text=True, encoding="utf-8", errors="replace",
+                            start_new_session=(not IS_WIN))
     try:
         out, _ = proc.communicate(timeout=timeout_s)
         return proc.returncode, out or ""

@@ -108,10 +108,10 @@ class _ProtoMixin:
 
     @staticmethod
     def _tree_kill(proc):
-        """[ASSEMBLY CHANGE V1] kill the WHOLE process tree.  On Windows the
-        wired server may be a `cmd /c npx ...` wrapper: killing only the cmd
-        process orphans the node child (failure class: orphaned-subprocess-
-        tree — the same leak cell 3's pyright backend closes with taskkill)."""
+        """Kill the WHOLE process tree.  On Windows the wired server may be
+        a `cmd /c npx ...` wrapper: killing only the cmd process orphans the
+        node child.  On POSIX, SIGTERM the process group then SIGKILL the
+        group (not just the direct child) if it doesn't exit."""
         if proc is None or proc.poll() is not None:
             return
         if os.name == "nt":
@@ -120,11 +120,20 @@ class _ProtoMixin:
                                capture_output=True, timeout=15)
             except Exception:
                 pass
+        else:
+            import signal as _sig
+            try: os.killpg(os.getpgid(proc.pid), _sig.SIGTERM)
+            except OSError: pass
+            try: proc.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                try: os.killpg(os.getpgid(proc.pid), _sig.SIGKILL)
+                except OSError: pass
         try:
             proc.kill()
         except OSError:
             pass
-        proc.wait(timeout=10)
+        try: proc.wait(timeout=10)
+        except subprocess.TimeoutExpired: pass
 
     def kill(self):
         """Hard-kill the server process (used by the crash gate)."""

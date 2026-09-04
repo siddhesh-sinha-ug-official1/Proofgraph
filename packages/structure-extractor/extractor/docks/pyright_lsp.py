@@ -54,7 +54,8 @@ class LspPyrightBackend:
         self._cmdline = " ".join(cmd)
         self.proc = subprocess.Popen(cmd, cwd=str(self.project_root),
                                      stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                                     stderr=subprocess.DEVNULL)
+                                     stderr=subprocess.DEVNULL,
+                                     start_new_session=(sys.platform != "win32"))
         self._reader = threading.Thread(target=self._read_loop, daemon=True)
         self._reader.start()
         root_uri = self.project_root.as_uri()
@@ -168,19 +169,19 @@ class LspPyrightBackend:
             self.proc.terminate()
         except Exception:
             pass
-        # On Windows the spawned command is a `cmd /c npx ...` TREE: terminating
-        # the cmd wrapper orphans the node child (observed: five orphaned
-        # pyright-langserver node processes).  Failure class: orphaned
-        # subprocess tree — guarded by an explicit tree kill.
-        # (Post-review fix from the cell's final DONE state at
-        # A:\23lean-push — the assembly copy was taken mid-build and
-        # predated it; ported during the schema swap, baseline sync only.)
+        # Tree-kill: on Windows the `cmd /c npx ...` wrapper orphans the
+        # node child if only the cmd process is killed.  On POSIX, SIGKILL
+        # the process group to reap the npx → node tree.
         if sys.platform == "win32":
             try:
                 subprocess.run(["taskkill", "/PID", str(self.proc.pid), "/T", "/F"],
                                capture_output=True, timeout=15)
             except Exception:
                 pass
+        else:
+            import os as _os, signal as _sig
+            try: _os.killpg(_os.getpgid(self.proc.pid), _sig.SIGKILL)
+            except OSError: pass
         try:
             self.proc.wait(timeout=10)
         except Exception:

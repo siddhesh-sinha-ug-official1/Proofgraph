@@ -20,7 +20,7 @@ def write_report(args, moat, lean, ceiling, suite_results,
     n_skip = sum(1 for c in CHECKS if c["pass"] is None)
     lines = []
     w = lines.append
-    w("# ACCEPTANCE REPORT — §7, the organism breathes")
+    w("# ACCEPTANCE REPORT — §7, end-to-end check")
     w("")
     w(f"Generated {datetime.now(timezone.utc).isoformat()} by "
       f"`python acceptance/run_demo.py"
@@ -103,7 +103,7 @@ def write_report(args, moat, lean, ceiling, suite_results,
       "catalog's bus/LSP/serializer classes are exercised by their owning "
       "suites (outerwall 41, hub 44, app, ai — see roll-up).")
     w("")
-    w("## Suite roll-up (the whole organism)")
+    w("## Suite roll-up (all checks)")
     w("")
     if suite_results:
         w("Measured live THIS run (--suites):")

@@ -5,7 +5,7 @@ Source (code **and** documents) → schema-conformant graph:
 **T2** resolved relationship edges via per-language **docks** ·
 **T3** graph properties uniformly via rustworkx (NetworkX cross-check).
 Every node, candidate edge, resolver decision, and rejected edge is a probe
-lead. **Maximally probe-able; the Phase-1 membrane (`wall.py`, MEMBRANE-SPEC.md)
+lead. **Densely instrumented; the Phase-1 membrane (`wall.py`, MEMBRANE-SPEC.md)
 is promoted OVER the pins — it never replaces them.**
 
 ## Quick start

@@ -14,14 +14,14 @@ verified to do.*
 
 ProofGraph reads source code and formal proofs, builds a typed dependency graph
 with content-addressed IDs, and attaches to every declaration a verdict that is
-**honest by construction**: `green` can only be produced by a real checker (today,
+**enforced by a multi-layer guard chain**: `green` can only be produced by a real checker (today,
 the Lean 4 kernel), and everything the system does not know, it *says* it does not
 know — in typed, probed, named ways.
 
 ## The shape: six cells, three membranes
 
 The system was built as six independent "cells", each by a separate build agent,
-each maximally instrumented (probes everywhere) and deliberately without a public
+each extensively instrumented (probes everywhere) and deliberately without a public
 interface. Assembly then added three nested membrane layers:
 
 1. **Cell walls** — each cell got a minimal, versioned, typed face (`wall.py` /
@@ -226,14 +226,12 @@ patched (behavior-preserving round). All are low/info severity. Grouped:
 
 **Real latent bugs (would bite on an unreached path):**
 
-1. **`byok-arena/src/adapters/gemini/wire.ts`** — when replaying a *neutral*
-   conversation history containing `role:"tool"` messages, the reshaper puts
-   the tool call id into `functionResponse.name`. Gemini matches function
-   responses by *function name*; the id belongs in the separate `id` field. The
-   cell's own `submitToolResults` path never hits this (it reconstructs from
-   cache), so it's unreached today — but any future consumer replaying neutral
-   histories through `chat()` on a real wire would mismatch. **Fix**: map
-   name←functionName, id←toolCallId; add a wire-shape test. Small.
+1. **`byok-arena/src/adapters/gemini/wire.ts`** — ~~when replaying a *neutral*
+   conversation history containing `role:"tool"` messages, the reshaper put
+   the tool call id into `functionResponse.name`.~~ **Fixed**: `wire.ts` now
+   maps `name←functionName`, `id←toolCallId` (the `functionName` field was
+   added to the neutral `ToolResultMessage` interface). The mismatch no
+   longer occurs.
 2. **`outerwall/analyze_roots.py`** — declared roots must never be guessed, and
    an unresolvable root raises `unknown-root`. True for module *names* — but
    the module-*ID* branch expands a module node with zero decl members to `[]`

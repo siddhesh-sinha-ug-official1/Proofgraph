@@ -57,6 +57,10 @@ agentic-convos/
 packages/*/agentic-convos/
 .claude/
 
+# ── Environment / secrets (never committed) ─────────────────────────────────
+.env
+.env.*
+
 # ── Editor / OS noise ───────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db

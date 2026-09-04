@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
-  "description": "ProofGraph Tree 5 — graph/node view cell (React Flow + ELK), maximal probe density round",
+  "description": "ProofGraph Tree 5 — graph/node view cell (React Flow + ELK), dense probe instrumentation round",
   "scripts": {
     "test": "vitest run",
     "typecheck": "tsc --noEmit",

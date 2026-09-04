@@ -99,7 +99,8 @@ export class EditorShellCell {
 
   /** @internal */
   repaintVerdicts(causeRef: string | null): ProbeEvent {
-    return this.verdict!.paintAll(
+    if (!this.verdict) throw new Error("cell: verdict engine not initialized (open() first)");
+    return this.verdict.paintAll(
       this.index(),
       (nodeId) => this.diagnostics.forNode(nodeId),
       causeRef,
@@ -166,8 +167,10 @@ export class EditorShellCell {
         await this.pump.request("shutdown", null);
         this.pump.notify("exit", null);
       }
-    } catch {
-      // dispose is best-effort; transport may already be gone (probed upstream)
+    } catch (err) {
+      // dispose is best-effort; transport may already be gone.
+      this.probe.emit("editor.conn.transport.state",
+        { phase: "dispose-error", detail: String(err) }, null);
     }
     this.selection?.dispose();
     this.connector?.dispose();

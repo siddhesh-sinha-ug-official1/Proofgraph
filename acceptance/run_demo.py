@@ -1,4 +1,4 @@
-"""run_demo — the §7 ACCEPTANCE RUNNER: one command, the organism breathes.
+"""run_demo — the §7 ACCEPTANCE RUNNER: one command, end-to-end check.
 
     python acceptance/run_demo.py                 # everything incl. the DEFAULT
                                                   # headless UI acceptance (real
