@@ -1,0 +1,6 @@
+node_modules/
+dist/
+out/
+resources/hub/
+resources/ai-server.cjs
+*.log

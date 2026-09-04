@@ -1,0 +1,93 @@
+appId: com.proofgraph.desktop
+productName: ProofGraph
+copyright: "Copyright © 2026 ProofGraph Contributors"
+
+directories:
+  buildResources: resources
+  output: out
+
+files:
+  - dist/**/*
+
+# ── Extra resources bundled alongside the app ──────────────────────────
+# Renderer: the pre-built Vite output from app/dist.
+# AI server: esbuild-bundled single file (runs on Electron's Node).
+# Hub: PyInstaller-frozen executable (self-contained, no Python needed).
+extraResources:
+  - from: ../app/dist
+    to: renderer
+    filter: ["**/*"]
+  - from: resources/ai-server.cjs
+    to: ai-server.cjs
+  # Uncomment once PyInstaller freeze is set up:
+  # - from: resources/hub
+  #   to: hub
+  #   filter: ["**/*"]
+
+# ── Auto-update from GitHub Releases ───────────────────────────────────
+publish:
+  provider: github
+  owner: siddhesh-sinha-ug-official1
+  repo: Proofgraph
+  releaseType: release
+
+# ── Windows: NSIS installer ────────────────────────────────────────────
+win:
+  target:
+    - target: nsis
+      arch: [x64, arm64]
+  icon: resources/icon.ico
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  perMachine: false
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: ProofGraph
+  license: ../LICENSE
+  installerSidebar: resources/sidebar.bmp
+  deleteAppDataOnUninstall: false
+
+# ── macOS: DMG + ZIP (ZIP required for auto-update) ───────────────────
+mac:
+  target:
+    - target: dmg
+      arch: [universal]
+    - target: zip
+      arch: [universal]
+  icon: resources/icon.icns
+  category: public.app-category.developer-tools
+  hardenedRuntime: true
+  entitlements: resources/entitlements.mac.plist
+  entitlementsInherit: resources/entitlements.mac.plist
+
+dmg:
+  contents:
+    - x: 130
+      y: 220
+    - x: 410
+      y: 220
+      type: link
+      path: /Applications
+
+# ── Linux: AppImage + deb ─────────────────────────────────────────────
+linux:
+  target:
+    - target: AppImage
+      arch: [x64, arm64]
+    - target: deb
+      arch: [x64, arm64]
+  icon: resources/icons
+  category: Development
+  maintainer: "ProofGraph <noreply@users.noreply.github.com>"
+  synopsis: Proof-graph explorer and verification UI
+  description: >
+    ProofGraph is a proof-dependency graph explorer with an LSP-backed
+    editor, visual graph view, and AI-assisted analysis.
+
+deb:
+  depends:
+    - libnotify4
+    - libxtst6
+    - libnss3
