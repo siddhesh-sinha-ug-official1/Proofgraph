@@ -58,7 +58,7 @@ def copy_tree(dst: Path) -> None:
     never inputs): node_modules (junctioned/symlinked per fault),
     __pycache__, .git, .vite caches, app/dist (the build gate rebuilds
     it), *.pyc."""
-    _SKIP_DIRS = {"node_modules", "__pycache__", ".git", ".vite", "dist"}
+    _SKIP_DIRS = {"node_modules", "__pycache__", ".git", ".vite"}
 
     def _ignore(directory, entries):
         rel = Path(directory).relative_to(PROOFGRAPH)
@@ -67,6 +67,8 @@ def copy_tree(dst: Path) -> None:
             if e in _SKIP_DIRS:
                 ignored.add(e)
             elif rel == Path("app") and e == "dist":
+                # Only skip app/dist (the build gate rebuilds it);
+                # other dist/ dirs (e.g. packages/*/dist/) are kept.
                 ignored.add(e)
             elif e.endswith((".pyc", ".pyo")):
                 ignored.add(e)

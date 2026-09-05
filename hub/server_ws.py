@@ -110,8 +110,11 @@ class LspBridgeMixin:
             conn.close(1008, "unknown-endpoint")
             return
         # S3: origin check — mirror the HTTP CORS policy (loopback only).
+        # "null" is the serialized opaque origin from file:// pages
+        # (RFC 6454); Electron production builds load via loadFile(),
+        # so the renderer's Origin header is the literal string "null".
         origin = conn.request.headers.get("Origin", "")
-        if origin:
+        if origin and origin != "null":
             from urllib.parse import urlparse as _up
             o = _up(origin)
             if o.scheme not in ("http", "https") or \

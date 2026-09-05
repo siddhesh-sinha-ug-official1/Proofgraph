@@ -17,6 +17,10 @@ import { updLog } from './logger';
 
 let initialized = false;
 let updateDownloaded = false;
+let downloadedVersion = '';
+// Track whether an interactive check is in flight so we can show
+// the "up to date" dialog exactly once, without stacking listeners.
+let interactiveCheckPending = false;
 
 function init() {
   if (initialized) return;
@@ -28,10 +32,22 @@ function init() {
 
   autoUpdater.on('update-available', (info: UpdateInfo) => {
     updLog.info(`update available: v${info.version}`);
+    // An update was found — clear the interactive flag so no stale
+    // "up to date" dialog fires.
+    interactiveCheckPending = false;
   });
 
   autoUpdater.on('update-not-available', () => {
     updLog.info('no update available');
+    if (interactiveCheckPending) {
+      interactiveCheckPending = false;
+      dialog.showMessageBox({
+        type: 'info',
+        title: 'Updates',
+        message: `${APP_NAME} is up to date.`,
+        buttons: ['OK'],
+      });
+    }
   });
 
   autoUpdater.on('download-progress', (p) => {
@@ -41,11 +57,13 @@ function init() {
   autoUpdater.on('update-downloaded', (info: UpdateInfo) => {
     updLog.info(`downloaded v${info.version} — ready to install`);
     updateDownloaded = true;
+    downloadedVersion = info.version;
     promptInstall(info.version);
   });
 
   autoUpdater.on('error', (err) => {
     updLog.error('auto-update error', err);
+    interactiveCheckPending = false;
   });
 }
 
@@ -86,24 +104,15 @@ export function checkForUpdates(interactive: boolean): void {
   init();
 
   if (updateDownloaded) {
-    promptInstall('(downloaded)');
+    promptInstall(downloadedVersion || '(downloaded)');
     return;
   }
 
-  if (interactive) {
-    // One-shot listener to show "no update" dialog
-    autoUpdater.once('update-not-available', () => {
-      dialog.showMessageBox({
-        type: 'info',
-        title: 'Updates',
-        message: `${APP_NAME} is up to date.`,
-        buttons: ['OK'],
-      });
-    });
-  }
+  interactiveCheckPending = interactive;
 
   autoUpdater.checkForUpdates().catch((err) => {
     updLog.error('checkForUpdates failed', err);
+    interactiveCheckPending = false;
     if (interactive) {
       dialog.showMessageBox({
         type: 'error',

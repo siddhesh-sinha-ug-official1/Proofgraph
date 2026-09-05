@@ -71,5 +71,7 @@ function showCrashDialog(err: Error): void {
     defaultId: 0,
   }).then(({ response }) => {
     if (response === 1) app.quit();
+  }).catch(() => {
+    // Dialog can reject if the app is quitting mid-dialog.
   });
 }

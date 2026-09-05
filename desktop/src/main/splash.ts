@@ -64,9 +64,10 @@ export function showSplash(): Splash {
   return {
     win,
     setText(msg: string) {
-      const safe = msg.replace(/'/g, "\\'");
+      // Use JSON.stringify for correct escaping (handles quotes,
+      // backslashes, newlines) instead of manual single-quote replace.
       win.webContents
-        .executeJavaScript(`document.getElementById('status').textContent='${safe}'`)
+        .executeJavaScript(`document.getElementById('status').textContent=${JSON.stringify(msg)}`)
         .catch(() => {});
     },
     close() {

@@ -44,6 +44,10 @@ function isLoopbackOrigin(origin: string): boolean {
  *  origin (the ephemeral-port acceptance UI). */
 export function originAllowed(origin: string | undefined): boolean {
   if (!origin) return true;
+  // "null" is the serialized opaque origin from file:// pages (RFC 6454).
+  // Electron production builds load the renderer via loadFile(), so its
+  // fetch/XHR requests carry Origin: null — a first-party caller.
+  if (origin === "null") return true;
   return ALLOWED_ORIGINS.has(origin) || isLoopbackOrigin(origin);
 }
 

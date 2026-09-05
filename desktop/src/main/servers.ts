@@ -9,8 +9,7 @@
  * the process exits 2.
  *
  * Tree-kill follows the audited pattern from the debug pass:
- *   POSIX  — detached: true  → process.kill(-pid, SIGTERM), wait 5 s,
- *            then SIGKILL to the group, then the direct child.
+ *   POSIX  — detached: true  → synchronous SIGTERM → grace → SIGKILL.
  *   Windows — taskkill /PID /T /F (recursive tree-kill via OS).
  */
 import { ChildProcess, spawn, execSync } from 'node:child_process';
@@ -18,7 +17,7 @@ import path from 'node:path';
 import { IS_DEV, IS_WIN, ROOT_DIR,
          HUB_STARTUP_TIMEOUT, AI_STARTUP_TIMEOUT } from './constants';
 import { hubLog, aiLog } from './logger';
-import type { Logger } from 'electron-log';
+import type { LogFunctions } from 'electron-log';
 
 // ── State ─────────────────────────────────────────────────────────────
 let hubProc:  ChildProcess | null = null;
@@ -47,6 +46,7 @@ function waitForReadiness(
 ): Promise<Record<string, unknown>> {
   return new Promise((resolve, reject) => {
     let buf = '';
+    let settled = false;
 
     const timer = setTimeout(() => {
       cleanup();
@@ -54,9 +54,25 @@ function waitForReadiness(
     }, timeoutMs);
 
     function cleanup() {
+      if (settled) return;
+      settled = true;
       clearTimeout(timer);
       proc.stdout?.removeListener('data', onData);
       proc.removeListener('exit', onExit);
+      proc.removeListener('error', onError);
+    }
+
+    function tryLine(line: string): boolean {
+      const obj = tryParseJson(line);
+      if (obj && 'ready' in obj) {
+        cleanup();
+        if (obj.ready) resolve(obj);
+        else reject(new Error(
+          `${name} startup failed: ${obj.detail ?? obj.failureClass ?? 'unknown'}`,
+        ));
+        return true;
+      }
+      return false;
     }
 
     function onData(chunk: Buffer) {
@@ -64,30 +80,41 @@ function waitForReadiness(
       const lines = buf.split('\n');
       buf = lines.pop() ?? '';
       for (const line of lines) {
-        const obj = tryParseJson(line);
-        if (obj && 'ready' in obj) {
-          cleanup();
-          if (obj.ready) resolve(obj);
-          else reject(new Error(
-            `${name} startup failed: ${obj.detail ?? obj.failureClass ?? 'unknown'}`,
-          ));
-          return;
-        }
+        if (tryLine(line)) return;
       }
     }
 
     function onExit(code: number | null) {
+      // Flush any remaining buffer (final line without trailing newline).
+      if (buf.trim()) tryLine(buf);
+      if (!settled) {
+        cleanup();
+        reject(new Error(`${name} exited (code ${code}) before reporting ready`));
+      }
+    }
+
+    function onError(err: Error) {
       cleanup();
-      reject(new Error(`${name} exited (code ${code}) before reporting ready`));
+      reject(new Error(`${name} failed to start: ${err.message}`));
     }
 
     proc.stdout?.on('data', onData);
     proc.on('exit', onExit);
+    proc.on('error', onError);
   });
 }
 
+// ── Port validation ──────────────────────────────────────────────────
+function requirePort(obj: Record<string, unknown>, key: string, name: string): number {
+  const v = obj[key];
+  if (typeof v !== 'number' || !Number.isFinite(v) || v <= 0) {
+    throw new Error(`${name} readiness JSON: expected positive number for '${key}', got ${JSON.stringify(v)}`);
+  }
+  return v;
+}
+
 // ── Stderr pipe ───────────────────────────────────────────────────────
-function pipeStderr(proc: ChildProcess, log: Logger) {
+function pipeStderr(proc: ChildProcess, log: LogFunctions) {
   proc.stderr?.on('data', (chunk: Buffer) => {
     for (const line of chunk.toString().split('\n')) {
       if (line.trim()) log.debug(line);
@@ -127,8 +154,8 @@ export async function startHub(): Promise<HubPorts> {
 
   const r = await waitForReadiness(proc, 'hub', HUB_STARTUP_TIMEOUT);
   const ports: HubPorts = {
-    httpPort: r.httpPort as number,
-    wsPort:   r.wsPort  as number,
+    httpPort: requirePort(r, 'httpPort', 'hub'),
+    wsPort:   requirePort(r, 'wsPort',  'hub'),
   };
   log.info(`hub ready — HTTP :${ports.httpPort}  WS :${ports.wsPort}`);
   return ports;
@@ -172,7 +199,7 @@ export async function startAiServer(hubHttpPort: number): Promise<AiPorts> {
   pipeStderr(proc, log);
 
   const r = await waitForReadiness(proc, 'ai-server', AI_STARTUP_TIMEOUT);
-  const ports: AiPorts = { port: r.port as number };
+  const ports: AiPorts = { port: requirePort(r, 'port', 'ai-server') };
   log.info(`ai-server ready — port :${ports.port}`);
   return ports;
 }
@@ -190,13 +217,18 @@ function treeKill(proc: ChildProcess | null): void {
     return;
   }
 
-  // POSIX: SIGTERM the process group, wait 5 s, then SIGKILL.
-  try { process.kill(-pid, 'SIGTERM'); } catch { /* already dead */ }
-
-  setTimeout(() => {
-    try { process.kill(-pid, 'SIGKILL'); } catch { /* already dead */ }
-    try { proc.kill('SIGKILL'); }         catch { /* already dead */ }
-  }, 5_000);
+  // POSIX: synchronous SIGTERM → grace period → SIGKILL to the group.
+  // Must be synchronous so the before-quit handler completes cleanup
+  // before Electron tears down the event loop.
+  try {
+    execSync(
+      `kill -TERM -${pid} 2>/dev/null || true;` +
+      ` sleep 1;` +
+      ` kill -0 ${pid} 2>/dev/null && kill -KILL -${pid} 2>/dev/null;` +
+      ` exit 0`,
+      { stdio: 'ignore', timeout: 10_000 },
+    );
+  } catch { /* already dead or timeout */ }
 }
 
 // ── Graceful shutdown ─────────────────────────────────────────────────

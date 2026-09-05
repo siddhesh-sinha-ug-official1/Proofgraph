@@ -170,8 +170,9 @@ class LspPyrightBackend:
         except Exception:
             pass
         # Tree-kill: on Windows the `cmd /c npx ...` wrapper orphans the
-        # node child if only the cmd process is killed.  On POSIX, SIGKILL
-        # the process group to reap the npx → node tree.
+        # node child if only the cmd process is killed.  On POSIX, SIGTERM
+        # the process group first (grace period), then SIGKILL if needed
+        # (consistent with the canonical pattern in spine_proto.py).
         if sys.platform == "win32":
             try:
                 subprocess.run(["taskkill", "/PID", str(self.proc.pid), "/T", "/F"],
@@ -180,8 +181,13 @@ class LspPyrightBackend:
                 pass
         else:
             import os as _os, signal as _sig
-            try: _os.killpg(_os.getpgid(self.proc.pid), _sig.SIGKILL)
+            try: _os.killpg(_os.getpgid(self.proc.pid), _sig.SIGTERM)
             except OSError: pass
+            try:
+                self.proc.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                try: _os.killpg(_os.getpgid(self.proc.pid), _sig.SIGKILL)
+                except OSError: pass
         try:
             self.proc.wait(timeout=10)
         except Exception:

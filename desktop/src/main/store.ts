@@ -7,6 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { USER_DATA_DIR } from './constants';
+import { mainLog } from './logger';
 
 const STORE_PATH = path.join(USER_DATA_DIR, 'settings.json');
 
@@ -28,6 +29,9 @@ export interface Settings {
 // ── In-memory cache ───────────────────────────────────────────────────
 let cache: Settings | null = null;
 
+// Ensure the settings directory exists exactly once.
+let dirCreated = false;
+
 function load(): Settings {
   if (cache !== null) return cache;
   try {
@@ -40,11 +44,21 @@ function load(): Settings {
 }
 
 function persist(s: Settings): void {
-  cache = s;
-  fs.mkdirSync(path.dirname(STORE_PATH), { recursive: true });
-  const tmp = STORE_PATH + '.tmp';
-  fs.writeFileSync(tmp, JSON.stringify(s, null, 2), 'utf-8');
-  fs.renameSync(tmp, STORE_PATH);               // atomic on all platforms
+  try {
+    if (!dirCreated) {
+      fs.mkdirSync(path.dirname(STORE_PATH), { recursive: true });
+      dirCreated = true;
+    }
+    const tmp = STORE_PATH + '.tmp';
+    fs.writeFileSync(tmp, JSON.stringify(s, null, 2), 'utf-8');
+    fs.renameSync(tmp, STORE_PATH);
+    // Update the cache only AFTER the disk write succeeds, so memory
+    // and disk never desynchronize on a write failure.
+    cache = s;
+  } catch (err) {
+    // Log but don't crash — settings are non-critical.
+    mainLog.warn('settings persist failed', err);
+  }
 }
 
 // ── Public API ────────────────────────────────────────────────────────
@@ -56,7 +70,6 @@ export function set<K extends keyof Settings>(
   key: K,
   value: Settings[K],
 ): void {
-  const s = load();
-  s[key] = value;
+  const s = { ...load(), [key]: value };
   persist(s);
 }
