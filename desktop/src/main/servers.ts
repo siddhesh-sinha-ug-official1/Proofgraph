@@ -13,6 +13,7 @@
  *   Windows — taskkill /PID /T /F (recursive tree-kill via OS).
  */
 import { ChildProcess, spawn, execSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { IS_DEV, IS_WIN, ROOT_DIR,
          HUB_STARTUP_TIMEOUT, AI_STARTUP_TIMEOUT } from './constants';
@@ -135,11 +136,24 @@ export async function startHub(): Promise<HubPorts> {
       '--http-port', '0', '--ws-port', '0',
     ];
   } else {
-    // Production: frozen PyInstaller executable in resources/hub/
-    cmd = IS_WIN
+    // Production: frozen PyInstaller executable in resources/hub/.
+    // Falls back to system Python if the frozen binary is missing
+    // (e.g. built with --skip-hub).
+    const frozenBin = IS_WIN
       ? path.join(ROOT_DIR, 'hub', 'serve_app', 'serve_app.exe')
       : path.join(ROOT_DIR, 'hub', 'serve_app', 'serve_app');
-    args = ['--http-port', '0', '--ws-port', '0'];
+
+    if (existsSync(frozenBin)) {
+      cmd = frozenBin;
+      args = ['--http-port', '0', '--ws-port', '0'];
+    } else {
+      log.warn('frozen hub not found — falling back to system Python');
+      cmd = findPython();
+      args = [
+        path.join(ROOT_DIR, 'hub', 'serve_app.py'),
+        '--http-port', '0', '--ws-port', '0',
+      ];
+    }
   }
 
   log.info(`spawn: ${cmd} ${args.join(' ')}`);

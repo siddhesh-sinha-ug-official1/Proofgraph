@@ -19,10 +19,9 @@ extraResources:
     filter: ["**/*"]
   - from: resources/ai-server.cjs
     to: ai-server.cjs
-  # Uncomment once PyInstaller freeze is set up:
-  # - from: resources/hub
-  #   to: hub
-  #   filter: ["**/*"]
+  - from: resources/hub
+    to: hub
+    filter: ["**/*"]
 
 # ── Auto-update from GitHub Releases ───────────────────────────────────
 publish:
@@ -35,8 +34,11 @@ publish:
 win:
   target:
     - target: nsis
-      arch: [x64, arm64]
-  icon: resources/icon.ico
+      arch: [x64]
+  # electron-builder auto-converts 512px PNG → .ico at build time
+  icon: resources/icon.png
+  # Code signing: set CSC_LINK + CSC_KEY_PASSWORD env vars to sign.
+  # When unsigned, run with CSC_IDENTITY_AUTO_DISCOVERY=false to skip.
 
 nsis:
   oneClick: false
@@ -46,8 +48,10 @@ nsis:
   createStartMenuShortcut: true
   shortcutName: ProofGraph
   license: ../LICENSE
-  installerSidebar: resources/sidebar.bmp
   deleteAppDataOnUninstall: false
+  # Use LZMA instead of 7z to avoid 32-bit NSIS mmap failure
+  # on large Electron apps (~280 MB uncompressed).
+  differentialPackage: false
 
 # ── macOS: DMG + ZIP (ZIP required for auto-update) ───────────────────
 mac:
@@ -56,7 +60,7 @@ mac:
       arch: [universal]
     - target: zip
       arch: [universal]
-  icon: resources/icon.icns
+  icon: resources/icon.png
   category: public.app-category.developer-tools
   hardenedRuntime: true
   entitlements: resources/entitlements.mac.plist

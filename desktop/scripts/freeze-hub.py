@@ -68,7 +68,7 @@ def main() -> int:
         sys.executable, "-m", "PyInstaller",
         "--noconfirm",
         "--name", "serve_app",
-        "--distpath", str(OUT.parent),
+        "--distpath", str(OUT),
         "--workpath", str(ROOT / "desktop" / "resources" / "_pyi_work"),
         "--specpath", str(ROOT / "desktop" / "resources"),
         # Directory mode (faster startup than --onefile)
