@@ -12,15 +12,80 @@ files:
 # ── Extra resources bundled alongside the app ──────────────────────────
 # Renderer: the pre-built Vite output from app/dist.
 # AI server: esbuild-bundled single file (runs on Electron's Node).
-# Hub: PyInstaller-frozen executable (self-contained, no Python needed).
+# Hub: frozen binary OR Python source (fallback needs system Python).
 extraResources:
   - from: ../app/dist
     to: renderer
     filter: ["**/*"]
   - from: resources/ai-server.cjs
     to: ai-server.cjs
+  # Hub: try frozen binary first, fall back to bundled Python source.
+  # The frozen binary (from freeze-hub.py) goes in resources/hub/ and
+  # takes priority. The Python source is always included as fallback.
   - from: resources/hub
     to: hub
+    filter: ["**/*"]
+  # Hub Python source (fallback when frozen binary is absent)
+  - from: ../hub
+    to: hub-src
+    filter:
+      - "**/*.py"
+      - "!__pycache__"
+  # Python packages the hub imports at runtime
+  - from: ../packages/capability-layer
+    to: packages/capability-layer
+    filter:
+      - "**/*.py"
+      - "!__pycache__"
+      - "!**/node_modules"
+  - from: ../packages/structure-extractor
+    to: packages/structure-extractor
+    filter:
+      - "**/*.py"
+      - "**/*.scm"
+      - "!__pycache__"
+      - "!**/node_modules"
+      - "!fixtures"
+  - from: ../packages/graph-model
+    to: packages/graph-model
+    filter:
+      - "**/*.py"
+      - "schema/schema.json"
+      - "!__pycache__"
+      - "!**/node_modules"
+  # Schema package: Python modules + data files (schema.json, PIN, gen/)
+  - from: ../packages/schema
+    to: packages/schema
+    filter:
+      - "**/*.py"
+      - "schema.json"
+      - "capability.json"
+      - "vectors.json"
+      - "PIN"
+      - "gen/schema_constants.py"
+      - "gen/capability_constants.py"
+      - "gen/graph-schema.ts"
+      - "gen/schema.md"
+      - "!__pycache__"
+      - "!**/node_modules"
+      - "!tests"
+  - from: ../outerwall
+    to: outerwall
+    filter:
+      - "**/*.py"
+      - "!__pycache__"
+  # Vessels: multi-cell loader, V1 capability feed, walls, trace data
+  - from: ../vessels
+    to: vessels
+    filter:
+      - "**/*.py"
+      - "TRACE-node.json"
+      - "!__pycache__"
+      - "!test_*.py"
+      - "!fixtures_v2"
+  # Default fixture for first-launch demo (tiny — 3 files)
+  - from: ../acceptance/fixtures/moatpkg
+    to: acceptance/fixtures/moatpkg
     filter: ["**/*"]
 
 # ── Auto-update from GitHub Releases ───────────────────────────────────

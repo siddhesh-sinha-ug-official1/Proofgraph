@@ -147,18 +147,31 @@ export async function startHub(): Promise<HubPorts> {
       cmd = frozenBin;
       args = ['--http-port', '0', '--ws-port', '0'];
     } else {
-      log.warn('frozen hub not found — falling back to system Python');
+      // Fallback: bundled Python source in resources/hub-src/.
+      // Needs system Python + pip packages (websockets, etc.).
+      log.warn('frozen hub not found — falling back to bundled Python source');
       cmd = findPython();
-      args = [
-        path.join(ROOT_DIR, 'hub', 'serve_app.py'),
-        '--http-port', '0', '--ws-port', '0',
-      ];
+      const hubSrc = path.join(ROOT_DIR, 'hub-src', 'serve_app.py');
+      if (!existsSync(hubSrc)) {
+        throw new Error(
+          'Hub server not available. Neither the frozen binary nor the ' +
+          'Python source was found in the installed resources.\n' +
+          `Looked for: ${frozenBin}\n` +
+          `       and: ${hubSrc}`,
+        );
+      }
+      args = [hubSrc, '--http-port', '0', '--ws-port', '0'];
     }
   }
 
   log.info(`spawn: ${cmd} ${args.join(' ')}`);
+
+  // Working directory: in dev mode, the repo root so relative imports work.
+  // In production, the resources directory (hub-src/ and packages/ are siblings).
+  const cwd = IS_DEV ? ROOT_DIR : ROOT_DIR;
+
   const proc = spawn(cmd, args, {
-    cwd: IS_DEV ? ROOT_DIR : undefined,
+    cwd,
     stdio: ['ignore', 'pipe', 'pipe'],
     detached: !IS_WIN,
     windowsHide: true,
