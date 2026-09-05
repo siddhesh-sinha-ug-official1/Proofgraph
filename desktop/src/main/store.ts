@@ -24,6 +24,8 @@ export interface Settings {
   windowMaximized?: boolean;
   lastFixture?: string;
   checkUpdatesOnStart?: boolean;
+  /** 'granted' | 'denied' | 'unset' — anonymous crash-report consent. */
+  telemetryConsent?: 'granted' | 'denied' | 'unset';
 }
 
 // ── In-memory cache ───────────────────────────────────────────────────

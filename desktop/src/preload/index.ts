@@ -27,4 +27,10 @@ contextBridge.exposeInMainWorld('proofgraph', {
     ipcRenderer.send('bug:report'),
   openLogs: (): void =>
     ipcRenderer.send('logs:open'),
+
+  // ── Telemetry / privacy ────────────────────────────────────────────
+  getTelemetryConsent: (): Promise<string> =>
+    ipcRenderer.invoke('telemetry:consent'),
+  isTelemetryEnabled: (): Promise<boolean> =>
+    ipcRenderer.invoke('telemetry:isEnabled'),
 });

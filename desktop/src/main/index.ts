@@ -10,7 +10,8 @@
  *   6. Create main window, load renderer with port query params.
  *   7. Close splash, show main window.
  *   8. Silent update check after 5 s.
- *   9. On quit: tree-kill all child processes.
+ *   9. First-launch telemetry consent dialog (once).
+ *  10. On quit: tree-kill all child processes.
  */
 import { app, dialog, ipcMain, shell } from 'electron';
 import { IS_DEV, IS_MAC, APP_VERSION } from './constants';
@@ -22,6 +23,7 @@ import { showSplash } from './splash';
 import { createMainWindow, getMainWindow } from './window';
 import { buildMenu } from './menu';
 import { checkForUpdates } from './updater';
+import { showConsentDialog, getConsent, isConsentGranted } from './telemetry';
 
 // ── Crash handlers (before anything else) ─────────────────────────────
 installCrashHandlers();
@@ -46,6 +48,8 @@ let ports: { hubHttp: number; hubWs: number; ai: number } | null = null;
 // ── IPC handlers ──────────────────────────────────────────────────────
 ipcMain.handle('app:version', () => APP_VERSION);
 ipcMain.handle('servers:ports', () => ports);
+ipcMain.handle('telemetry:consent', () => getConsent());
+ipcMain.handle('telemetry:isEnabled', () => isConsentGranted());
 ipcMain.on('updater:check', () => checkForUpdates(true));
 ipcMain.on('bug:report', () => openBugReport());
 ipcMain.on('logs:open', () => shell.openPath(LOG_DIR));
@@ -81,6 +85,12 @@ app.whenReady().then(async () => {
     // 6. Silent update check
     if (!IS_DEV) {
       setTimeout(() => checkForUpdates(false), 5_000);
+    }
+
+    // 7. First-launch telemetry consent (non-blocking, after window shows)
+    if (getConsent() === 'unset') {
+      // Small delay so the main window is visible first.
+      setTimeout(() => showConsentDialog(), 2_000);
     }
 
   } catch (err: unknown) {

@@ -3,17 +3,22 @@
  *
  * "Report Bug" opens a pre-filled GitHub Issue with:
  *   - App version, Electron version, OS, architecture.
+ *   - Recent crash summaries (scrubbed of PII).
  *   - No personal paths, no log content (user can attach logs manually).
  *
- * Uncaught exceptions are logged to the file transport and, if the
- * window is available, shown in a non-blocking error dialog.
+ * Uncaught exceptions and unhandled rejections are:
+ *   1. Logged via electron-log (file + console).
+ *   2. Saved as a structured crash report (see telemetry.ts).
+ *   3. Shown in a dialog (uncaughtException only).
  */
 import { app, dialog, shell, BrowserWindow } from 'electron';
 import { APP_NAME, APP_VERSION, ISSUES_URL } from './constants';
 import { mainLog, LOG_DIR } from './logger';
+import { saveCrashReport, recentCrashSummary } from './telemetry';
 
 // ── Bug report ────────────────────────────────────────────────────────
 export function openBugReport(): void {
+  const crashes = recentCrashSummary(3);
   const body = [
     '**Describe the bug**',
     'A clear description of what happened.',
@@ -28,6 +33,9 @@ export function openBugReport(): void {
     `- ProofGraph: v${APP_VERSION}`,
     `- Electron: ${process.versions.electron}`,
     `- OS: ${process.platform} ${process.arch}`,
+    '',
+    '**Recent crash reports**',
+    crashes,
     '',
     '**Logs**',
     `Attach log files from: Help → View Logs`,
@@ -45,11 +53,13 @@ export function openBugReport(): void {
 export function installCrashHandlers(): void {
   process.on('uncaughtException', (err) => {
     mainLog.error('uncaughtException', err);
+    saveCrashReport('uncaughtException', err);
     showCrashDialog(err);
   });
 
   process.on('unhandledRejection', (reason) => {
     mainLog.error('unhandledRejection', reason);
+    saveCrashReport('unhandledRejection', reason);
     // Don't show dialog for rejections — they're usually non-fatal.
   });
 }
@@ -64,7 +74,8 @@ function showCrashDialog(err: Error): void {
     detail: [
       err.message,
       '',
-      'The app may be unstable. Check Help → View Logs for details.',
+      'A crash report has been saved locally.',
+      'Check Help → Privacy & Crash Reports to view reports.',
       'Please report this bug via Help → Report Bug.',
     ].join('\n'),
     buttons: ['Continue', 'Quit'],
