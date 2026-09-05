@@ -105,6 +105,8 @@ export default function App(props: AppProps): React.ReactElement {
         <Welcome
           schemaPin={s.health?.schemaPin ?? null}
           recents={s.recents}
+          isDesktop={s.isDesktop}
+          onOpenFolder={s.isDesktop ? s.openFolderNative : null}
           onOpenSample={s.openSample}
           onOpenRecent={(r) => { s.setProjectOpen(true); void (r.kind === "folder" ? s.openFolder(r.path) : s.openFile(r.path)); }}
         />

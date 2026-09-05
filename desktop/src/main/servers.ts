@@ -28,7 +28,7 @@ export interface HubPorts  { httpPort: number; wsPort: number }
 export interface AiPorts   { port: number }
 
 // ── Python resolution ─────────────────────────────────────────────────
-function findPython(): string {
+export function findPython(): string {
   return process.env.PYTHON ?? (IS_WIN ? 'python' : 'python3');
 }
 

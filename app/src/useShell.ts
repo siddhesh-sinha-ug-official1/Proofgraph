@@ -18,6 +18,7 @@ import { useAppUi } from "./useAppUi";
 import { useAppFlows } from "./useAppFlows";
 import { useFileFlows } from "./useFileFlows";
 import { useAppDerived } from "./useAppDerived";
+import { useElectronIntegration } from "./useElectronIntegration";
 
 export function useShell(props: AppProps) {
   const hubBase = props.hubBase ?? DEFAULT_HUB_BASE;
@@ -44,6 +45,17 @@ export function useShell(props: AppProps) {
     pushBanner: data.pushBanner, openWindow: ui.openWindow, setDialog: ui.setDialog,
     setRecents: ui.setRecents, runAnalyze: flows.runAnalyze,
   });
+  const electron = useElectronIntegration({
+    openFolder: fileFlows.openFolder,
+    openFile: fileFlows.openFile,
+    runAnalyze: flows.runAnalyze,
+    closeProject: ui.closeProject,
+    saveActive: flows.saveActive,
+    setProjectOpen: ui.setProjectOpen,
+    setDialog: ui.setDialog,
+    pushBanner: data.pushBanner,
+  });
+
   const derived = useAppDerived({
     disableEditor, hubBase, tabsSnap, prefs,
     layout: ui.layout, projectOpen: ui.projectOpen,
@@ -55,7 +67,7 @@ export function useShell(props: AppProps) {
   return {
     hubBase, aiBase, disableEditor, httpDo, httpGet, bus, tabs, tabsSnap,
     confirmFn, prefs, setPrefs,
-    ...data, ...ui, ...flows, ...fileFlows, ...derived,
+    ...data, ...ui, ...flows, ...fileFlows, ...electron, ...derived,
   };
 }
 
