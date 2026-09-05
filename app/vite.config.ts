@@ -40,6 +40,10 @@ export default defineConfig({
       path.resolve(p(".."), "acceptance", "fixtures", "moatpkg").replace(/\\/g, "/"),
     ),
   },
+  // Electron production loads via file:// — absolute paths like /assets/
+  // resolve to the drive root, not the renderer directory.  "./" emits
+  // relative paths (./assets/…) that work on both file:// and http://.
+  base: "./",
   build: {
     outDir: "dist",
     emptyOutDir: true,
