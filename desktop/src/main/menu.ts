@@ -3,6 +3,11 @@
  *
  * Platform-aware: macOS gets the standard app menu with About/Quit
  * under the app name; Windows and Linux get File/View/Help.
+ *
+ * Menu actions that need renderer cooperation (Open Folder, Analyze,
+ * Save) send an IPC message to the focused window's webContents via
+ * the 'menu:action' channel. The renderer subscribes once via the
+ * preload bridge (window.proofgraph.onMenuAction).
  */
 import { app, Menu, shell, dialog, BrowserWindow } from 'electron';
 import { APP_NAME, APP_VERSION, IS_MAC, GITHUB_URL } from './constants';
@@ -12,6 +17,12 @@ import { openBugReport } from './reporter';
 import {
   getConsent, setConsent, getReportsDir, listReports, clearReports,
 } from './telemetry';
+
+/** Send an action string to the focused renderer window. */
+function sendMenuAction(action: string): void {
+  const win = BrowserWindow.getFocusedWindow();
+  if (win) win.webContents.send('menu:action', action);
+}
 
 export function buildMenu(): void {
   const template: Electron.MenuItemConstructorOptions[] = [];
@@ -44,14 +55,65 @@ export function buildMenu(): void {
   template.push({
     label: 'File',
     submenu: [
+      {
+        label: 'Open Folder…',
+        accelerator: 'CmdOrCtrl+Shift+O',
+        click: () => sendMenuAction('openFolder'),
+      },
+      {
+        label: 'Open File…',
+        accelerator: 'CmdOrCtrl+O',
+        click: () => sendMenuAction('openFile'),
+      },
+      { type: 'separator' },
+      {
+        label: 'Save',
+        accelerator: 'CmdOrCtrl+S',
+        click: () => sendMenuAction('save'),
+      },
+      { type: 'separator' },
+      {
+        label: 'Run Analysis',
+        accelerator: 'CmdOrCtrl+Shift+A',
+        click: () => sendMenuAction('analyze'),
+      },
+      { type: 'separator' },
+      {
+        label: 'Close Project',
+        click: () => sendMenuAction('closeProject'),
+      },
       ...(!IS_MAC ? [
+        { type: 'separator' as const },
         {
           label: 'Check for Updates…',
           click: () => checkForUpdates(true),
         },
         { type: 'separator' as const },
-      ] : []),
-      IS_MAC ? { role: 'close' as const } : { role: 'quit' as const },
+        { role: 'quit' as const },
+      ] : [
+        { type: 'separator' as const },
+        { role: 'close' as const },
+      ]),
+    ],
+  });
+
+  // ── Edit ────────────────────────────────────────────────────────────
+  template.push({
+    label: 'Edit',
+    submenu: [
+      { role: 'undo' },
+      { role: 'redo' },
+      { type: 'separator' },
+      { role: 'cut' },
+      { role: 'copy' },
+      { role: 'paste' },
+      { role: 'selectAll' },
+      { type: 'separator' },
+      {
+        label: 'Find…',
+        accelerator: 'CmdOrCtrl+F',
+        click: () => sendMenuAction('search'),
+      },
     ],
   });
 

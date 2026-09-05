@@ -15,6 +15,8 @@ import type { RecentEntry } from "./prefs";
 export default function Welcome(props: {
   schemaPin: { schemaVersion: string; schemaHash: string } | null;
   recents: RecentEntry[];
+  isDesktop: boolean;
+  onOpenFolder: (() => void) | null;
   onOpenSample: () => void;
   onOpenRecent: (r: RecentEntry) => void;
 }): React.ReactElement {
@@ -29,8 +31,19 @@ export default function Welcome(props: {
             : <>hub /health not served — no version is claimed</>}
         </div>
         <div className="welcome-actions">
+          {props.onOpenFolder && (
+            <button
+              type="button" className="primary" data-testid="open-project-folder"
+              onClick={() => {
+                probeShell("shell.welcome.open-folder", { note: "native folder picker → POST /analyze {root}" });
+                props.onOpenFolder!();
+              }}
+            >
+              Open Project Folder
+            </button>
+          )}
           <button
-            type="button" className="primary" data-testid="open-sample-workspace"
+            type="button" className={props.isDesktop ? "" : "primary"} data-testid="open-sample-workspace"
             onClick={() => {
               probeShell("shell.welcome.open-sample", { note: "the current hub workspace flow — /graph + /analysis + /workspace refetch" });
               props.onOpenSample();
@@ -38,12 +51,14 @@ export default function Welcome(props: {
           >
             Open sample workspace
           </button>
-          <button
-            type="button" disabled
-            title="the hub serves ONE declared workspace (serve_app declares the jail) — an empty workspace needs a hub-side declaration, not a browser guess"
-          >
-            New empty workspace
-          </button>
+          {!props.isDesktop && (
+            <button
+              type="button" disabled
+              title="the hub serves ONE declared workspace (serve_app declares the jail) — an empty workspace needs a hub-side declaration, not a browser guess"
+            >
+              New empty workspace
+            </button>
+          )}
         </div>
         <div className="welcome-recents">
           <div className="popup-head">RECENT</div>
@@ -58,7 +73,18 @@ export default function Welcome(props: {
             </div>
           ))}
         </div>
-        <div className="welcome-foot">the hub serves /graph · /analysis · workspace fs — the browser never touches disk</div>
+        {props.isDesktop && (
+          <div className="welcome-shortcuts">
+            <span className="shortcut-hint"><kbd>Ctrl+Shift+O</kbd> Open folder</span>
+            <span className="shortcut-hint"><kbd>Ctrl+O</kbd> Open file</span>
+            <span className="shortcut-hint"><kbd>Ctrl+Shift+A</kbd> Analyze</span>
+          </div>
+        )}
+        <div className="welcome-foot">
+          {props.isDesktop
+            ? "ProofGraph Desktop — open any project folder to begin analysis"
+            : "the hub serves /graph · /analysis · workspace fs — the browser never touches disk"}
+        </div>
       </div>
     </div>
   );

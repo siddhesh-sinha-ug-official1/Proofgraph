@@ -18,6 +18,25 @@ contextBridge.exposeInMainWorld('proofgraph', {
   getServerPorts: (): Promise<{ hubHttp: number; hubWs: number; ai: number }> =>
     ipcRenderer.invoke('servers:ports'),
 
+  // ── Native dialogs (Electron-only — the browser never touches disk) ─
+  openFolderDialog: (): Promise<string | null> =>
+    ipcRenderer.invoke('dialog:openFolder'),
+  openFileDialog: (): Promise<string | null> =>
+    ipcRenderer.invoke('dialog:openFile'),
+
+  // ── Menu → renderer IPC ─────────────────────────────────────────────
+  // The main process sends menu actions; the renderer subscribes once.
+  onMenuAction: (callback: (action: string) => void): (() => void) => {
+    const handler = (_event: Electron.IpcRendererEvent, action: string) =>
+      callback(action);
+    ipcRenderer.on('menu:action', handler);
+    return () => { ipcRenderer.removeListener('menu:action', handler); };
+  },
+
+  // ── Python check ────────────────────────────────────────────────────
+  checkPython: (): Promise<{ available: boolean; version: string | null; path: string | null }> =>
+    ipcRenderer.invoke('system:checkPython'),
+
   // ── Updates ─────────────────────────────────────────────────────────
   checkForUpdates: (): void =>
     ipcRenderer.send('updater:check'),

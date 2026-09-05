@@ -60,7 +60,15 @@ export function useAppFlows(a: AppFlowsArgs) {
     }
     setAnalyzing(true);
     const sameRoot = req.root === undefined || req.root === "";
-    const root = sameRoot ? workspace.root : `${workspace.root}/${req.root}`;
+    // Native Electron dialog returns ABSOLUTE paths (C:\… or /home/…) which
+    // must not be joined onto the workspace root. Browser-side folder picks
+    // return workspace-relative paths that need the join.
+    const isAbsolute = req.root !== undefined && (
+      req.root.startsWith("/") || /^[A-Za-z]:[\\/]/.test(req.root)
+    );
+    const root = sameRoot ? workspace.root
+      : isAbsolute ? req.root!
+      : `${workspace.root}/${req.root}`;
     const roots = req.roots ?? (sameRoot ? workspace.declaredRoots : undefined);
     // sameRoot re-analyzes THIS workspace: reuse the workspace's known
     // pyrightMode so a hub launched with --pyright live is not silently

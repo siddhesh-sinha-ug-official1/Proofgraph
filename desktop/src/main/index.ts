@@ -13,12 +13,14 @@
  *   9. First-launch telemetry consent dialog (once).
  *  10. On quit: tree-kill all child processes.
  */
-import { app, dialog, ipcMain, shell } from 'electron';
-import { IS_DEV, IS_MAC, APP_VERSION } from './constants';
+import { app, dialog, ipcMain, shell, BrowserWindow } from 'electron';
+import { execSync } from 'node:child_process';
+import { IS_DEV, IS_MAC, IS_WIN, APP_VERSION } from './constants';
 import { mainLog, LOG_DIR } from './logger';
 import { installCrashHandlers, openBugReport } from './reporter';
 import { startHub, startAiServer, stopAll,
          type HubPorts, type AiPorts } from './servers';
+import { findPython } from './servers';
 import { showSplash } from './splash';
 import { createMainWindow, getMainWindow } from './window';
 import { buildMenu } from './menu';
@@ -53,6 +55,46 @@ ipcMain.handle('telemetry:isEnabled', () => isConsentGranted());
 ipcMain.on('updater:check', () => checkForUpdates(true));
 ipcMain.on('bug:report', () => openBugReport());
 ipcMain.on('logs:open', () => shell.openPath(LOG_DIR));
+
+// ── Native dialog handlers ───────────────────────────────────────────
+ipcMain.handle('dialog:openFolder', async () => {
+  const win = BrowserWindow.getFocusedWindow() ?? undefined;
+  const result = await dialog.showOpenDialog({
+    ...(win ? { parentWindow: win } : {}),
+    title: 'Open Project Folder',
+    properties: ['openDirectory'],
+    buttonLabel: 'Open Project',
+  });
+  return result.canceled ? null : result.filePaths[0];
+});
+
+ipcMain.handle('dialog:openFile', async () => {
+  const win = BrowserWindow.getFocusedWindow() ?? undefined;
+  const result = await dialog.showOpenDialog({
+    ...(win ? { parentWindow: win } : {}),
+    title: 'Open File',
+    properties: ['openFile'],
+    filters: [
+      { name: 'Python', extensions: ['py'] },
+      { name: 'All Files', extensions: ['*'] },
+    ],
+  });
+  return result.canceled ? null : result.filePaths[0];
+});
+
+// ── Python availability check ────────────────────────────────────────
+ipcMain.handle('system:checkPython', async () => {
+  const pyCmd = findPython();
+  try {
+    const raw = execSync(`${pyCmd} --version`, {
+      encoding: 'utf-8', timeout: 5_000, stdio: ['ignore', 'pipe', 'pipe'],
+    }).trim();
+    const version = raw.replace(/^Python\s*/i, '');
+    return { available: true, version, path: pyCmd };
+  } catch {
+    return { available: false, version: null, path: null };
+  }
+});
 
 // ── App ready ─────────────────────────────────────────────────────────
 app.whenReady().then(async () => {
