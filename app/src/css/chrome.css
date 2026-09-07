@@ -48,6 +48,11 @@
   position: absolute; top: 100%; left: 0; z-index: 90; min-width: 240px;
   background: var(--pop); border: 1px solid var(--popbd); border-radius: 10px;
   box-shadow: 0 14px 38px rgba(0, 0, 0, .24); padding: 6px; margin-top: 4px;
+  animation: popupSlide .12s ease-out;
+}
+@keyframes popupSlide {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 .popup-right-align { left: auto; right: 0; }
 .popup-head { padding: 5px 10px 3px; color: var(--txd); font: 600 10.5px var(--ui); letter-spacing: .6px; }
@@ -89,7 +94,7 @@
 .menu-separator { height: 1px; background: var(--bd); margin: 5px 8px; }
 
 /* ── banners (named failure classes — README severity fills) ── */
-.banner-region { flex: 0 0 auto; display: flex; flex-direction: column; padding: 0 8px; }
+.banner-region { flex: 0 0 auto; display: flex; flex-direction: column; padding: 0 8px; max-height: 140px; overflow-y: auto; }
 .banner {
   display: flex; gap: 8px; align-items: baseline; padding: 6px 12px; margin-top: 6px;
   border-radius: 8px; font-size: 12.5px;
@@ -98,5 +103,6 @@
 .banner-error { background: var(--bnE); border: 1px solid var(--bnEb); }
 .banner-warn  { background: var(--bnW); border: 1px solid var(--bnWb); }
 .banner-info  { background: var(--bnI); border: 1px solid var(--bnIb); }
-.banner-dismiss { margin-left: auto; border: none; background: none; color: var(--txd); cursor: pointer; }
+.banner-dismiss { margin-left: auto; border: none; background: none; color: var(--txd); cursor: pointer; padding: 2px 6px; border-radius: 4px; transition: background .12s, color .12s; }
+.banner-dismiss:hover { background: rgba(255,255,255,.1); color: var(--tx); }
 .banner-error-text { color: var(--bnEb); }

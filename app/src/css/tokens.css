@@ -35,5 +35,35 @@ body { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; font-size:
 .app-root ::-webkit-scrollbar-track { background: transparent; }
 
 .hint { color: var(--txd); font-size: 11px; }
-.loading { padding: 16px; color: var(--txd); }
+.loading { padding: 16px; color: var(--txd); display: flex; align-items: center; gap: 8px; }
+.loading::before {
+  content: ""; display: inline-block; width: 14px; height: 14px;
+  border: 2px solid var(--bd); border-top-color: var(--acc);
+  border-radius: 50%; animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 .mono, code { font-family: var(--mono); font-size: 11px; }
+
+/* smooth theme switching — color properties transition on all themed elements */
+.app-root,
+.app-root .header,
+.app-root .rail,
+.app-root .tw,
+.app-root .status-bar,
+.app-root .welcome,
+.app-root .modal,
+.app-root .popup,
+.app-root .banner {
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+}
+
+/* global focus-visible ring */
+.app-root button:focus-visible,
+.app-root input:focus-visible,
+.app-root [role="tab"]:focus-visible,
+.app-root [role="treeitem"]:focus-visible,
+.app-root [tabindex]:focus-visible {
+  outline: 2px solid var(--acc);
+  outline-offset: -1px;
+  border-radius: 4px;
+}

@@ -61,6 +61,11 @@
   z-index: 7; width: 320px; background: var(--is); border: 1px solid var(--bd);
   border-radius: 11px; box-shadow: var(--shadow); padding: 10px 12px;
   display: flex; flex-direction: column; gap: 6px;
+  animation: inspectorSlideIn .18s ease-out;
+}
+@keyframes inspectorSlideIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 .inspector-head { display: flex; align-items: baseline; gap: 8px; }
 .inspector-head b { font-size: 12.5px; }

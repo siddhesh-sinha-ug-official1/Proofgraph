@@ -67,14 +67,14 @@ export default function SettingsDialog(props: {
       <div className="settings-body">
         <div className="settings-nav" role="tablist" aria-label="settings pages">
           {nav.map((n) => (
-            <div
-              key={n.id} role="tab" aria-selected={page === n.id}
+            <button
+              key={n.id} type="button" role="tab" aria-selected={page === n.id}
               data-settings-page={n.id}
               className={`settings-nav-row ${page === n.id ? "settings-nav-active" : ""}`}
               onClick={() => setPage(n.id)}
             >
               {n.label}
-            </div>
+            </button>
           ))}
         </div>
         <div className="settings-page" role="tabpanel">

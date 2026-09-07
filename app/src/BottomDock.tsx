@@ -15,7 +15,7 @@
  *                   contract's "tail visible in the pins console".
  */
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import AiPanel from "./AiPanel";
 import { fetchPinsHistory, type HttpDo } from "./fsSource";
 import { GraphSourceError } from "./graphSource";
@@ -156,6 +156,12 @@ export function PinsConsole({ hubBase, httpDo }: { hubBase: string; httpDo: Http
     return filtered.slice(-PINS_TAIL); // tail-bounded, bound visible below
   }, [hubLines, shellTail, filter]);
 
+  // auto-scroll pins to bottom when new entries arrive
+  const pinsEndRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    pinsEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [all.length]);
+
   return (
     <div className="pins-console" data-testid="pins-console">
       <div className="pins-toolbar">
@@ -182,6 +188,7 @@ export function PinsConsole({ hubBase, httpDo }: { hubBase: string; httpDo: Http
             <span className="pins-payload">{JSON.stringify(l.payload)}</span>
           </div>
         ))}
+        <div ref={pinsEndRef} />
       </div>
     </div>
   );
