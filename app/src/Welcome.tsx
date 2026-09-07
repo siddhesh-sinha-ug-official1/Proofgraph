@@ -60,13 +60,17 @@ export default function Welcome(props: {
             </button>
           )}
         </div>
-        <div className="welcome-recents">
+        <div className="welcome-recents" role="list" aria-label="recent items">
           <div className="popup-head">RECENT</div>
           {props.recents.length === 0 && (
             <div className="popup-hint">nothing opened yet in this browser profile (localStorage pgshell.recents.v1)</div>
           )}
           {props.recents.slice(0, 6).map((r, i) => (
-            <div key={i} className="popup-row" data-testid="welcome-recent" onClick={() => props.onOpenRecent(r)}>
+            <div key={i} className="popup-row" role="listitem" tabIndex={0}
+              data-testid="welcome-recent"
+              onClick={() => props.onOpenRecent(r)}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); props.onOpenRecent(r); } }}
+            >
               <span className="popup-ic">{r.kind === "folder" ? "▤" : "·"}</span>
               <span className="mono">{r.path || "(workspace root)"}</span>
               <span className="popup-right">{r.kind}</span>

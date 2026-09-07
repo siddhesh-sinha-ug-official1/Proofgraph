@@ -60,7 +60,13 @@ export type AnalysisFetch =
   | { status: "pending"; failureClass: string; detail: string; url: string };
 
 const defaultHttpGet: HttpGet = async (url) => {
-  const resp = await fetch(url);
+  let resp: Response;
+  try {
+    resp = await fetch(url);
+  } catch (e) {
+    throw new GraphSourceError("hub-unreachable",
+      `GET ${url} failed at transport level: ${e instanceof Error ? e.message : String(e)}`);
+  }
   return { status: resp.status, bytes: new Uint8Array(await resp.arrayBuffer()) };
 };
 

@@ -88,15 +88,15 @@ export default function Explorer(props: ExplorerProps): React.ReactElement {
   }, [props.workspaceRoot, props.refreshToken, loadDir]);
 
   const toggleDir = (relPath: string): void => {
+    const wasExpanded = expanded.has(relPath);
+    const needsLoad = !wasExpanded && dirs.get(relPath) === undefined;
     setExpanded((prev) => {
       const next = new Set(prev);
       if (next.has(relPath)) next.delete(relPath);
-      else {
-        next.add(relPath);
-        if (dirs.get(relPath) === undefined) void loadDir(relPath); // LAZY: first expand fetches
-      }
+      else next.add(relPath);
       return next;
     });
+    if (needsLoad) void loadDir(relPath); // LAZY: first expand fetches (outside state updater)
   };
 
   const renderDir = (relPath: string, depth: number): React.ReactNode => {
@@ -131,7 +131,7 @@ export default function Explorer(props: ExplorerProps): React.ReactElement {
               <span className="explorer-twist">{isOpen ? "▾" : "▸"}</span>
               <span className="explorer-icon">📁</span> {e.name}
             </div>
-            {isOpen && renderDir(childPath, depth + 1)}
+            {isOpen && <div role="group">{renderDir(childPath, depth + 1)}</div>}
           </React.Fragment>
         );
       }

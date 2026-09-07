@@ -6,7 +6,7 @@
  * in useFileFlows.ts. App.tsx stays the facade component.
  */
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { GraphSourceError } from "./graphSource";
 import { fsWrite, postAnalyze, type HttpDo, type WorkspaceInfo } from "./fsSource";
 import { probeShell } from "./shellLog";
@@ -38,9 +38,11 @@ export function useAppFlows(a: AppFlowsArgs) {
   } = a;
   const [analyzing, setAnalyzing] = useState(false);
   const [saving, setSaving] = useState(false);
+  const analyzingRef = useRef(false);
+  const savingRef = useRef(false);
 
   const runAnalyze = useCallback(async (req: { root?: string; roots?: string[] }, cause: string): Promise<boolean> => {
-    if (analyzing) return false;
+    if (analyzingRef.current) return false;
     // Integrate-stage seam reconciliation AT THE HUB'S VOCABULARY
     // (hub/server.py analyze() + REPORT-appshell-hubfs): POST /analyze
     // REQUIRES a hub-side 'root' path — a folder pick arrives here
@@ -58,6 +60,7 @@ export function useAppFlows(a: AppFlowsArgs) {
       probeShell("shell.analyze.blocked", { cause, failureClass: fc });
       return false;
     }
+    analyzingRef.current = true;
     setAnalyzing(true);
     const sameRoot = req.root === undefined || req.root === "";
     // Native Electron dialog returns ABSOLUTE paths (C:\… or /home/…) which
@@ -100,18 +103,20 @@ export function useAppFlows(a: AppFlowsArgs) {
       probeShell("shell.analyze.failed", { cause, failureClass: fc });
       return false;
     } finally {
+      analyzingRef.current = false;
       setAnalyzing(false);
     }
-  }, [analyzing, workspace, workspaceFailure, prefs.pyrightMode, hubBase, httpDo, refreshAll, pushBanner]);
+  }, [workspace, workspaceFailure, prefs.pyrightMode, hubBase, httpDo, refreshAll, pushBanner]);
 
   const saveActive = useCallback(async (cause: string): Promise<void> => {
     const t = tabs.active();
-    if (t === null || saving) return;
+    if (t === null || savingRef.current) return;
     if (t.readOnlyReason !== null) {
       probeShell("shell.save.blocked", { relPath: t.relPath, reason: t.readOnlyReason, cause });
       pushBanner({ severity: "warn", failureClass: "save-refused", detail: `${t.relPath}: ${t.readOnlyReason}` });
       return;
     }
+    savingRef.current = true;
     setSaving(true);
     const text = editorApi !== null ? editorApi.getText() : t.buffer;
     try {
@@ -131,9 +136,10 @@ export function useAppFlows(a: AppFlowsArgs) {
       pushBanner({ severity: "error", failureClass: fc, detail: e instanceof Error ? e.message : String(e) });
       probeShell("shell.save.failed", { relPath: t.relPath, failureClass: fc, cause });
     } finally {
+      savingRef.current = false;
       setSaving(false);
     }
-  }, [tabs, saving, editorApi, hubBase, httpDo, prefs.autoReanalyzeOnSave, runAnalyze, pushBanner]);
+  }, [tabs, editorApi, hubBase, httpDo, prefs.autoReanalyzeOnSave, runAnalyze, pushBanner]);
 
   // ── keyboard (contract: Ctrl+S, Ctrl+, , Ctrl+Shift+E, Ctrl+Shift+G) ──────
   useEffect(() => {

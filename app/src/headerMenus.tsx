@@ -36,14 +36,16 @@ export function ProjectSwitcher(p: {
           <div className="popup-head">RECENT PROJECTS</div>
           {p.recents.length === 0 && <div className="popup-hint">(no recents yet — localStorage pgshell.recents.v1)</div>}
           {p.recents.slice(0, 5).map((r, i) => (
-            <div key={i} role="menuitem" className="popup-row" onClick={p.act(() => p.onOpenRecent(r))}>
+            <div key={i} role="menuitem" tabIndex={0} className="popup-row" onClick={p.act(() => p.onOpenRecent(r))}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); p.act(() => p.onOpenRecent(r))(); } }}>
               <span className="popup-ic">{r.kind === "folder" ? "▤" : "·"}</span>
               <span className="mono">{r.path || "(workspace root)"}</span>
               <span className="popup-right">{r.kind}</span>
             </div>
           ))}
           <div className="menu-separator" role="separator" />
-          <div role="menuitem" className="popup-row" data-testid="close-project" onClick={p.act(p.onCloseProject)}>
+          <div role="menuitem" tabIndex={0} className="popup-row" data-testid="close-project" onClick={p.act(p.onCloseProject)}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); p.act(p.onCloseProject)(); } }}>
             Close project
           </div>
         </div>
@@ -76,18 +78,22 @@ export function SettingsMenu(p: {
       </button>
       {p.open && (
         <div className="popup header-popup popup-right-align" role="menu" aria-label="settings quick menu">
-          <div role="menuitem" className="popup-row" onClick={p.act(() => p.onTheme("light"))}>
+          <div role="menuitem" tabIndex={0} className="popup-row" onClick={p.act(() => p.onTheme("light"))}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); p.act(() => p.onTheme("light"))(); } }}>
             <span className="menu-item-check">{p.theme === "light" ? "✓" : ""}</span>Theme: Light
           </div>
-          <div role="menuitem" className="popup-row" onClick={p.act(() => p.onTheme("dark"))}>
+          <div role="menuitem" tabIndex={0} className="popup-row" onClick={p.act(() => p.onTheme("dark"))}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); p.act(() => p.onTheme("dark"))(); } }}>
             <span className="menu-item-check">{p.theme === "dark" ? "✓" : ""}</span>Theme: Dark
           </div>
           <div className="menu-separator" role="separator" />
-          <div role="menuitem" className="popup-row" onClick={p.act(() => p.onSettings("plugins"))}>
+          <div role="menuitem" tabIndex={0} className="popup-row" onClick={p.act(() => p.onSettings("plugins"))}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); p.act(() => p.onSettings("plugins"))(); } }}>
             <span className="menu-item-check" />Plugins…
           </div>
           <div className="menu-separator" role="separator" />
-          <div role="menuitem" className="popup-row" onClick={p.act(() => p.onSettings())}>
+          <div role="menuitem" tabIndex={0} className="popup-row" onClick={p.act(() => p.onSettings())}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); p.act(() => p.onSettings())(); } }}>
             <span className="menu-item-check" />Settings…<span className="popup-right">Ctrl+,</span>
           </div>
         </div>

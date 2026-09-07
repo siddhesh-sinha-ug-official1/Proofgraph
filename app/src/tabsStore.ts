@@ -82,7 +82,7 @@ export class TabsStore {
 
   activate(relPath: string): void {
     if (this.find(relPath) === undefined) return;
-    if (this.activePath === relPath) { this.emit(); return; }
+    if (this.activePath === relPath) return;
     const from = this.activePath;
     this.activePath = relPath;
     probeShell("shell.tab.activate", {

@@ -43,6 +43,9 @@ export function connectBrowserTransports(
     ws.addEventListener("open", () => {
       const msgHandlers: Array<(msg: unknown) => void> = [];
       const closeHandlers: Array<() => void> = [];
+      ws.addEventListener("error", () => {
+        console.warn("[lspTransport] ws error after open:", wsUrl);
+      });
       ws.addEventListener("message", (ev: MessageEvent) => {
         const data = typeof ev.data === "string"
           ? ev.data

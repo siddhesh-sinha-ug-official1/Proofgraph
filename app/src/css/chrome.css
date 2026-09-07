@@ -31,6 +31,8 @@
   background: var(--acc); color: #fff; font: 11.5px var(--ui); cursor: pointer;
 }
 .analyze-config .header-caret { color: rgba(255, 255, 255, .85); font-size: 8px; }
+.analyze-main:hover:not(:disabled), .analyze-config:hover:not(:disabled) { filter: brightness(1.12); }
+.analyze-main:active:not(:disabled), .analyze-config:active:not(:disabled) { transform: scale(.97); }
 .analyze-main:disabled, .analyze-config:disabled { opacity: .55; cursor: not-allowed; }
 
 .hub-chip {
@@ -104,5 +106,5 @@
 .banner-warn  { background: var(--bnW); border: 1px solid var(--bnWb); }
 .banner-info  { background: var(--bnI); border: 1px solid var(--bnIb); }
 .banner-dismiss { margin-left: auto; border: none; background: none; color: var(--txd); cursor: pointer; padding: 2px 6px; border-radius: 4px; transition: background .12s, color .12s; }
-.banner-dismiss:hover { background: rgba(255,255,255,.1); color: var(--tx); }
+.banner-dismiss:hover { background: var(--hov); color: var(--tx); }
 .banner-error-text { color: var(--bnEb); }

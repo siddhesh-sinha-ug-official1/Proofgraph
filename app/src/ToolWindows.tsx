@@ -157,6 +157,7 @@ export function WindowLayer(props: WindowLayerProps): React.ReactElement {
               <div
                 key={i}
                 role="menuitem"
+                tabIndex={g.enabled === true ? 0 : -1}
                 aria-disabled={g.enabled !== true}
                 aria-checked={g.checked === true}
                 data-gear-item={g.itemId}
@@ -169,6 +170,7 @@ export function WindowLayer(props: WindowLayerProps): React.ReactElement {
                   }
                   g.act?.();
                 }}
+                onKeyDown={(e) => { if ((e.key === "Enter" || e.key === " ") && g.enabled === true) { e.preventDefault(); g.act?.(); } }}
               >
                 <span className="menu-item-check">{g.checked === true ? "✓" : ""}</span>
                 <span className="menu-item-label">{g.label}</span>

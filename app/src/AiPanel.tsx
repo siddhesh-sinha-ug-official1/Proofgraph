@@ -66,7 +66,13 @@ export default function AiPanel({ aiBase }: { aiBase: string }): React.ReactElem
       } catch (e) {
         throw new Error(`ai-server-unreachable: ${e instanceof Error ? e.message : String(e)} — start it: node ai/server.ts (port 8478)`);
       }
-      const body = await r.json();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let body: any;
+      try {
+        body = await r.json();
+      } catch {
+        throw new Error(`ai-bad-response: server returned non-JSON response (HTTP ${r.status})`);
+      }
       if (!r.ok) {
         throw new Error(`${body.failureClass ?? "ai-bad-response"}: ${body.detail ?? `HTTP ${r.status}`}`);
       }
@@ -87,8 +93,9 @@ export default function AiPanel({ aiBase }: { aiBase: string }): React.ReactElem
           onChange={(e) => setQuestion(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter" && !busy) void ask(); }}
           placeholder="ask about the composed graph…"
+          aria-label="AI question"
         />
-        <button onClick={() => void ask()} disabled={busy}>{busy ? "asking…" : "ask"}</button>
+        <button type="button" onClick={() => void ask()} disabled={busy}>{busy ? "asking…" : "ask"}</button>
       </div>
       {error !== null && <div className="banner banner-error">{error}</div>}
       {resp !== null && (

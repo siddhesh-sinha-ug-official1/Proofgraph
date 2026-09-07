@@ -1,7 +1,7 @@
 /* ── welcome ── */
 .welcome { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0; overflow: auto; }
 .welcome-card {
-  display: flex; flex-direction: column; align-items: center; gap: 6px; width: 480px; padding: 20px 0;
+  display: flex; flex-direction: column; align-items: center; gap: 6px; width: 480px; max-width: 92%; padding: 20px 0;
   animation: welcomeFadeIn .35s ease-out;
 }
 @keyframes welcomeFadeIn {
@@ -74,7 +74,7 @@
 }
 .modal {
   background: var(--is); color: var(--tx); border: 1px solid var(--popbd); border-radius: 14px;
-  min-width: 440px; max-width: 92%; max-height: 88vh; display: flex; flex-direction: column;
+  min-width: min(440px, 92vw); max-width: 92%; max-height: 88vh; display: flex; flex-direction: column;
   box-shadow: 0 30px 70px rgba(0, 0, 0, .35); overflow: hidden;
   animation: modalEnter .2s ease-out;
 }
@@ -125,6 +125,7 @@ button.primary:hover:not(:disabled) { background: var(--acc); filter: brightness
 .theme-card { height: 64px; width: 128px; border-radius: 9px; cursor: pointer; font: 12.5px var(--ui); border: 1px solid var(--bd); }
 .theme-card-light { background: #FFFFFF; color: #27282E; }
 .theme-card-dark { background: #1E1F22; color: #DFE1E5; }
+.theme-card:hover { border-color: var(--acc); }
 .theme-card-active { border: 2px solid var(--acc); }
 .accent-row { display: flex; gap: 10px; align-items: center; margin-top: 9px; }
 .accent-row input[type="color"] { width: 40px; height: 32px; border: 1px solid var(--bd); border-radius: 7px; background: var(--rs); padding: 2px; cursor: pointer; }
@@ -132,9 +133,11 @@ button.primary:hover:not(:disabled) { background: var(--acc); filter: brightness
 .accent-hex:focus { border-color: var(--acc); }
 .accent-divider { width: 1px; height: 22px; background: var(--bd); }
 .accent-swatch { width: 26px; height: 26px; border-radius: 50%; cursor: pointer; border: none; }
+.accent-swatch:hover { transform: scale(1.15); }
 .accent-swatch-active { box-shadow: 0 0 0 2px var(--is), 0 0 0 4px var(--acc); }
 .stepper-row { display: flex; gap: 11px; align-items: center; margin-top: 9px; flex-wrap: wrap; }
 .stepper-row button { width: 26px; height: 26px; border: 1px solid var(--bd); border-radius: 7px; background: transparent; color: var(--tx); cursor: pointer; }
+.stepper-row button:hover:not(:disabled) { background: var(--hov); }
 .stepper-row button:disabled { opacity: .5; cursor: not-allowed; }
 .stepper-row input[type="number"] { width: 90px; background: var(--rs); color: var(--tx); border: 1px solid var(--bd); border-radius: 7px; padding: 4px 6px; }
 .radio-stack { display: flex; flex-direction: column; gap: 7px; margin-top: 9px; }

@@ -40,12 +40,11 @@ export class ErrorBoundary extends React.Component<Props, State> {
   render(): React.ReactNode {
     if (this.state.error) {
       return (
-        <div className="pane-status pane-status-failed" style={{ padding: "12px 14px" }}>
-          <div style={{ marginBottom: 6 }}>
+        <div className="pane-status pane-status-failed error-boundary-crash">
+          <div className="error-boundary-msg">
             <strong>{this.props.name}</strong> crashed: {this.state.error.message}
           </div>
-          <button type="button" onClick={this.handleRetry}
-            style={{ fontSize: "11px", padding: "3px 10px", cursor: "pointer" }}>
+          <button type="button" className="error-boundary-retry" onClick={this.handleRetry}>
             retry
           </button>
         </div>

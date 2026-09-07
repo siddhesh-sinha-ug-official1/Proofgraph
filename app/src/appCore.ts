@@ -56,10 +56,8 @@ export interface ServedNode {
 /** SERVED bytes → client download. Export never re-serializes (contract). */
 export function downloadServedBytes(name: string, bytes: Uint8Array): boolean {
   try {
-    // TS resolves Uint8Array.buffer as ArrayBufferLike (includes SharedArrayBuffer);
-    // Blob() requires ArrayBuffer — new Uint8Array() narrows the backing buffer type.
-    const buf = new Uint8Array(bytes) as { buffer: ArrayBuffer };
-    const blob = new Blob([buf.buffer], { type: "application/json" });
+    // Blob accepts Uint8Array directly — avoids the ArrayBufferLike/SharedArrayBuffer cast.
+    const blob = new Blob([new Uint8Array(bytes)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;

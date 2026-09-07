@@ -58,7 +58,7 @@
 .legend-lead { width: 22px; height: 0; border-top: 2px dashed; border-color: var(--txd); display: inline-block; }
 
 .inspector {
-  z-index: 7; width: 320px; background: var(--is); border: 1px solid var(--bd);
+  z-index: 7; width: 320px; max-width: calc(100% - 28px); background: var(--is); border: 1px solid var(--bd);
   border-radius: 11px; box-shadow: var(--shadow); padding: 10px 12px;
   display: flex; flex-direction: column; gap: 6px;
   animation: inspectorSlideIn .18s ease-out;
@@ -70,7 +70,8 @@
 .inspector-head { display: flex; align-items: baseline; gap: 8px; }
 .inspector-head b { font-size: 12.5px; }
 .inspector-id { color: var(--txd); font-size: 10.5px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.inspector-head button { border: none; background: none; color: var(--txd); cursor: pointer; font-size: 11px; }
+.inspector-head button { border: none; background: none; color: var(--txd); cursor: pointer; font-size: 11px; border-radius: 4px; padding: 2px 4px; transition: color .12s, background .12s; }
+.inspector-head button:hover { color: var(--tx); background: var(--hov); }
 .inspector-facts { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
 .inspector-chip { display: inline-flex; align-items: center; gap: 5px; background: var(--rs); border-radius: 6px; padding: 2px 8px; font-size: 10.5px; }
 .inspector-dot { width: 8px; height: 8px; border-radius: 2.5px; }

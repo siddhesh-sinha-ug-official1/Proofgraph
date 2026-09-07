@@ -93,7 +93,10 @@ export function useAppData({ hubBase, httpGet, httpDo, bus, prefs }: AppDataArgs
           bus.graphSide,
           prefs.graphMaxNodes !== null ? { capConfig: { maxNodes: prefs.graphMaxNodes } } : {},
         );
-        if (disposed) return;
+        if (disposed) {
+          try { w.cell.controller.dispose(); } catch { /* already down */ }
+          return;
+        }
         wallLive.current = w;
         setWall(w);
         (window as unknown as { pgGraphWall: GraphViewWall }).pgGraphWall = w; // spike surface

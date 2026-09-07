@@ -154,8 +154,11 @@ export default function SearchEverywhere(props: {
             <div
               key={`${h.kind}:${h.key}`}
               className="popup-row search-row"
+              role="option"
+              tabIndex={0}
               data-search-hit={h.key}
               onClick={() => (h.kind === "file" ? props.onOpenFile(h.key) : props.onPickNode(h.key))}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); h.kind === "file" ? props.onOpenFile(h.key) : props.onPickNode(h.key); } }}
             >
               <span className="popup-ic">{h.icon}</span>
               <span className="mono">{h.label}</span>
